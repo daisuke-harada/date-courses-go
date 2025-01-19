@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: DateCourses API
+  version: 0.1.1
+servers:
+  - description: Development server
+    url: http://localhost:7777
+  - description: Production server
+    url: https://api.datecourses.com
+tags:
+  - name: top
+    description: Information about the top-level API features
+  - name: session
+    description: Details about user sessions and authentication
+  - name: user
+    description: Information related to user profiles and data
+  - name: date_spot
+    description: Details about various date spots available
+  - name: date_spot_review
+    description: User reviews and ratings for date spots
+  - name: course
+    description: Information about different date courses offered
+  - name: prefecture
+    description: Details about prefectures and their locations
+  - name: genre
+    description: Information about different genres of date spots
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "../api/components/schemas/default.yaml#/components/schemas/WelcomeResponseData"
+  /api/v1/top:
+    get:
+      tags: ["top"]
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "../api/components/schemas/default.yaml#/components/schemas/TopResponseData"
+  # /api/v1/signup:
+    # post:
+    #   tags: ["session"]
+    #   responses:
+    #     "201":
+    #       description: "Successful response"
+  # /api/v1/login:
+    # post:
+    #   tags: ["session"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  /api/v1/users:
+    get:
+      tags: ["user"]
+      responses:
+        "200":
+          description: "Successful response"
+  /api/v1/users/{id}:
+    get:
+      tags: ["user"]
+      responses:
+        "200":
+          description: "Successful response"
+    # put:
+    #   tags: ["user"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+    # delete:
+    #   tags: ["user"]
+    #   responses:
+    #     "204":
+    #       description: "Successful response"
+  # /api/v1/user_name_search:
+    # post:
+    #   tags: ["user"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  /api/v1/users/{user_id}/followings:
+      get:
+        tags: ["user"]
+        responses:
+          "200":
+            description: "Successful response"
+  /api/v1/users/{user_id}/followers:
+    get:
+      tags: ["user"]
+      responses:
+        "200":
+          description: "Successful response"
+  # /api/v1/relationships:
+    # post:
+    #   tags: ["user"]
+    #   responses:
+    #     "201":
+    #       description: "Successful response"
+  # /api/v1/relationships/{current_user_id}/{other_user_id}:
+    # delete:
+    #   tags: ["user"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  # /api/v1/date_spot_name_search:
+    # post:
+    #   tags: ["date_spot"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  # /api/v1/date_spots/sort:
+    # post:
+    #   tags: ["date_spot"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  # /api/v1/courses/sort:
+    # post:
+    #   tags: ["course"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  /api/v1/date_spots:
+    get:
+      tags: ["date_spot"]
+      responses:
+        "200":
+          description: "Successful response"
+    # post:
+    #   tags: ["date_spot"]
+    #   responses:
+    #     "201":
+    #       description: "Successful response"
+  /api/v1/date_spots/{id}:
+    get:
+      tags: ["date_spot"]
+      responses:
+        "200":
+          description: "Successful response"
+    # put:
+    #   tags: ["date_spot"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+    # delete:
+    #   tags: ["date_spot"]
+    #   responses:
+    #     "204":
+    #       description: "Successful response"
+  # /api/v1/date_spot_reviews:
+    # post:
+    #   tags: ["date_spot_review"]
+    #   responses:
+    #     "201":
+    #       description: "Successful response"
+  # /api/v1/date_spot_reviews/{id}:
+    # put:
+    #   tags: ["date_spot_review"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+    # delete:
+    #   tags: ["date_spot_review"]
+    #   responses:
+    #     "200":
+    #       description: "Successful response"
+  /api/v1/prefectures/{id}:
+    get:
+      tags: ["prefecture"]
+      responses:
+        "200":
+          description: "Successful response"
+  /api/v1/genres/{id}:
+    get:
+      tags: ["genre"]
+      responses:
+        "200":
+          description: "Successful response"
+  /api/v1/courses:
+    get:
+      tags: ["course"]
+      responses:
+        "200":
+          description: "Successful response"
+    # post:
+    #   tags: ["course"]
+    #   responses:
+    #     "201":
+    #       description: "Successful response"
+  /api/v1/courses/{id}:
+    get:
+      tags: ["course"]
+      responses:
+        "200":
+          description: "Successful response"
+    # delete:
+    #   tags: ["course"]
+    #   responses:
+    #     "204":
+    #       description: "Successful response"
+

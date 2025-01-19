@@ -1,0 +1,42 @@
+components:
+  schemas:
+    DateSpotResponseData:
+      type: object
+      required:
+      - id
+      - name
+      - image
+      - closing_time
+      - opening_time
+      - created_at
+      - updated_at
+      - average_rate
+      - genre_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        image:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+        closing_time:
+          type: string
+          format: date-time
+        opening_time:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        average_rate:
+          type: number
+          format: float
+        genre_id:
+          type: integer

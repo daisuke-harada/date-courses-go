@@ -1,0 +1,36 @@
+components:
+  schemas:
+    AddressAndDateSpotsResponseData:
+      type: object
+      required:
+        - id
+        - city_name
+        - latitude
+        - longitude
+        - prefecture_name
+        - genre_name
+        - review_total_number
+        - average_rate
+        - date_spot
+      properties:
+        id:
+          type: integer
+        city_name:
+          type: string
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        prefecture_name:
+          type: string
+        genre_name:
+          type: string
+        review_total_number:
+          type: integer
+        average_rate:
+          type: number
+          format: float
+        date_spot:
+          $ref: "./date_spot.yaml#/components/schemas/DateSpotResponseData"

@@ -1,0 +1,31 @@
+components:
+  schemas:
+    WelcomeResponseData:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "hello"
+    TopResponseData:
+      type: object
+      required:
+        - address_and_date_spots
+        - areas
+        - genres
+        - main_genres
+        - main_prefecture
+      properties:
+        address_and_date_spots:
+          type: array
+          items:
+           $ref: "./address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsResponseData"
+        areas:
+          type: string
+        genres:
+          type: string
+        main_genres:
+          type: string
+        main_prefecture:
+          type: string

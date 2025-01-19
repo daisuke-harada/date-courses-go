@@ -1,0 +1,231 @@
+openapi: 3.0.3
+info:
+  title: DateCourses API
+  version: 0.1.1
+servers:
+- description: Development server
+  url: http://localhost:7777
+- description: Production server
+  url: https://api.datecourses.com
+tags:
+- description: Information about the top-level API features
+  name: top
+- description: Details about user sessions and authentication
+  name: session
+- description: Information related to user profiles and data
+  name: user
+- description: Details about various date spots available
+  name: date_spot
+- description: User reviews and ratings for date spots
+  name: date_spot_review
+- description: Information about different date courses offered
+  name: course
+- description: Details about prefectures and their locations
+  name: prefecture
+- description: Information about different genres of date spots
+  name: genre
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WelcomeResponseData'
+          description: Successful response
+  /api/v1/top:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopResponseData'
+          description: Successful response
+components:
+  schemas:
+    WelcomeResponseData:
+      example:
+        message: hello
+      properties:
+        message:
+          example: hello
+          type: string
+      required:
+      - message
+      type: object
+    TopResponseData:
+      example:
+        genres: genres
+        areas: areas
+        main_genres: main_genres
+        main_prefecture: main_prefecture
+        address_and_date_spots:
+        - city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
+        - city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
+      properties:
+        address_and_date_spots:
+          items:
+            $ref: '#/components/schemas/AddressAndDateSpotsResponseData'
+          type: array
+        areas:
+          type: string
+        genres:
+          type: string
+        main_genres:
+          type: string
+        main_prefecture:
+          type: string
+      required:
+      - address_and_date_spots
+      - areas
+      - genres
+      - main_genres
+      - main_prefecture
+      type: object
+    AddressAndDateSpotsResponseData:
+      example:
+        city_name: city_name
+        prefecture_name: prefecture_name
+        latitude: 6.0274563
+        review_total_number: 5
+        average_rate: 5.637377
+        date_spot:
+          image:
+            url: https://openapi-generator.tech
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          closing_time: 2000-01-23T04:56:07.000+00:00
+          opening_time: 2000-01-23T04:56:07.000+00:00
+          name: name
+          average_rate: 7.0614014
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: 2
+          genre_id: 9
+        id: 0
+        genre_name: genre_name
+        longitude: 1.4658129
+      properties:
+        id:
+          type: integer
+        city_name:
+          type: string
+        latitude:
+          format: float
+          type: number
+        longitude:
+          format: float
+          type: number
+        prefecture_name:
+          type: string
+        genre_name:
+          type: string
+        review_total_number:
+          type: integer
+        average_rate:
+          format: float
+          type: number
+        date_spot:
+          $ref: '#/components/schemas/DateSpotResponseData'
+      required:
+      - average_rate
+      - city_name
+      - date_spot
+      - genre_name
+      - id
+      - latitude
+      - longitude
+      - prefecture_name
+      - review_total_number
+      type: object
+    DateSpotResponseData:
+      example:
+        image:
+          url: https://openapi-generator.tech
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        closing_time: 2000-01-23T04:56:07.000+00:00
+        opening_time: 2000-01-23T04:56:07.000+00:00
+        name: name
+        average_rate: 7.0614014
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: 2
+        genre_id: 9
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        image:
+          $ref: '#/components/schemas/DateSpotResponseData_image'
+        closing_time:
+          format: date-time
+          type: string
+        opening_time:
+          format: date-time
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        average_rate:
+          format: float
+          type: number
+        genre_id:
+          type: integer
+      required:
+      - average_rate
+      - closing_time
+      - created_at
+      - genre_id
+      - id
+      - image
+      - name
+      - opening_time
+      - updated_at
+      type: object
+    DateSpotResponseData_image:
+      example:
+        url: https://openapi-generator.tech
+      properties:
+        url:
+          format: uri
+          type: string
+      type: object
