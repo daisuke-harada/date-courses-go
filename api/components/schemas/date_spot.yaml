@@ -1,6 +1,6 @@
 components:
   schemas:
-    DateSpotResponseData:
+    DateSpotData:
       type: object
       required:
       - id
@@ -18,11 +18,7 @@ components:
         name:
           type: string
         image:
-          type: object
-          properties:
-            url:
-              type: string
-              format: uri
+          $ref: "./image.yaml#/components/schemas/ImageData"
         closing_time:
           type: string
           format: date-time

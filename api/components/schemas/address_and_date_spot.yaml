@@ -1,6 +1,6 @@
 components:
   schemas:
-    AddressAndDateSpotsResponseData:
+    AddressAndDateSpotsData:
       type: object
       required:
         - id
@@ -33,4 +33,4 @@ components:
           type: number
           format: float
         date_spot:
-          $ref: "./date_spot.yaml#/components/schemas/DateSpotResponseData"
+          $ref: "./date_spot.yaml#/components/schemas/DateSpotData"

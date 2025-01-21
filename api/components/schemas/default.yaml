@@ -20,7 +20,7 @@ components:
         address_and_date_spots:
           type: array
           items:
-           $ref: "./address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsResponseData"
+           $ref: "./address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
         areas:
           type: string
         genres:
