@@ -1,0 +1,62 @@
+components:
+  schemas:
+    UserData:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - gender
+        - image
+        - admin
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        gender:
+          type: string
+        image:
+          $ref: "./image.yaml#/components/schemas/ImageData"
+        admin:
+          type: boolean
+    UserResponseData:
+      type: object
+      required:
+        - id
+        - admin
+        - email
+        - gender
+        - image
+        - name
+        - followerIds
+        - followingIds
+        - courses
+      properties:
+        id:
+          type: integer
+        admin:
+          type: boolean
+        email:
+          type: string
+        gender:
+          type: string
+        image:
+          $ref: "./image.yaml#/components/schemas/ImageData"
+        name:
+          type: string
+        followerIds:
+          type: array
+          items:
+            type: integer
+        followingIds:
+          type: array
+          items:
+            type: integer
+        courses:
+          type: array
+          items:
+            $ref: "./coure.yaml#/components/schemas/CourseData"

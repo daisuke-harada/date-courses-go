@@ -1,0 +1,26 @@
+components:
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    UserIdParam:
+      name: user_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    CurrentUserIdParam:
+      name: current_user_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    OtherUserIdParam:
+      name: other_user_id
+      in: path
+      required: true
+      schema:
+        type: integer

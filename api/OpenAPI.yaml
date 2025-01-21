@@ -33,7 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../api/components/schemas/default.yaml#/components/schemas/WelcomeResponseData"
+                $ref: "./components/schemas/default.yaml#/components/schemas/WelcomeResponseData"
   /api/v1/top:
     get:
       tags: ["top"]
@@ -43,7 +43,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../api/components/schemas/default.yaml#/components/schemas/TopResponseData"
+                $ref: "./components/schemas/default.yaml#/components/schemas/TopResponseData"
   # /api/v1/signup:
     # post:
     #   tags: ["session"]
@@ -62,12 +62,24 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./components/schemas/user.yaml#/components/schemas/UserResponseData"
   /api/v1/users/{id}:
     get:
       tags: ["user"]
+      parameters:
+        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas/user.yaml#/components/schemas/UserResponseData"
     # put:
     #   tags: ["user"]
     #   responses:
@@ -87,12 +99,16 @@ paths:
   /api/v1/users/{user_id}/followings:
       get:
         tags: ["user"]
+        parameters:
+          - $ref: "./components/schemas/parameter.yaml#/components/parameters/UserIdParam"
         responses:
           "200":
             description: "Successful response"
   /api/v1/users/{user_id}/followers:
     get:
       tags: ["user"]
+      parameters:
+        - $ref: "./components/schemas/parameter.yaml#/components/parameters/UserIdParam"
       responses:
         "200":
           description: "Successful response"
@@ -103,11 +119,14 @@ paths:
     #     "201":
     #       description: "Successful response"
   # /api/v1/relationships/{current_user_id}/{other_user_id}:
-    # delete:
-    #   tags: ["user"]
-    #   responses:
-    #     "200":
-    #       description: "Successful response"
+  #   delete:
+  #     tags: ["user"]
+  #     parameters:
+  #       - $ref: "./components/schemas/parameter.yaml#/components/parameters/CurrentUserIdParam"
+  #       - $ref: "./components/schemas/parameter.yaml#/components/parameters/OtherUserIdParam"
+  #     responses:
+  #       "200":
+  #         description: "Successful response"
   # /api/v1/date_spot_name_search:
     # post:
     #   tags: ["date_spot"]
@@ -140,6 +159,8 @@ paths:
   /api/v1/date_spots/{id}:
     get:
       tags: ["date_spot"]
+      parameters:
+        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
@@ -162,6 +183,8 @@ paths:
   # /api/v1/date_spot_reviews/{id}:
     # put:
     #   tags: ["date_spot_review"]
+    #   parameters:
+    #      - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
     #   responses:
     #     "200":
     #       description: "Successful response"
@@ -173,12 +196,16 @@ paths:
   /api/v1/prefectures/{id}:
     get:
       tags: ["prefecture"]
+      parameters:
+        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
   /api/v1/genres/{id}:
     get:
       tags: ["genre"]
+      parameters:
+        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
@@ -196,6 +223,8 @@ paths:
   /api/v1/courses/{id}:
     get:
       tags: ["course"]
+      parameters:
+        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"

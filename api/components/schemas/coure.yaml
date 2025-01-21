@@ -1,0 +1,28 @@
+components:
+  schemas:
+    CourseData:
+      type: object
+      required:
+        - id
+        - authority
+        - travel_mode
+        - user
+        - no_duplicate_prefecture_names
+        - date_spots
+      properties:
+        id:
+          type: integer
+        authority:
+          type: string
+        travel_mode:
+          type: string
+        user:
+          $ref: './user.yaml#/components/schemas/UserData'
+        no_duplicate_prefecture_names:
+          type: array
+          items:
+            type: string
+        date_spots:
+          type: array
+          items:
+            $ref: './address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData'

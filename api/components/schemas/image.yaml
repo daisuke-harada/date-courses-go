@@ -1,0 +1,11 @@
+components:
+  schemas:
+    ImageData:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          nullable: true
