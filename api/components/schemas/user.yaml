@@ -35,6 +35,7 @@ components:
         - followerIds
         - followingIds
         - courses
+        - date_spot_reviews
       properties:
         id:
           type: integer
@@ -60,3 +61,7 @@ components:
           type: array
           items:
             $ref: "./coure.yaml#/components/schemas/CourseData"
+        date_spot_reviews:
+          type: array
+          items:
+            $ref: "./date_spot_review.yaml#/components/schemas/DateSpotReviewData"
