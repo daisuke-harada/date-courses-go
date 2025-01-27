@@ -1,0 +1,14 @@
+components:
+  schemas:
+    FollowingResponsData:
+      type: object
+      required:
+        - user_name
+        - users
+      properties:
+        user_name:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: "./user.yaml#/components/schemas/UserResponseData"
