@@ -554,6 +554,7 @@ components:
           type: array
       required:
       - authority
+      - date_spot_reviews
       - date_spots
       - id
       - no_duplicate_prefecture_names
