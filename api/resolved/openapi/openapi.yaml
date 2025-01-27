@@ -315,35 +315,6 @@ components:
             admin: true
             id: 5
             email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
         - no_duplicate_prefecture_names:
           - no_duplicate_prefecture_names
           - no_duplicate_prefecture_names
@@ -397,35 +368,6 @@ components:
             admin: true
             id: 5
             email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
         gender: gender
         followerIds:
         - 6
@@ -593,35 +535,6 @@ components:
           admin: true
           id: 5
           email: email
-        date_spot_reviews:
-        - rate: 7.0614014
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 2
-          content: content
-        - rate: 7.0614014
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 2
-          content: content
       properties:
         id:
           type: integer
@@ -638,10 +551,6 @@ components:
         date_spots:
           items:
             $ref: '#/components/schemas/AddressAndDateSpotsData'
-          type: array
-        date_spot_reviews:
-          items:
-            $ref: '#/components/schemas/DateSpotReviewData'
           type: array
       required:
       - authority
@@ -729,36 +638,4 @@ components:
       - id
       - image
       - name
-      type: object
-    DateSpotReviewData:
-      example:
-        rate: 7.0614014
-        date_spot:
-          image:
-            url: https://openapi-generator.tech
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          closing_time: 2000-01-23T04:56:07.000+00:00
-          opening_time: 2000-01-23T04:56:07.000+00:00
-          name: name
-          average_rate: 7.0614014
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: 2
-          genre_id: 9
-        id: 2
-        content: content
-      properties:
-        id:
-          type: integer
-        rate:
-          format: float
-          type: number
-        content:
-          type: string
-        date_spot:
-          $ref: '#/components/schemas/DateSpotData'
-      required:
-      - content
-      - date_spot
-      - id
-      - rate
       type: object

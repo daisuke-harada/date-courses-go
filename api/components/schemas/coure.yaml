@@ -27,7 +27,3 @@ components:
           type: array
           items:
             $ref: './address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData'
-        date_spot_reviews:
-          type: array
-          items:
-            $ref: "./date_spot_review.yaml#/components/schemas/DateSpotReviewData"
