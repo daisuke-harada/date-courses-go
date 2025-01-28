@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FollowingResponsData'
+                $ref: '#/components/schemas/RelationShipResponsData'
           description: Successful response
       tags:
       - user
@@ -102,6 +102,10 @@ paths:
           type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationShipResponsData'
           description: Successful response
       tags:
       - user
@@ -453,7 +457,7 @@ components:
       - image
       - name
       type: object
-    FollowingResponsData:
+    RelationShipResponsData:
       example:
         user_name: user_name
         users:

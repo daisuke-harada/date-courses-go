@@ -1,6 +1,6 @@
 components:
   schemas:
-    FollowingResponsData:
+    RelationShipResponsData:
       type: object
       required:
         - user_name
