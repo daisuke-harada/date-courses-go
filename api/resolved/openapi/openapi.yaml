@@ -113,6 +113,12 @@ paths:
     get:
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AddressAndDateSpotsData'
+                type: array
           description: Successful response
       tags:
       - date_spot
