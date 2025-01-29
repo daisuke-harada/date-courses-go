@@ -183,7 +183,6 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
-
     # put:
     #   tags: ["date_spot"]
     #   responses:
@@ -235,6 +234,10 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas/course.yaml#/components/schemas/CourseResponseData"
     # post:
     #   tags: ["course"]
     #   responses:
@@ -248,6 +251,13 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./components/schemas/course.yaml#/components/schemas/CourseResponseData"
+
     # delete:
     #   tags: ["course"]
     #   responses:
