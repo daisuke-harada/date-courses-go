@@ -1,6 +1,6 @@
 components:
   schemas:
-    CourseData:
+    CourseResponseData:
       type: object
       required:
         - id
@@ -9,7 +9,6 @@ components:
         - user
         - no_duplicate_prefecture_names
         - date_spots
-        - date_spot_reviews
       properties:
         id:
           type: integer

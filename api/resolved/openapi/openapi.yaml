@@ -169,6 +169,10 @@ paths:
     get:
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseResponseData'
           description: Successful response
       tags:
       - course
@@ -182,6 +186,12 @@ paths:
           type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/CourseResponseData'
+                type: array
           description: Successful response
       tags:
       - course
@@ -449,7 +459,7 @@ components:
           type: array
         courses:
           items:
-            $ref: '#/components/schemas/CourseData'
+            $ref: '#/components/schemas/CourseResponseData'
           type: array
         date_spot_reviews:
           items:
@@ -834,18 +844,7 @@ components:
       - prefecture_name
       - review_total_number
       type: object
-    ImageData:
-      example:
-        url: https://openapi-generator.tech
-      properties:
-        url:
-          format: uri
-          nullable: true
-          type: string
-      required:
-      - url
-      type: object
-    CourseData:
+    CourseResponseData:
       example:
         no_duplicate_prefecture_names:
         - no_duplicate_prefecture_names
@@ -919,12 +918,22 @@ components:
           type: array
       required:
       - authority
-      - date_spot_reviews
       - date_spots
       - id
       - no_duplicate_prefecture_names
       - travel_mode
       - user
+      type: object
+    ImageData:
+      example:
+        url: https://openapi-generator.tech
+      properties:
+        url:
+          format: uri
+          nullable: true
+          type: string
+      required:
+      - url
       type: object
     DateSpotReviewData:
       example:
