@@ -132,6 +132,10 @@ paths:
           type: integer
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressAndDateSpotsData'
           description: Successful response
       tags:
       - date_spot
