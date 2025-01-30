@@ -220,6 +220,12 @@ paths:
       responses:
         "200":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./components/schemas/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
   /api/v1/genres/{id}:
     get:
       tags: ["genre"]
