@@ -52,10 +52,14 @@ paths:
         content:
           multipart/form-data:
               schema:
-                $ref: '#/components/schemas/request/signup.yaml#/components/schemas/SignupFormData'
+                $ref: './components/schemas/request/registration.yaml#/components/schemas/SignupFormData'
       responses:
         "201":
           description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: './components/schemas/response/registration.yaml#/components/schemas/SignUpResponseData'
   # /api/v1/login:
     # post:
     #   tags: ["session"]
