@@ -1,0 +1,12 @@
+components:
+  schemas:
+    SignUpResponseData:
+      type: object
+      required:
+        - user
+        - login_status
+      properties:
+        user:
+          $reg: "./user.yaml#/components/schemas/UserResponseData"
+        login_status:
+          type: boolean

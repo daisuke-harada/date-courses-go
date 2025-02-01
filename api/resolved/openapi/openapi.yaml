@@ -47,8 +47,18 @@ paths:
       - top
   /api/v1/signup:
     post:
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SignupFormData'
+        required: true
       responses:
         "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponseData'
           description: Successful response
       tags:
       - session
@@ -297,6 +307,39 @@ components:
       - genres
       - main_genres
       - main_prefecture
+      type: object
+    SignupFormData:
+      properties:
+        name:
+          example: 原田大輔
+          type: string
+        email:
+          example: daisuke@test.com
+          type: string
+        gender:
+          example: 男性
+          type: string
+        password:
+          example: "[FILTERED]"
+          type: string
+        password_confirmation:
+          example: "[FILTERED]"
+          type: string
+        image:
+          format: binary
+          type: string
+      type: object
+    SignUpResponseData:
+      example:
+        login_status: true
+        user: ""
+      properties:
+        user: {}
+        login_status:
+          type: boolean
+      required:
+      - login_status
+      - user
       type: object
     UserResponseData:
       example:
