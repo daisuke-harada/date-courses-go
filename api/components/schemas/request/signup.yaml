@@ -1,0 +1,23 @@
+components:
+  schemas:
+    SignupFormData:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "原田大輔"
+        email:
+          type: string
+          example: "daisuke@test.com"
+        gender:
+          type: string
+          example: "男性"
+        password:
+          type: string
+          example: "[FILTERED]"
+        password_confirmation:
+          type: string
+          example: "[FILTERED]"
+        image:
+          type: string
+          format: binary

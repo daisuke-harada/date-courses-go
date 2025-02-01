@@ -33,7 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./components/schemas/default.yaml#/components/schemas/WelcomeResponseData"
+                $ref: "./components/schemas/response/default.yaml#/components/schemas/WelcomeResponseData"
   /api/v1/top:
     get:
       tags: ["top"]
@@ -43,13 +43,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./components/schemas/default.yaml#/components/schemas/TopResponseData"
-  # /api/v1/signup:
-    # post:
-    #   tags: ["session"]
-    #   responses:
-    #     "201":
-    #       description: "Successful response"
+                $ref: "./components/schemas/response/default.yaml#/components/schemas/TopResponseData"
+  /api/v1/signup:
+    post:
+      tags: ["session"]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/request/signup.yaml#/components/schemas/SignupFormData'
+      responses:
+        "201":
+          description: "Successful response"
   # /api/v1/login:
     # post:
     #   tags: ["session"]
@@ -67,19 +73,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "./components/schemas/user.yaml#/components/schemas/UserResponseData"
+                  $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
   /api/v1/users/{id}:
     get:
       tags: ["user"]
       parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
           content:
             application/json:
               schema:
-                $ref: "./components/schemas/user.yaml#/components/schemas/UserResponseData"
+                $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
     # put:
     #   tags: ["user"]
     #   responses:
@@ -100,26 +106,26 @@ paths:
       get:
         tags: ["user"]
         parameters:
-          - $ref: "./components/schemas/parameter.yaml#/components/parameters/UserIdParam"
+          - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/UserIdParam"
         responses:
           "200":
             description: "Successful response"
             content:
               application/json:
                 schema:
-                  $ref: "./components/schemas/relationship.yaml#/components/schemas/RelationShipResponsData"
+                  $ref: "./components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"
   /api/v1/users/{user_id}/followers:
     get:
       tags: ["user"]
       parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/UserIdParam"
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/UserIdParam"
       responses:
         "200":
           description: "Successful response"
           content:
               application/json:
                 schema:
-                  $ref: "./components/schemas/relationship.yaml#/components/schemas/RelationShipResponsData"
+                  $ref: "./components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"
 
   # /api/v1/relationships:
     # post:
@@ -131,8 +137,8 @@ paths:
   #   delete:
   #     tags: ["user"]
   #     parameters:
-  #       - $ref: "./components/schemas/parameter.yaml#/components/parameters/CurrentUserIdParam"
-  #       - $ref: "./components/schemas/parameter.yaml#/components/parameters/OtherUserIdParam"
+  #       - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/CurrentUserIdParam"
+  #       - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/OtherUserIdParam"
   #     responses:
   #       "200":
   #         description: "Successful response"
@@ -165,7 +171,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "./components/schemas/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
+                  $ref: "./components/schemas/response/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
     # post:
     #   tags: ["date_spot"]
     #   responses:
@@ -175,14 +181,14 @@ paths:
     get:
       tags: ["date_spot"]
       parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
           content:
             application/json:
               schema:
-                $ref: "./components/schemas/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
+                $ref: "./components/schemas/response/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
     # put:
     #   tags: ["date_spot"]
     #   responses:
@@ -203,7 +209,7 @@ paths:
     # put:
     #   tags: ["date_spot_review"]
     #   parameters:
-    #      - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
+    #      - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
     #   responses:
     #     "200":
     #       description: "Successful response"
@@ -216,7 +222,7 @@ paths:
     get:
       tags: ["prefecture"]
       parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
@@ -225,12 +231,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "./components/schemas/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
+                  $ref: "./components/schemas/response/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
   /api/v1/genres/{id}:
     get:
       tags: ["genre"]
       parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
@@ -243,7 +249,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "./components/schemas/course.yaml#/components/schemas/CourseResponseData"
+                $ref: "./components/schemas/response/course.yaml#/components/schemas/CourseResponseData"
     # post:
     #   tags: ["course"]
     #   responses:
@@ -253,7 +259,7 @@ paths:
     get:
       tags: ["course"]
       parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
       responses:
         "200":
           description: "Successful response"
@@ -262,7 +268,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "./components/schemas/course.yaml#/components/schemas/CourseResponseData"
+                  $ref: "./components/schemas/response/course.yaml#/components/schemas/CourseResponseData"
 
     # delete:
     #   tags: ["course"]

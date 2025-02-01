@@ -45,6 +45,13 @@ paths:
           description: Successful response
       tags:
       - top
+  /api/v1/signup:
+    post:
+      responses:
+        "201":
+          description: Successful response
+      tags:
+      - session
   /api/v1/users:
     get:
       responses:
