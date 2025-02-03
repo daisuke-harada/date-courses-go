@@ -1,2 +1,2 @@
-gen-openapi:
+gen:
 	bash scripts/openapi-generator-cli.sh
