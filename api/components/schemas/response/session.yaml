@@ -1,0 +1,9 @@
+components:
+  schemas:
+    LoginResponseData:
+      type: object
+      required:
+        - login_status
+      properties:
+        login_status:
+          type: boolean

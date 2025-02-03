@@ -60,12 +60,22 @@ paths:
             application/json:
               schema:
                 $ref: './components/schemas/response/registration.yaml#/components/schemas/SignUpResponseData'
-  # /api/v1/login:
-    # post:
-    #   tags: ["session"]
-    #   responses:
-    #     "200":
-    #       description: "Successful response"
+  /api/v1/login:
+    post:
+      tags: ["session"]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: './components/schemas/request/session.yaml#/components/schemas/SigninFormData'
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: './components/schemas/response/session.yaml#/components/schemas/LoginResponseData'
   /api/v1/users:
     get:
       tags: ["user"]
@@ -90,11 +100,23 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
-    # put:
-    #   tags: ["user"]
-    #   responses:
-    #     "200":
-    #       description: "Successful response"
+    put:
+      tags: ["user"]
+      parameters:
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: './components/schemas/request/users.yaml#/components/schemas/UserFormData'
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
     # delete:
     #   tags: ["user"]
     #   responses:

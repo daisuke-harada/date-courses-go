@@ -62,6 +62,23 @@ paths:
           description: Successful response
       tags:
       - session
+  /api/v1/login:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SigninFormData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseData'
+          description: Successful response
+      tags:
+      - session
   /api/v1/users:
     get:
       responses:
@@ -83,6 +100,28 @@ paths:
         required: true
         schema:
           type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseData'
+          description: Successful response
+      tags:
+      - user
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserFormData'
+        required: true
       responses:
         "200":
           content:
@@ -311,23 +350,24 @@ components:
     SignupFormData:
       properties:
         name:
-          example: 原田大輔
           type: string
         email:
-          example: daisuke@test.com
           type: string
         gender:
-          example: 男性
           type: string
         password:
-          example: "[FILTERED]"
           type: string
         password_confirmation:
-          example: "[FILTERED]"
           type: string
         image:
           format: binary
           type: string
+      required:
+      - email
+      - gender
+      - name
+      - password
+      - password_confirmation
       type: object
     SignUpResponseData:
       example:
@@ -340,6 +380,25 @@ components:
       required:
       - login_status
       - user
+      type: object
+    SigninFormData:
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+      required:
+      - name
+      - password
+      type: object
+    LoginResponseData:
+      example:
+        login_status: true
+      properties:
+        login_status:
+          type: boolean
+      required:
+      - login_status
       type: object
     UserResponseData:
       example:
@@ -532,6 +591,32 @@ components:
       - id
       - image
       - name
+      type: object
+    UserFormData:
+      properties:
+        name:
+          type: string
+        email:
+          format: email
+          type: string
+        gender:
+          type: string
+        password:
+          type: string
+        password_confirmation:
+          type: string
+        image:
+          format: binary
+          type: string
+        id:
+          type: string
+      required:
+      - email
+      - gender
+      - id
+      - name
+      - password
+      - password_confirmation
       type: object
     RelationShipResponsData:
       example:

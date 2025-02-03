@@ -1,6 +1,6 @@
 components:
   schemas:
-    SignupFormData:
+    UserFormData:
       type: object
       required:
         - name
@@ -8,11 +8,13 @@ components:
         - gender
         - password
         - password_confirmation
+        - id
       properties:
         name:
           type: string
         email:
           type: string
+          format: email
         gender:
           type: string
         password:
@@ -22,3 +24,5 @@ components:
         image:
           type: string
           format: binary
+        id:
+          type: string
