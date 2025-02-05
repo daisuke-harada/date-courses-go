@@ -117,17 +117,31 @@ paths:
             application/json:
               schema:
                 $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
-    # delete:
-    #   tags: ["user"]
-    #   responses:
-    #     "204":
-    #       description: "Successful response"
-  # /api/v1/user_name_search:
-    # post:
-    #   tags: ["user"]
-    #   responses:
-    #     "200":
-    #       description: "Successful response"
+    delete:
+      tags: ["user"]
+      parameters:
+        - $ref: "./components/schemas/response/parameter.yaml#/components/parameters/IdParam"
+      responses:
+        "204":
+          description: "No Content"
+  /api/v1/user_name_search:
+    post:
+      tags: ["user"]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "./components/schemas/request/users.yaml#/components/schemas/UserNameSearchData"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
   /api/v1/users/{user_id}/followings:
       get:
         tags: ["user"]

@@ -93,6 +93,18 @@ paths:
       tags:
       - user
   /api/v1/users/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No Content
+      tags:
+      - user
     get:
       parameters:
       - in: path
@@ -128,6 +140,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponseData'
+          description: Successful response
+      tags:
+      - user
+  /api/v1/user_name_search:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserNameSearchData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserResponseData'
+                type: array
           description: Successful response
       tags:
       - user
@@ -617,6 +648,13 @@ components:
       - name
       - password
       - password_confirmation
+      type: object
+    UserNameSearchData:
+      properties:
+        user_name:
+          type: string
+      required:
+      - user_name
       type: object
     RelationShipResponsData:
       example:

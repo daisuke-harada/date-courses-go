@@ -26,3 +26,10 @@ components:
           format: binary
         id:
           type: string
+    UserNameSearchData:
+      type: object
+      required:
+        - user_name
+      properties:
+        user_name:
+          type: string
