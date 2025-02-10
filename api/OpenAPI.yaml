@@ -168,11 +168,11 @@ paths:
                   $ref: "./components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"
 
   # /api/v1/relationships:
-    # post:
-    #   tags: ["user"]
-    #   responses:
-    #     "201":
-    #       description: "Successful response"
+  #   post:
+  #     tags: ["user"]
+  #     responses:
+  #       "201":
+  #         description: "Successful response"
   # /api/v1/relationships/{current_user_id}/{other_user_id}:
   #   delete:
   #     tags: ["user"]
@@ -182,12 +182,25 @@ paths:
   #     responses:
   #       "200":
   #         description: "Successful response"
-  # /api/v1/date_spot_name_search:
-    # post:
-    #   tags: ["date_spot"]
-    #   responses:
-    #     "200":
-    #       description: "Successful response"
+  /api/v1/date_spot_name_search:
+    post:
+      tags: ["date_spot"]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "./components/schemas/request/date_spots.yaml#/components/schemas/DateSpotNameSearchData"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./components/schemas/response/address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData"
+
   # /api/v1/date_spots/sort:
     # post:
     #   tags: ["date_spot"]

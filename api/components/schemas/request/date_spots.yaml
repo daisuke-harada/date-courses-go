@@ -1,0 +1,9 @@
+components:
+  schemas:
+    DateSpotNameSearchData:
+      type: object
+      required:
+        - date_spot_name
+      properties:
+        date_spot_name:
+          type: string

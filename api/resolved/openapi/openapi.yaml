@@ -196,6 +196,25 @@ paths:
           description: Successful response
       tags:
       - user
+  /api/v1/date_spot_name_search:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DateSpotNameSearchData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AddressAndDateSpotsData'
+                type: array
+          description: Successful response
+      tags:
+      - date_spot
   /api/v1/date_spots:
     get:
       responses:
@@ -968,6 +987,13 @@ components:
       required:
       - user_name
       - users
+      type: object
+    DateSpotNameSearchData:
+      properties:
+        date_spot_name:
+          type: string
+      required:
+      - date_spot_name
       type: object
     AddressAndDateSpotsData:
       example:
