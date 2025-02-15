@@ -12,3 +12,33 @@ components:
           type: array
           items:
             $ref: "./user.yaml#/components/schemas/UserResponseData"
+    FollowResponseData:
+      type: object
+      required:
+        - users
+        - current_user
+        - followed_user
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "./user.yaml#/components/schemas/UserResponseData"
+        current_user:
+          $ref: "./user.yaml#/components/schemas/UserResponseData"
+        followed_user:
+          $ref: "./user.yaml#/components/schemas/UserResponseData"
+    UnFollowResponseData:
+      type: object
+      required:
+        - users
+        - current_user
+        - followed_user
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "./user.yaml#/components/schemas/UserResponseData"
+        current_user:
+          $ref: "./user.yaml#/components/schemas/UserResponseData"
+        un_followed_user:
+          $ref: "./user.yaml#/components/schemas/UserResponseData"

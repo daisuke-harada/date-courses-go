@@ -25,4 +25,23 @@ components:
         date_spots:
           type: array
           items:
-            $ref: './address_and_date_spot.yaml#/components/schemas/AddressAndDateSpotsData'
+            $ref: './address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData'
+    CourseSortResponseData:
+      type: object
+      required:
+        - courses
+        - prefecture_id
+      properties:
+        courses:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseResponseData"
+        prefecture_id:
+          type: integer
+    CourseFormResponseData:
+      type: object
+      required:
+        - course_id
+      properties:
+        date_spot_id:
+          type: integer

@@ -60,7 +60,7 @@ components:
         courses:
           type: array
           items:
-            $ref: "./course.yaml#/components/schemas/CourseResponseData"
+            $ref: "./courses.yaml#/components/schemas/CourseResponseData"
         date_spot_reviews:
           type: array
           items:

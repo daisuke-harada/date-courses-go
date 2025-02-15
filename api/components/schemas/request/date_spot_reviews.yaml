@@ -1,0 +1,19 @@
+components:
+  schemas:
+    DateSpotReviewFormRequestData:
+      type: object
+      required:
+        - rate
+        - content
+        - user_id
+        - date_spot_id
+      properties:
+        rate:
+          type: number
+          format: float
+        content:
+          type: string
+        user_id:
+          type: integer
+        date_spot_id:
+          type: integer
