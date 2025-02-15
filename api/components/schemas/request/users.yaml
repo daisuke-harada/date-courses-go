@@ -1,6 +1,6 @@
 components:
   schemas:
-    UserFormData:
+    UserFormRequestData:
       type: object
       required:
         - name

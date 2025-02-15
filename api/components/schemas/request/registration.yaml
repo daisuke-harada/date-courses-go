@@ -1,6 +1,6 @@
 components:
   schemas:
-    SignupFormData:
+    SignupFormRequestData:
       type: object
       required:
         - name

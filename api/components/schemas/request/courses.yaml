@@ -1,0 +1,33 @@
+components:
+  schemas:
+    CourseSortRequestData:
+      type: object
+      required:
+        - prefecture_id
+      properties:
+        prefecture_id:
+          type: integer
+    CourseFormRequestData:
+      type: object
+      required:
+        - user_id
+        - date_spots
+        - travel_mode
+        - authority
+      properties:
+        user_id:
+          type: integer
+        date_spots:
+          type: array
+          items:
+            type: integer
+        travel_mode:
+          type: string
+          enum:
+            - DRIVING
+            - WALKING
+        authority:
+          type: string
+          enum:
+            - 公開
+            - 非公開

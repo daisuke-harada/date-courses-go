@@ -1,0 +1,12 @@
+components:
+  schemas:
+    FollowReauestData:
+      type: object
+      required:
+        - current_user_id
+        - followed_user_id
+      properties:
+        current_user_id:
+          type: integer
+        followed_user_id:
+          type: integer

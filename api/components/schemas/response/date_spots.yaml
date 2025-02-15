@@ -36,3 +36,29 @@ components:
           format: float
         genre_id:
           type: integer
+    DateSpotSortResponseData:
+      type: object
+      required:
+        - address_and_date_spots
+        - prefecture_id
+        - genre_id
+        - come_time
+      properties:
+        address_and_date_spots:
+          type: array
+          items:
+            $ref: "./address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+        prefecture_id:
+          type: integer
+        genre_id:
+          type: integer
+        come_time:
+          type: string
+          format: date-time
+    DateSpotFormResponseData:
+      type: object
+      required:
+        - date_spot_id
+      properties:
+        date_spot_id:
+          type: integer

@@ -51,7 +51,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SignupFormData'
+              $ref: '#/components/schemas/SignupFormRequestData'
         required: true
       responses:
         "201":
@@ -68,7 +68,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SigninFormData'
+              $ref: '#/components/schemas/SigninFormRequestData'
         required: true
       responses:
         "200":
@@ -132,7 +132,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserFormData'
+              $ref: '#/components/schemas/UserFormRequestData'
         required: true
       responses:
         "200":
@@ -196,6 +196,45 @@ paths:
           description: Successful response
       tags:
       - user
+  /api/v1/relationships:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FollowReauestData'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowResponseData'
+          description: Successful response
+      tags:
+      - user
+  /api/v1/relationships/{current_user_id}/{other_user_id}:
+    delete:
+      parameters:
+      - in: path
+        name: current_user_id
+        required: true
+        schema:
+          type: integer
+      - in: path
+        name: other_user_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowResponseData'
+          description: Successful response
+      tags:
+      - user
   /api/v1/date_spot_name_search:
     post:
       requestBody:
@@ -215,6 +254,42 @@ paths:
           description: Successful response
       tags:
       - date_spot
+  /api/v1/date_spots/sort:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DateSpotSortData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DateSpotSortResponseData'
+                type: array
+          description: Successful response
+      tags:
+      - date_spot
+  /api/v1/courses/sort:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseSortRequestData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseSortResponseData'
+          description: Successful response
+      tags:
+      - course
   /api/v1/date_spots:
     get:
       responses:
@@ -228,7 +303,35 @@ paths:
           description: Successful response
       tags:
       - date_spot
+    post:
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DateSpotFormRequestData'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DateSpotFormResponseData'
+          description: Successful response
+      tags:
+      - date_spot
   /api/v1/date_spots/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Successful response
+      tags:
+      - date_spot
     get:
       parameters:
       - in: path
@@ -245,6 +348,84 @@ paths:
           description: Successful response
       tags:
       - date_spot
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DateSpotFormRequestData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DateSpotFormResponseData'
+          description: Successful response
+      tags:
+      - date_spot
+  /api/v1/date_spot_reviews:
+    post:
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DateSpotReviewFormRequestData'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DateSpotReviewResponseData'
+          description: Successful response
+      tags:
+      - date_spot_review
+  /api/v1/date_spot_reviews/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DateSpotReviewResponseData'
+          description: Successful response
+      tags:
+      - date_spot_review
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DateSpotReviewFormRequestData'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DateSpotReviewResponseData'
+          description: Successful response
+      tags:
+      - date_spot_review
   /api/v1/prefectures/{id}:
     get:
       parameters:
@@ -288,7 +469,35 @@ paths:
           description: Successful response
       tags:
       - course
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseFormRequestData'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseFormResponseData'
+          description: Successful response
+      tags:
+      - course
   /api/v1/courses/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Successful response
+      tags:
+      - course
     get:
       parameters:
       - in: path
@@ -318,6 +527,18 @@ components:
     UserIdParam:
       in: path
       name: user_id
+      required: true
+      schema:
+        type: integer
+    CurrentUserIdParam:
+      in: path
+      name: current_user_id
+      required: true
+      schema:
+        type: integer
+    OtherUserIdParam:
+      in: path
+      name: other_user_id
       required: true
       schema:
         type: integer
@@ -397,7 +618,7 @@ components:
       - main_genres
       - main_prefecture
       type: object
-    SignupFormData:
+    SignupFormRequestData:
       properties:
         name:
           type: string
@@ -431,7 +652,7 @@ components:
       - login_status
       - user
       type: object
-    SigninFormData:
+    SigninFormRequestData:
       properties:
         name:
           type: string
@@ -642,7 +863,7 @@ components:
       - image
       - name
       type: object
-    UserFormData:
+    UserFormRequestData:
       properties:
         name:
           type: string
@@ -988,6 +1209,631 @@ components:
       - user_name
       - users
       type: object
+    FollowReauestData:
+      properties:
+        current_user_id:
+          type: integer
+        followed_user_id:
+          type: integer
+      required:
+      - current_user_id
+      - followed_user_id
+      type: object
+    FollowResponseData:
+      example:
+        followed_user:
+          image:
+            url: https://openapi-generator.tech
+          courses:
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          gender: gender
+          followerIds:
+          - 6
+          - 6
+          name: name
+          admin: true
+          followingIds:
+          - 1
+          - 1
+          id: 0
+          email: email
+          date_spot_reviews:
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+        users:
+        - image:
+            url: https://openapi-generator.tech
+          courses:
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          gender: gender
+          followerIds:
+          - 6
+          - 6
+          name: name
+          admin: true
+          followingIds:
+          - 1
+          - 1
+          id: 0
+          email: email
+          date_spot_reviews:
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+        - image:
+            url: https://openapi-generator.tech
+          courses:
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          gender: gender
+          followerIds:
+          - 6
+          - 6
+          name: name
+          admin: true
+          followingIds:
+          - 1
+          - 1
+          id: 0
+          email: email
+          date_spot_reviews:
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+        current_user:
+          image:
+            url: https://openapi-generator.tech
+          courses:
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          - no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            - city_name: city_name
+              prefecture_name: prefecture_name
+              latitude: 6.0274563
+              review_total_number: 5
+              average_rate: 5.637377
+              date_spot:
+                image:
+                  url: https://openapi-generator.tech
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                closing_time: 2000-01-23T04:56:07.000+00:00
+                opening_time: 2000-01-23T04:56:07.000+00:00
+                name: name
+                average_rate: 7.0614014
+                created_at: 2000-01-23T04:56:07.000+00:00
+                id: 2
+                genre_id: 9
+              id: 0
+              genre_name: genre_name
+              longitude: 1.4658129
+            travel_mode: travel_mode
+            authority: authority
+            id: 5
+            user:
+              image:
+                url: https://openapi-generator.tech
+              gender: gender
+              name: name
+              admin: true
+              id: 5
+              email: email
+          gender: gender
+          followerIds:
+          - 6
+          - 6
+          name: name
+          admin: true
+          followingIds:
+          - 1
+          - 1
+          id: 0
+          email: email
+          date_spot_reviews:
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+          - rate: 7.0614014
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 2
+            content: content
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserResponseData'
+          type: array
+        current_user:
+          $ref: '#/components/schemas/UserResponseData'
+        followed_user:
+          $ref: '#/components/schemas/UserResponseData'
+      required:
+      - current_user
+      - followed_user
+      - users
+      type: object
     DateSpotNameSearchData:
       properties:
         date_spot_name:
@@ -1048,6 +1894,210 @@ components:
       - longitude
       - prefecture_name
       - review_total_number
+      type: object
+    DateSpotSortData:
+      properties:
+        prefecture_id:
+          type: integer
+        genre_id:
+          type: integer
+        come_time:
+          format: date-time
+          type: string
+      required:
+      - come_time
+      - genre_id
+      - prefecture_id
+      type: object
+    DateSpotSortResponseData:
+      example:
+        come_time: 2000-01-23T04:56:07.000+00:00
+        prefecture_id: 0
+        address_and_date_spots:
+        - city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
+        - city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
+        genre_id: 6
+      properties:
+        address_and_date_spots:
+          items:
+            $ref: '#/components/schemas/AddressAndDateSpotsData'
+          type: array
+        prefecture_id:
+          type: integer
+        genre_id:
+          type: integer
+        come_time:
+          format: date-time
+          type: string
+      required:
+      - address_and_date_spots
+      - come_time
+      - genre_id
+      - prefecture_id
+      type: object
+    CourseSortRequestData:
+      properties:
+        prefecture_id:
+          type: integer
+      required:
+      - prefecture_id
+      type: object
+    CourseSortResponseData:
+      example:
+        courses:
+        - no_duplicate_prefecture_names:
+          - no_duplicate_prefecture_names
+          - no_duplicate_prefecture_names
+          date_spots:
+          - city_name: city_name
+            prefecture_name: prefecture_name
+            latitude: 6.0274563
+            review_total_number: 5
+            average_rate: 5.637377
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 0
+            genre_name: genre_name
+            longitude: 1.4658129
+          - city_name: city_name
+            prefecture_name: prefecture_name
+            latitude: 6.0274563
+            review_total_number: 5
+            average_rate: 5.637377
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 0
+            genre_name: genre_name
+            longitude: 1.4658129
+          travel_mode: travel_mode
+          authority: authority
+          id: 5
+          user:
+            image:
+              url: https://openapi-generator.tech
+            gender: gender
+            name: name
+            admin: true
+            id: 5
+            email: email
+        - no_duplicate_prefecture_names:
+          - no_duplicate_prefecture_names
+          - no_duplicate_prefecture_names
+          date_spots:
+          - city_name: city_name
+            prefecture_name: prefecture_name
+            latitude: 6.0274563
+            review_total_number: 5
+            average_rate: 5.637377
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 0
+            genre_name: genre_name
+            longitude: 1.4658129
+          - city_name: city_name
+            prefecture_name: prefecture_name
+            latitude: 6.0274563
+            review_total_number: 5
+            average_rate: 5.637377
+            date_spot:
+              image:
+                url: https://openapi-generator.tech
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              closing_time: 2000-01-23T04:56:07.000+00:00
+              opening_time: 2000-01-23T04:56:07.000+00:00
+              name: name
+              average_rate: 7.0614014
+              created_at: 2000-01-23T04:56:07.000+00:00
+              id: 2
+              genre_id: 9
+            id: 0
+            genre_name: genre_name
+            longitude: 1.4658129
+          travel_mode: travel_mode
+          authority: authority
+          id: 5
+          user:
+            image:
+              url: https://openapi-generator.tech
+            gender: gender
+            name: name
+            admin: true
+            id: 5
+            email: email
+        prefecture_id: 0
+      properties:
+        courses:
+          items:
+            $ref: '#/components/schemas/CourseResponseData'
+          type: array
+        prefecture_id:
+          type: integer
+      required:
+      - courses
+      - prefecture_id
       type: object
     CourseResponseData:
       example:
@@ -1128,6 +2178,126 @@ components:
       - no_duplicate_prefecture_names
       - travel_mode
       - user
+      type: object
+    DateSpotFormRequestData:
+      properties:
+        name:
+          type: string
+        genre_id:
+          type: integer
+        opening_time:
+          format: date-time
+          type: string
+        closing_time:
+          format: date-time
+          type: string
+        image:
+          $ref: '#/components/schemas/ImageData_1'
+        prefecture_id:
+          type: integer
+        city_name:
+          type: string
+      required:
+      - city_name
+      - closing_time
+      - genre_id
+      - image
+      - name
+      - opening_time
+      - prefecture_id
+      type: object
+    DateSpotFormResponseData:
+      example:
+        date_spot_id: 0
+      properties:
+        date_spot_id:
+          type: integer
+      required:
+      - date_spot_id
+      type: object
+    DateSpotReviewFormRequestData:
+      properties:
+        rate:
+          format: float
+          type: number
+        content:
+          type: string
+        user_id:
+          type: integer
+        date_spot_id:
+          type: integer
+      required:
+      - content
+      - date_spot_id
+      - rate
+      - user_id
+      type: object
+    DateSpotReviewResponseData:
+      example:
+        review_average_rate: 5
+        date_spot_reviews:
+        - rate: 6.0274563
+          user_id: 1
+          user_image:
+            url: https://openapi-generator.tech
+          user_name: user_name
+          date_spot_id: 5
+          user_gender: user_gender
+          id: 0
+          content: content
+        - rate: 6.0274563
+          user_id: 1
+          user_image:
+            url: https://openapi-generator.tech
+          user_name: user_name
+          date_spot_id: 5
+          user_gender: user_gender
+          id: 0
+          content: content
+      properties:
+        date_spot_reviews:
+          items:
+            $ref: '#/components/schemas/DateSpotReviewResponseData_date_spot_reviews_inner'
+          type: array
+        review_average_rate:
+          format: float
+          type: integer
+      required:
+      - date_spot_reviews
+      - review_average_rate
+      type: object
+    CourseFormRequestData:
+      properties:
+        user_id:
+          type: integer
+        date_spots:
+          items:
+            type: integer
+          type: array
+        travel_mode:
+          enum:
+          - DRIVING
+          - WALKING
+          type: string
+        authority:
+          enum:
+          - 公開
+          - 非公開
+          type: string
+      required:
+      - authority
+      - date_spots
+      - travel_mode
+      - user_id
+      type: object
+    CourseFormResponseData:
+      example:
+        date_spot_id: 0
+      properties:
+        date_spot_id:
+          type: integer
+      required:
+      - course_id
       type: object
     ImageData:
       example:
@@ -1249,4 +2419,52 @@ components:
       - id
       - image
       - name
+      type: object
+    ImageData_1:
+      properties:
+        url:
+          format: binary
+          nullable: true
+          type: string
+      required:
+      - url
+      type: object
+    DateSpotReviewResponseData_date_spot_reviews_inner:
+      example:
+        rate: 6.0274563
+        user_id: 1
+        user_image:
+          url: https://openapi-generator.tech
+        user_name: user_name
+        date_spot_id: 5
+        user_gender: user_gender
+        id: 0
+        content: content
+      properties:
+        id:
+          type: integer
+        rate:
+          format: float
+          type: number
+        content:
+          type: string
+        user_id:
+          type: integer
+        date_spot_id:
+          type: integer
+        user_name:
+          type: string
+        user_gender:
+          type: string
+        user_image:
+          $ref: '#/components/schemas/ImageData'
+      required:
+      - content
+      - date_spot_id
+      - id
+      - rate
+      - user_gender
+      - user_id
+      - user_image
+      - user_name
       type: object

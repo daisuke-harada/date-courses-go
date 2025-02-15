@@ -1,5 +1,32 @@
 components:
   schemas:
+    DateSpotFormRequestData:
+      type: object
+      required:
+        - name
+        - genre_id
+        - opening_time
+        - closing_time
+        - image
+        - prefecture_id
+        - city_name
+      properties:
+        name:
+          type: string
+        genre_id:
+          type: integer
+        opening_time:
+          type: string
+          format: date-time
+        closing_time:
+          type: string
+          format: date-time
+        image:
+          $ref: "./image.yaml#/components/schemas/ImageData"
+        prefecture_id:
+          type: integer
+        city_name:
+          type: string
     DateSpotNameSearchData:
       type: object
       required:
@@ -7,3 +34,17 @@ components:
       properties:
         date_spot_name:
           type: string
+    DateSpotSortData:
+      type: object
+      required:
+        - prefecture_id
+        - genre_id
+        - come_time
+      properties:
+        prefecture_id:
+          type: integer
+        genre_id:
+          type: integer
+        come_time:
+          type: string
+          format: date-time

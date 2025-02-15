@@ -16,4 +16,44 @@ components:
         content:
           type: string
         date_spot:
-          $ref: "./date_spot.yaml#/components/schemas/DateSpotData"
+          $ref: "./date_spots.yaml#/components/schemas/DateSpotData"
+    DateSpotReviewResponseData:
+      type: object
+      required:
+        - date_spot_reviews
+        - review_average_rate
+      properties:
+        date_spot_reviews:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - rate
+              - content
+              - user_id
+              - date_spot_id
+              - user_name
+              - user_gender
+              - user_image
+            properties:
+              id:
+                type: integer
+              rate:
+                type: number
+                format: float
+              content:
+                type: string
+              user_id:
+                type: integer
+              date_spot_id:
+                type: integer
+              user_name:
+                type: string
+              user_gender:
+                type: string
+              user_image:
+                $ref: "./image.yaml#/components/schemas/ImageData"
+        review_average_rate:
+          type: integer
+          format: float
