@@ -13,13 +13,13 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/daisuke-harada/date-courses-go/internal/api"
+	"github.com/daisuke-harada/date-courses-go/internal/cmd/api"
 )
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 
-const templatePath = "../../templates/handler.tmpl"
-const handlerRootPath = "../handler"
+const templatePath = "./templates/handler.tmpl"
+const handlerRootPath = "./handler"
 
 func toSnakeCase(str string) string {
 	snake := re.ReplaceAllString(str, "${1}_${2}")

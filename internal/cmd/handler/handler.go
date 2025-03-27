@@ -1,6 +1,6 @@
 package handler
 
-import "github.com/daisuke-harada/date-courses-go/internal/api"
+import "github.com/daisuke-harada/date-courses-go/internal/cmd/api"
 
 type handler struct{}
 

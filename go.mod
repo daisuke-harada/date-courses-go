@@ -3,8 +3,10 @@ module github.com/daisuke-harada/date-courses-go
 go 1.24.1
 
 require (
+	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/oapi-codegen/runtime v1.1.1
+	go.uber.org/dig v1.18.1
 )
 
 require (
