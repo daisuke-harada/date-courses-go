@@ -5,6 +5,7 @@
 package api
 
 import (
+	"github.com/daisuke-harada/date-courses-go/internal/cmd/api"
 	"github.com/daisuke-harada/date-courses-go/internal/cmd/handler"
 	"github.com/labstack/echo"
 	"go.uber.org/dig"
@@ -12,9 +13,11 @@ import (
 
 func Run() {
 	container := dig.New()
-
 	container.Provide(NewEcho)
 	container.Provide(handler.NewHandler)
+	container.Invoke(func(router api.EchoRouter, si api.ServerInterface) {
+		api.RegisterHandlers(router, si)
+	})
 }
 
 func NewEcho() *echo.Echo {
