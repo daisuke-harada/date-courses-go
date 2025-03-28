@@ -14,11 +14,13 @@ import (
 	"text/template"
 
 	"github.com/daisuke-harada/date-courses-go/internal/cmd/api"
+	"github.com/samber/lo"
 )
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 
-const templatePath = "./templates/handler.tmpl"
+const constractorTempPath = "../../templates/handler_constructor.tmpl"
+const handlerTempPath = "../../templates/handler.tmpl"
 const handlerRootPath = "./handler"
 
 func toSnakeCase(str string) string {
@@ -45,7 +47,8 @@ func extractMethodNames() []reflect.Method {
 
 func main() {
 	methods := extractMethodNames()
-	tmpl, err := template.ParseFiles(templatePath)
+
+	tmpl, err := template.ParseFiles(handlerTempPath)
 	if err != nil {
 		log.Fatalf("Failed to parse template: %s", err)
 	}
@@ -55,6 +58,8 @@ func main() {
 		log.Fatalf("Failed to create directory: %s", err)
 	}
 
+	// handler.goないのコードを生成する
+	createHandlerConstractor(methods)
 	for _, method := range methods {
 		fileName := toSnakeCase(method.Name) + ".go"
 		filePath := filepath.Join(handlerRootPath, fileName)
@@ -68,6 +73,30 @@ func fileNoExists(filePath string) bool {
 	// エラーは、指定されたパスが存在しない場合や、アクセス権限がない場合に返されるため、ファイルの存在可否を確認できる
 	_, err := os.Stat(filePath)
 	return os.IsNotExist(err)
+}
+
+func createHandlerConstractor(methods []reflect.Method) {
+	handlerNames := lo.Map(methods, func(method reflect.Method, _ int) string {
+		return method.Name
+	})
+
+	constractorTmpl, err := template.ParseFiles(constractorTempPath)
+	if err != nil {
+		log.Fatalf("Failed to parse template: %s", err)
+	}
+
+	// handlerのconstractorを作成
+	constractorFile, err := os.Create(filepath.Join(handlerRootPath, "handler.go"))
+	if err != nil {
+		log.Fatalf("Failed to create file: %s", err)
+	}
+	defer constractorFile.Close()
+
+	constractorTmpl.Execute(constractorFile, struct {
+		HandlerNames []string
+	}{
+		HandlerNames: handlerNames,
+	})
 }
 
 func createFile(filePath string, tmpl *template.Template, method reflect.Method) {
@@ -93,7 +122,7 @@ func createFile(filePath string, tmpl *template.Template, method reflect.Method)
 		})
 	}
 
-	err = tmpl.Execute(file, struct {
+	if err := tmpl.Execute(file, struct {
 		MethodName string
 		Args       []struct {
 			Name string
@@ -102,8 +131,7 @@ func createFile(filePath string, tmpl *template.Template, method reflect.Method)
 	}{
 		MethodName: method.Name,
 		Args:       args,
-	})
-	if err != nil {
+	}); err != nil {
 		log.Fatalf("Failed to execute template: %s", err)
 	}
 

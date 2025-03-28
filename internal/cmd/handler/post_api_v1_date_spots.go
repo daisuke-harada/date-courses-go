@@ -5,7 +5,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *handler) PostApiV1DateSpots(ctx echo.Context) error {
+type PostApiV1DateSpotsHandler struct {}
+
+func (h *PostApiV1DateSpotsHandler) PostApiV1DateSpots(ctx echo.Context) error {
 	// TODO: Implement your logic here
 	// Example: return ctx.JSON(http.StatusOK, map[string]string{"message": "success"})
 	return ctx.JSON(http.StatusOK, map[string]string{"message": "success"})
