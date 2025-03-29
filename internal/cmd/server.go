@@ -1,6 +1,6 @@
 //go:generate oapi-codegen -generate types -o api/api_types.gen.go -package api ../../api/resolved/openapi/openapi.yaml
 //go:generate oapi-codegen -generate echo-server -o api/api_server.gen.go -package api ../../api/resolved/openapi/openapi.yaml
-//go:generate go run api/handler.gen.go
+//go:generate go run handler_generator.go
 
 package api
 
