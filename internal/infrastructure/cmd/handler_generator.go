@@ -13,14 +13,14 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/daisuke-harada/date-courses-go/internal/cmd/api"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api"
 	"github.com/samber/lo"
 )
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 
-const constractorTempPath = "../../templates/handler_constructor.tmpl"
-const handlerTempPath = "../../templates/handler.tmpl"
+const constractorTempPath = "../../../templates/handler_constructor.tmpl"
+const handlerTempPath = "../../../templates/handler.tmpl"
 const handlerRootPath = "./handler"
 
 func toSnakeCase(str string) string {

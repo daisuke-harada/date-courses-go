@@ -1,16 +1,13 @@
 package main
 
+import (
+	"log"
+
+	api "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd"
+)
+
 func main() {
-	// container := dig.New
-
-	// container.Provide(api.NewServer)
-	// container.Provide(logger.NewLogger)
-
-	// if err := container.Invoke(func(server *api.Server) {
-	// 	if err := server.Run(context.Background()); err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// }); err != nil {
-	// 	log.Fatal(err)
-	// }
+	if err := api.Run(); err != nil {
+		log.Fatalf("Failed to start server :%v", err)
+	}
 }

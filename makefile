@@ -4,4 +4,4 @@ openapi-generate:
 	bash scripts/openapi-generator-cli.sh
 
 go-generate:
-	go generate ./internal/cmd
+	go generate ./internal/infrastructure/cmd
