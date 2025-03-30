@@ -1,13 +1,15 @@
 package main
 
 import (
-	"log"
-
 	api "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd"
+	"github.com/daisuke-harada/date-courses-go/pkg/logger"
 )
 
 func main() {
-	if err := api.Run(); err != nil {
-		log.Fatalf("Failed to start server :%v", err)
+	// ロガーを初期化
+	log := logger.NewLogger()
+
+	if err := api.Run(log); err != nil {
+		log.Error("Failed to start server :%v", err)
 	}
 }
