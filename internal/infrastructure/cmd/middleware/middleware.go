@@ -15,6 +15,6 @@ type Middleware struct {
 	log logger.LoggerInterface
 }
 
-func NewMiddlewre(log logger.LoggerInterface) MiddlewareInterface {
+func NewMiddleware(log logger.LoggerInterface) MiddlewareInterface {
 	return &Middleware{log: log}
 }

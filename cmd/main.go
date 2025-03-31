@@ -8,7 +8,6 @@ import (
 func main() {
 	// ロガーを初期化
 	log := logger.NewLogger()
-
 	if err := api.Run(log); err != nil {
 		log.Error("Failed to start server :%v", err)
 	}

@@ -5,3 +5,6 @@ openapi-generate:
 
 go-generate:
 	go generate ./internal/infrastructure/cmd
+
+run:
+go run ./cmd/main.go
