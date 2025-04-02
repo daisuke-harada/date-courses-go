@@ -19,8 +19,8 @@ import (
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 
-const constractorTempPath = "../../../templates/handler_constructor.tmpl"
-const handlerTempPath = "../../../templates/handler.tmpl"
+const constractorTempPath = "../../../../templates/handler_constructor.tmpl"
+const handlerTempPath = "../../../../templates/handler.tmpl"
 const handlerRootPath = "./handler"
 
 func toSnakeCase(str string) string {

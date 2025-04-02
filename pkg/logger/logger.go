@@ -8,7 +8,6 @@ type LoggerInterface interface {
 	Warn(msg string, fields ...interface{})
 }
 
-// NewLogger initializes a new Zap logger and returns it as a LoggerInterface
 func NewLogger() LoggerInterface {
-	return NewZapLogger()
+	return NewSimpleLogger()
 }

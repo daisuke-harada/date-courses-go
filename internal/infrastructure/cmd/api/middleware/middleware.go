@@ -6,9 +6,8 @@ import (
 )
 
 type MiddlewareInterface interface {
-	LoggerMiddleware() echo.MiddlewareFunc
-	// AuthMiddleware() echo.MiddlewareFunc
-	// ValidationMiddleware() echo.MiddlewareFunc
+	Logger() echo.MiddlewareFunc
+	Cors() echo.MiddlewareFunc
 }
 
 type Middleware struct {
