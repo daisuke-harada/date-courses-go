@@ -1,7 +1,7 @@
 package main
 
 import (
-	api "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd"
+	api "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
 )
 
