@@ -13,9 +13,6 @@ import (
 
 func Run(log logger.LoggerInterface) error {
 	container := dig.New()
-	container.Provide(func() logger.LoggerInterface {
-		return log
-	})
 	container.Provide(NewEcho)
 	container.Provide(handler.NewHandler)
 	err := container.Invoke(func(e *echo.Echo, ha *handler.Handler) error {
@@ -25,7 +22,6 @@ func Run(log logger.LoggerInterface) error {
 		}
 		return nil
 	})
-
 	return err
 }
 
