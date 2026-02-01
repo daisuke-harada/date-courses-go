@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
@@ -16,17 +17,17 @@ func NewSimpleLogger() *SimpleLogger {
 }
 
 func (l *SimpleLogger) Info(msg string, fields ...interface{}) {
-	l.logger.Printf("INFO: "+msg, fields...)
+	l.logger.Print("INFO: " + fmt.Sprintf(msg, fields...))
 }
 
 func (l *SimpleLogger) Error(msg string, fields ...interface{}) {
-	l.logger.Printf("ERROR: "+msg, fields...)
+	l.logger.Print("ERROR: " + fmt.Sprintf(msg, fields...))
 }
 
 func (l *SimpleLogger) Debug(msg string, fields ...interface{}) {
-	l.logger.Printf("DEBUG: "+msg, fields...)
+	l.logger.Print("DEBUG: " + fmt.Sprintf(msg, fields...))
 }
 
 func (l *SimpleLogger) Warn(msg string, fields ...interface{}) {
-	l.logger.Printf("WARN: "+msg, fields...)
+	l.logger.Print("WARN: " + fmt.Sprintf(msg, fields...))
 }

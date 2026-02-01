@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"log"
 
 	"go.uber.org/zap"
@@ -13,22 +14,22 @@ type zapLogger struct {
 
 // Infoメソッドは、情報レベルのログメッセージを出力します
 func (z *zapLogger) Info(msg string, fields ...interface{}) {
-	z.logger.Sugar().Infow(msg, fields...)
+	z.logger.Sugar().Info(fmt.Sprintf(msg, fields...))
 }
 
 // Errorメソッドは、エラーレベルのログメッセージを出力します
 func (z *zapLogger) Error(msg string, fields ...interface{}) {
-	z.logger.Sugar().Errorw(msg, fields...)
+	z.logger.Sugar().Error(fmt.Sprintf(msg, fields...))
 }
 
 // Debugメソッドは、デバッグレベルのログメッセージを出力します
 func (z *zapLogger) Debug(msg string, fields ...interface{}) {
-	z.logger.Sugar().Debugw(msg, fields...)
+	z.logger.Sugar().Debug(fmt.Sprintf(msg, fields...))
 }
 
 // Warnメソッドは、警告レベルのログメッセージを出力します
 func (z *zapLogger) Warn(msg string, fields ...interface{}) {
-	z.logger.Sugar().Warnw(msg, fields...)
+	z.logger.Sugar().Warn(fmt.Sprintf(msg, fields...))
 }
 
 // NewZapLogger関数は、新しいZapロガーを初期化し、zapLoggerとして返します
