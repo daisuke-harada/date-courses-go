@@ -32,7 +32,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WelcomeResponseData'
+                $ref: "#/components/schemas/WelcomeResponseData"
           description: Successful response
   /api/v1/top:
     get:
@@ -41,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopResponseData'
+                $ref: "#/components/schemas/TopResponseData"
           description: Successful response
       tags:
       - top
@@ -51,14 +51,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SignupFormRequestData'
+              $ref: "#/components/schemas/SignupFormRequestData"
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignUpResponseData'
+                $ref: "#/components/schemas/SignUpResponseData"
           description: Successful response
       tags:
       - session
@@ -68,14 +68,14 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SigninFormRequestData'
+              $ref: "#/components/schemas/SigninFormRequestData"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponseData'
+                $ref: "#/components/schemas/LoginResponseData"
           description: Successful response
       tags:
       - session
@@ -87,7 +87,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/UserResponseData'
+                  $ref: "#/components/schemas/UserResponseData"
                 type: array
           description: Successful response
       tags:
@@ -117,7 +117,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseData'
+                $ref: "#/components/schemas/UserResponseData"
           description: Successful response
       tags:
       - user
@@ -132,14 +132,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserFormRequestData'
+              $ref: "#/components/schemas/UserFormRequestData"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseData'
+                $ref: "#/components/schemas/UserResponseData"
           description: Successful response
       tags:
       - user
@@ -149,7 +149,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserNameSearchData'
+              $ref: "#/components/schemas/UserNameSearchData"
         required: true
       responses:
         "200":
@@ -157,7 +157,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/UserResponseData'
+                  $ref: "#/components/schemas/UserResponseData"
                 type: array
           description: Successful response
       tags:
@@ -175,7 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelationShipResponsData'
+                $ref: "#/components/schemas/RelationShipResponsData"
           description: Successful response
       tags:
       - user
@@ -192,7 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RelationShipResponsData'
+                $ref: "#/components/schemas/RelationShipResponsData"
           description: Successful response
       tags:
       - user
@@ -202,14 +202,14 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/FollowReauestData'
+              $ref: "#/components/schemas/FollowReauestData"
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FollowResponseData'
+                $ref: "#/components/schemas/FollowResponseData"
           description: Successful response
       tags:
       - user
@@ -231,7 +231,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FollowResponseData'
+                $ref: "#/components/schemas/FollowResponseData"
           description: Successful response
       tags:
       - user
@@ -241,7 +241,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/DateSpotNameSearchData'
+              $ref: "#/components/schemas/DateSpotNameSearchData"
         required: true
       responses:
         "200":
@@ -249,7 +249,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/AddressAndDateSpotsData'
+                  $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
       tags:
@@ -260,7 +260,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/DateSpotSortData'
+              $ref: "#/components/schemas/DateSpotSortData"
         required: true
       responses:
         "200":
@@ -268,7 +268,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/DateSpotSortResponseData'
+                  $ref: "#/components/schemas/DateSpotSortResponseData"
                 type: array
           description: Successful response
       tags:
@@ -279,14 +279,14 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CourseSortRequestData'
+              $ref: "#/components/schemas/CourseSortRequestData"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseSortResponseData'
+                $ref: "#/components/schemas/CourseSortResponseData"
           description: Successful response
       tags:
       - course
@@ -298,7 +298,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/AddressAndDateSpotsData'
+                  $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
       tags:
@@ -308,14 +308,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/DateSpotFormRequestData'
+              $ref: "#/components/schemas/DateSpotFormRequestData"
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DateSpotFormResponseData'
+                $ref: "#/components/schemas/DateSpotFormResponseData"
           description: Successful response
       tags:
       - date_spot
@@ -344,7 +344,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddressAndDateSpotsData'
+                $ref: "#/components/schemas/AddressAndDateSpotsData"
           description: Successful response
       tags:
       - date_spot
@@ -359,14 +359,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/DateSpotFormRequestData'
+              $ref: "#/components/schemas/DateSpotFormRequestData"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DateSpotFormResponseData'
+                $ref: "#/components/schemas/DateSpotFormResponseData"
           description: Successful response
       tags:
       - date_spot
@@ -376,14 +376,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/DateSpotReviewFormRequestData'
+              $ref: "#/components/schemas/DateSpotReviewFormRequestData"
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DateSpotReviewResponseData'
+                $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
       tags:
       - date_spot_review
@@ -400,7 +400,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DateSpotReviewResponseData'
+                $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
       tags:
       - date_spot_review
@@ -415,14 +415,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/DateSpotReviewFormRequestData'
+              $ref: "#/components/schemas/DateSpotReviewFormRequestData"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DateSpotReviewResponseData'
+                $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
       tags:
       - date_spot_review
@@ -440,7 +440,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/AddressAndDateSpotsData'
+                  $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
       tags:
@@ -465,7 +465,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseResponseData'
+                $ref: "#/components/schemas/CourseResponseData"
           description: Successful response
       tags:
       - course
@@ -474,14 +474,14 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CourseFormRequestData'
+              $ref: "#/components/schemas/CourseFormRequestData"
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseFormResponseData'
+                $ref: "#/components/schemas/CourseFormResponseData"
           description: Successful response
       tags:
       - course
@@ -511,7 +511,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/CourseResponseData'
+                  $ref: "#/components/schemas/CourseResponseData"
                 type: array
           description: Successful response
       tags:
@@ -601,7 +601,7 @@ components:
       properties:
         address_and_date_spots:
           items:
-            $ref: '#/components/schemas/AddressAndDateSpotsData'
+            $ref: "#/components/schemas/AddressAndDateSpotsData"
           type: array
         areas:
           type: string
@@ -832,7 +832,7 @@ components:
         gender:
           type: string
         image:
-          $ref: '#/components/schemas/ImageData'
+          $ref: "#/components/schemas/ImageData"
         name:
           type: string
         followerIds:
@@ -845,11 +845,11 @@ components:
           type: array
         courses:
           items:
-            $ref: '#/components/schemas/CourseResponseData'
+            $ref: "#/components/schemas/CourseResponseData"
           type: array
         date_spot_reviews:
           items:
-            $ref: '#/components/schemas/DateSpotReviewData'
+            $ref: "#/components/schemas/DateSpotReviewData"
           type: array
       required:
       - admin
@@ -1203,7 +1203,7 @@ components:
           type: string
         users:
           items:
-            $ref: '#/components/schemas/UserResponseData'
+            $ref: "#/components/schemas/UserResponseData"
           type: array
       required:
       - user_name
@@ -1823,12 +1823,12 @@ components:
       properties:
         users:
           items:
-            $ref: '#/components/schemas/UserResponseData'
+            $ref: "#/components/schemas/UserResponseData"
           type: array
         current_user:
-          $ref: '#/components/schemas/UserResponseData'
+          $ref: "#/components/schemas/UserResponseData"
         followed_user:
-          $ref: '#/components/schemas/UserResponseData'
+          $ref: "#/components/schemas/UserResponseData"
       required:
       - current_user
       - followed_user
@@ -1883,7 +1883,7 @@ components:
           format: float
           type: number
         date_spot:
-          $ref: '#/components/schemas/DateSpotData'
+          $ref: "#/components/schemas/DateSpotData"
       required:
       - average_rate
       - city_name
@@ -1956,7 +1956,7 @@ components:
       properties:
         address_and_date_spots:
           items:
-            $ref: '#/components/schemas/AddressAndDateSpotsData'
+            $ref: "#/components/schemas/AddressAndDateSpotsData"
           type: array
         prefecture_id:
           type: integer
@@ -2091,7 +2091,7 @@ components:
       properties:
         courses:
           items:
-            $ref: '#/components/schemas/CourseResponseData'
+            $ref: "#/components/schemas/CourseResponseData"
           type: array
         prefecture_id:
           type: integer
@@ -2162,14 +2162,14 @@ components:
         travel_mode:
           type: string
         user:
-          $ref: '#/components/schemas/UserData'
+          $ref: "#/components/schemas/UserData"
         no_duplicate_prefecture_names:
           items:
             type: string
           type: array
         date_spots:
           items:
-            $ref: '#/components/schemas/AddressAndDateSpotsData'
+            $ref: "#/components/schemas/AddressAndDateSpotsData"
           type: array
       required:
       - authority
@@ -2192,7 +2192,7 @@ components:
           format: date-time
           type: string
         image:
-          $ref: '#/components/schemas/ImageData_1'
+          $ref: "#/components/schemas/ImageData_1"
         prefecture_id:
           type: integer
         city_name:
@@ -2257,7 +2257,7 @@ components:
       properties:
         date_spot_reviews:
           items:
-            $ref: '#/components/schemas/DateSpotReviewResponseData_date_spot_reviews_inner'
+            $ref: "#/components/schemas/DateSpotReviewResponseData_date_spot_reviews_inner"
           type: array
         review_average_rate:
           format: float
@@ -2335,7 +2335,7 @@ components:
         content:
           type: string
         date_spot:
-          $ref: '#/components/schemas/DateSpotData'
+          $ref: "#/components/schemas/DateSpotData"
       required:
       - content
       - date_spot
@@ -2360,7 +2360,7 @@ components:
         name:
           type: string
         image:
-          $ref: '#/components/schemas/ImageData'
+          $ref: "#/components/schemas/ImageData"
         closing_time:
           format: date-time
           type: string
@@ -2409,7 +2409,7 @@ components:
         gender:
           type: string
         image:
-          $ref: '#/components/schemas/ImageData'
+          $ref: "#/components/schemas/ImageData"
         admin:
           type: boolean
       required:
@@ -2457,7 +2457,7 @@ components:
         user_gender:
           type: string
         user_image:
-          $ref: '#/components/schemas/ImageData'
+          $ref: "#/components/schemas/ImageData"
       required:
       - content
       - date_spot_id
