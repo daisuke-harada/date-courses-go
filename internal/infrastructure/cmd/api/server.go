@@ -21,6 +21,10 @@ import (
 )
 
 func Run(ctx context.Context) error {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	container := dig.New()
 	container.Provide(NewEcho)
 	container.Provide(handler.NewHandler)
@@ -29,16 +33,26 @@ func Run(ctx context.Context) error {
 
 		addr := ":8080"
 		srv := &http.Server{
-			Addr:    addr,
-			Handler: e,
+			Addr: addr,
 		}
+
+		// サーバ全体のライフサイクル（起動〜停止）を表すctx。
+		// shutdown開始時に明示的にcancelすることで、起動ログ等にも一貫したctxが渡されます。
+		serverCtx, cancelServer := context.WithCancel(ctx)
+		defer cancelServer()
 
 		errCh := make(chan error, 1)
 		go func() {
-			logger.Info("server starting on %s", addr)
-			if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Info(serverCtx, "server starting", "addr", addr)
+			// StartServer は shutdown 経由の停止時も http.ErrServerClosed を返します。
+			// それ以外のエラーは異常終了として扱います。
+			err := e.StartServer(srv)
+			if err != nil && !errors.Is(err, http.ErrServerClosed) {
 				errCh <- err
+				return
 			}
+			// 正常終了（shutdown）も通知しておくと、select側でgoroutineリークを避けられます。
+			errCh <- nil
 		}()
 
 		sigCh := make(chan os.Signal, 1)
@@ -47,28 +61,31 @@ func Run(ctx context.Context) error {
 
 		select {
 		case err := <-errCh:
-			logger.Error("server stopped with error: %v", err)
-			return err
+			if err != nil {
+				logger.Error(serverCtx, "server stopped with error", "err", err)
+				return err
+			}
 		case sig := <-sigCh:
-			logger.Info("shutdown signal received: %s", sig.String())
+			logger.Info(serverCtx, "shutdown signal received", "signal", sig.String())
 		case <-ctx.Done():
-			logger.Info("context canceled: %v", ctx.Err())
+			logger.Info(serverCtx, "context canceled", "err", ctx.Err())
 		}
 
-		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		cancelServer()
+
+		shutdownCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
-		if err := srv.Shutdown(shutdownCtx); err != nil {
-			logger.Error("graceful shutdown failed: %v", err)
+		if err := e.Shutdown(shutdownCtx); err != nil {
+			logger.Error(ctx, "graceful shutdown failed", "err", err)
 			return err
 		}
-		logger.Info("server shutdown complete")
+		logger.Info(ctx, "server shutdown complete")
 		return nil
 	})
 }
 
 func NewEcho() *echo.Echo {
 	e := echo.New()
-	e.HideBanner = true
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Logger())
