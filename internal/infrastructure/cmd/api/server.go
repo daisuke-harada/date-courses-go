@@ -8,7 +8,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -21,29 +20,28 @@ import (
 )
 
 func Run(ctx context.Context) error {
-	if ctx == nil {
-		ctx = context.Background()
-	}
+	notifyCtx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
 	container := dig.New()
 	container.Provide(NewEcho)
 	container.Provide(handler.NewHandler)
-	return container.Invoke(func(e *echo.Echo, ha *handler.Handler) error {
-		RegisterHandlers(e, ha)
+
+	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
+		RegisterHandlers(e, handler)
 
 		addr := ":8080"
 		srv := &http.Server{
 			Addr: addr,
 		}
 
-		// サーバ全体のライフサイクル（起動〜停止）を表すctx。
-		// shutdown開始時に明示的にcancelすることで、起動ログ等にも一貫したctxが渡されます。
-		serverCtx, cancelServer := context.WithCancel(ctx)
-		defer cancelServer()
-
+		// errCh をバッファ1にしているのは、select が ctx.Done() 側を先に選ぶ可能性があるためです。
+		// もし errCh がバッファ0だと、select が ctx.Done() を選んで先に進んだ後は errCh を受信する箇所が無くなるので、
+		// StartServer が shutdown の結果として戻ってきたタイミングで errCh <- nil/err がブロックし、
+		// 起動goroutineが終了できずに残り続ける(= goroutine leak っぽい状態)可能性があります。
 		errCh := make(chan error, 1)
 		go func() {
-			logger.Info(serverCtx, "server starting", "addr", addr)
+			logger.Info(notifyCtx, "server starting", "addr", addr)
 			// StartServer は shutdown 経由の停止時も http.ErrServerClosed を返します。
 			// それ以外のエラーは異常終了として扱います。
 			err := e.StartServer(srv)
@@ -51,29 +49,21 @@ func Run(ctx context.Context) error {
 				errCh <- err
 				return
 			}
-			// 正常終了（shutdown）も通知しておくと、select側でgoroutineリークを避けられます。
 			errCh <- nil
 		}()
-
-		sigCh := make(chan os.Signal, 1)
-		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-		defer signal.Stop(sigCh)
 
 		select {
 		case err := <-errCh:
 			if err != nil {
-				logger.Error(serverCtx, "server stopped with error", "err", err)
+				logger.Error(notifyCtx, "server stopped with error", "err", err)
 				return err
 			}
-		case sig := <-sigCh:
-			logger.Info(serverCtx, "shutdown signal received", "signal", sig.String())
-		case <-ctx.Done():
-			logger.Info(serverCtx, "context canceled", "err", ctx.Err())
+		case <-notifyCtx.Done():
+			// notifyCtx はシグナルでも親ctxのキャンセルでも Done になります。
+			logger.Info(notifyCtx, "context canceled", "err", notifyCtx.Err())
 		}
 
-		cancelServer()
-
-		shutdownCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+		shutdownCtx, cancel := context.WithTimeout(notifyCtx, 10*time.Second)
 		defer cancel()
 		if err := e.Shutdown(shutdownCtx); err != nil {
 			logger.Error(ctx, "graceful shutdown failed", "err", err)
