@@ -1,0 +1,15 @@
+post:
+  tags: ["course"]
+  requestBody:
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          $ref: "../components/schemas/request/courses.yaml#/components/schemas/CourseSortRequestData"
+  responses:
+    "200":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseSortResponseData"

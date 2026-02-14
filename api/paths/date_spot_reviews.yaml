@@ -1,0 +1,15 @@
+post:
+  tags: ["date_spot_review"]
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: "../components/schemas/request/date_spot_reviews.yaml#/components/schemas/DateSpotReviewFormRequestData"
+  responses:
+    "201":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/date_spot_review.yaml#/components/schemas/DateSpotReviewResponseData"

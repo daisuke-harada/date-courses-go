@@ -1,0 +1,20 @@
+get:
+  tags: ["course"]
+  parameters:
+    - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
+  responses:
+    "200":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
+delete:
+  tags: ["course"]
+  parameters:
+    - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
+  responses:
+    "204":
+      description: "Successful response"
