@@ -1,0 +1,11 @@
+get:
+  tags: ["user"]
+  parameters:
+    - $ref: "../components/schemas/parameter.yaml#/components/parameters/UserIdParam"
+  responses:
+    "200":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"

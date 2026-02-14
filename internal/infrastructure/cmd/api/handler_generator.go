@@ -13,15 +13,19 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/apigen"
 	"github.com/samber/lo"
 )
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 
-const constractorTempPath = "../../../../templates/handler_constructor.tmpl"
-const handlerTempPath = "../../../../templates/handler.tmpl"
-const handlerRootPath = "./handler"
+const handlerRootPath = "../handler"
+
+// Templates are loaded from the repository's existing templates directory.
+// This generator is expected to be invoked from `internal/infrastructure/cmd/api/apigen`
+// via `go generate`, so paths are relative to that directory.
+const handlerTemplatePath = "../../../../../templates/handler.tmpl"
+const constructorTemplatePath = "../../../../../templates/handler_constructor.tmpl"
 
 func toSnakeCase(str string) string {
 	snake := re.ReplaceAllString(str, "${1}_${2}")
@@ -33,7 +37,7 @@ func extractMethodNames() []reflect.Method {
 	// reflect.TypeOf((*api.ServerInterface)(nil))は、ServerInterface型のnilポインタを取得
 	// nilポインタを取得するのは、インターフェースの型情報を取得するために具体的なインスタンスを作成する必要がないから
 	// .Elem()は、そのポインタが指す要素の型を取得
-	serverInterfaceType := reflect.TypeOf((*api.ServerInterface)(nil)).Elem()
+	serverInterfaceType := reflect.TypeOf((*apigen.ServerInterface)(nil)).Elem()
 
 	var methods []reflect.Method
 	// NumMethod()でインターフェイスに定義されているメソッドの数を取得する
@@ -48,7 +52,7 @@ func extractMethodNames() []reflect.Method {
 func main() {
 	methods := extractMethodNames()
 
-	tmpl, err := template.ParseFiles(handlerTempPath)
+	tmpl, err := template.ParseFiles(handlerTemplatePath)
 	if err != nil {
 		log.Fatalf("Failed to parse template: %s", err)
 	}
@@ -80,7 +84,7 @@ func createHandlerConstractor(methods []reflect.Method) {
 		return method.Name
 	})
 
-	constractorTmpl, err := template.ParseFiles(constractorTempPath)
+	constractorTmpl, err := template.ParseFiles(constructorTemplatePath)
 	if err != nil {
 		log.Fatalf("Failed to parse template: %s", err)
 	}

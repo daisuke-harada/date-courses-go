@@ -1,7 +1,3 @@
-//go:generate oapi-codegen -generate types -o api_types.gen.go -package api ../../../../api/resolved/openapi/openapi.yaml
-//go:generate oapi-codegen -generate echo-server -o api_server.gen.go -package api ../../../../api/resolved/openapi/openapi.yaml
-//go:generate go run handler_generator.go
-
 package api
 
 import (
@@ -12,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/apigen"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
 	"github.com/labstack/echo/v4"
@@ -28,7 +25,7 @@ func Run(ctx context.Context) error {
 	container.Provide(handler.NewHandler)
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
-		RegisterHandlers(e, handler)
+		apigen.RegisterHandlers(e, handler)
 
 		addr := ":8080"
 		srv := &http.Server{

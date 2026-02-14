@@ -1,0 +1,26 @@
+get:
+  tags: ["date_spot"]
+  responses:
+    "200":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+post:
+  tags: ["date_spot"]
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: "../components/schemas/request/date_spots.yaml#/components/schemas/DateSpotFormRequestData"
+  responses:
+    "201":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/date_spots.yaml#/components/schemas/DateSpotFormResponseData"

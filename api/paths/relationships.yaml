@@ -1,0 +1,15 @@
+post:
+  tags: ["user"]
+  requestBody:
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          $ref: "../components/schemas/request/relationships.yaml#/components/schemas/FollowReauestData"
+  responses:
+    "201":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/relationship.yaml#/components/schemas/FollowResponseData"

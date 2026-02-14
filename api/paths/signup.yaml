@@ -1,0 +1,15 @@
+post:
+  tags: ["session"]
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: "../components/schemas/request/registration.yaml#/components/schemas/SignupFormRequestData"
+  responses:
+    "201":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/registration.yaml#/components/schemas/SignUpResponseData"

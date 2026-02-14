@@ -1,0 +1,11 @@
+get:
+  tags: ["user"]
+  responses:
+    "200":
+      description: "Successful response"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../components/schemas/response/user.yaml#/components/schemas/UserResponseData"

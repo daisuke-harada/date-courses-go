@@ -1,0 +1,7 @@
+get:
+  tags: ["genre"]
+  parameters:
+    - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
+  responses:
+    "200":
+      description: "Successful response"

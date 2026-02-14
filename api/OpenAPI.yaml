@@ -26,403 +26,47 @@ tags:
     description: Information about different genres of date spots
 paths:
   /:
-    get:
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/default.yaml#/components/schemas/WelcomeResponseData"
+    $ref: "./paths/root.yaml"
   /api/v1/top:
-    get:
-      tags: ["top"]
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/default.yaml#/components/schemas/TopResponseData"
+    $ref: "./paths/top.yaml"
   /api/v1/signup:
-    post:
-      tags: ["session"]
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-              schema:
-                $ref: './components/schemas/request/registration.yaml#/components/schemas/SignupFormRequestData'
-      responses:
-        "201":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: './components/schemas/response/registration.yaml#/components/schemas/SignUpResponseData'
+    $ref: "./paths/signup.yaml"
   /api/v1/login:
-    post:
-      tags: ["session"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: './components/schemas/request/session.yaml#/components/schemas/SigninFormRequestData'
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: './components/schemas/response/session.yaml#/components/schemas/LoginResponseData'
+    $ref: "./paths/login.yaml"
   /api/v1/users:
-    get:
-      tags: ["user"]
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
+    $ref: "./paths/users.yaml"
   /api/v1/users/{id}:
-    get:
-      tags: ["user"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
-    put:
-      tags: ["user"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: './components/schemas/request/users.yaml#/components/schemas/UserFormRequestData'
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
-    delete:
-      tags: ["user"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "204":
-          description: "No Content"
+    $ref: "./paths/users_id.yaml"
   /api/v1/user_name_search:
-    post:
-      tags: ["user"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "./components/schemas/request/users.yaml#/components/schemas/UserNameSearchData"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/user.yaml#/components/schemas/UserResponseData"
+    $ref: "./paths/user_name_search.yaml"
   /api/v1/users/{user_id}/followings:
-      get:
-        tags: ["user"]
-        parameters:
-          - $ref: "./components/schemas/parameter.yaml#/components/parameters/UserIdParam"
-        responses:
-          "200":
-            description: "Successful response"
-            content:
-              application/json:
-                schema:
-                  $ref: "./components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"
+    $ref: "./paths/users_user_id_followings.yaml"
   /api/v1/users/{user_id}/followers:
-    get:
-      tags: ["user"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/UserIdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"
-
+    $ref: "./paths/users_user_id_followers.yaml"
   /api/v1/relationships:
-    post:
-      tags: ["user"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "./components/schemas/request/relationships.yaml#/components/schemas/FollowReauestData"
-      responses:
-        "201":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/relationship.yaml#/components/schemas/FollowResponseData"
-
+    $ref: "./paths/relationships.yaml"
   /api/v1/relationships/{current_user_id}/{other_user_id}:
-    delete:
-      tags: ["user"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/CurrentUserIdParam"
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/OtherUserIdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/relationship.yaml#/components/schemas/FollowResponseData"
+    $ref: "./paths/relationships_current_user_id_other_user_id.yaml"
   /api/v1/date_spot_name_search:
-    post:
-      tags: ["date_spot"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "./components/schemas/request/date_spots.yaml#/components/schemas/DateSpotNameSearchData"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+    $ref: "./paths/date_spot_name_search.yaml"
   /api/v1/date_spots/sort:
-    post:
-      tags: ["date_spot"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "./components/schemas/request/date_spots.yaml#/components/schemas/DateSpotSortData"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/date_spots.yaml#/components/schemas/DateSpotSortResponseData"
+    $ref: "./paths/date_spots_sort.yaml"
   /api/v1/courses/sort:
-    post:
-      tags: ["course"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "./components/schemas/request/courses.yaml#/components/schemas/CourseSortRequestData"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/courses.yaml#/components/schemas/CourseSortResponseData"
+    $ref: "./paths/courses_sort.yaml"
   /api/v1/date_spots:
-    get:
-      tags: ["date_spot"]
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
-    post:
-      tags: ["date_spot"]
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: "./components/schemas/request/date_spots.yaml#/components/schemas/DateSpotFormRequestData"
-      responses:
-        "201":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/date_spots.yaml#/components/schemas/DateSpotFormResponseData"
+    $ref: "./paths/date_spots.yaml"
   /api/v1/date_spots/{id}:
-    get:
-      tags: ["date_spot"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
-    put:
-      tags: ["date_spot"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: "./components/schemas/request/date_spots.yaml#/components/schemas/DateSpotFormRequestData"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/date_spots.yaml#/components/schemas/DateSpotFormResponseData"
-    delete:
-      tags: ["date_spot"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "204":
-          description: "Successful response"
+    $ref: "./paths/date_spots_id.yaml"
   /api/v1/date_spot_reviews:
-    post:
-      tags: ["date_spot_review"]
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: "./components/schemas/request/date_spot_reviews.yaml#/components/schemas/DateSpotReviewFormRequestData"
-      responses:
-        "201":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/date_spot_review.yaml#/components/schemas/DateSpotReviewResponseData"
+    $ref: "./paths/date_spot_reviews.yaml"
   /api/v1/date_spot_reviews/{id}:
-    put:
-      tags: ["date_spot_review"]
-      parameters:
-         - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: "./components/schemas/request/date_spot_reviews.yaml#/components/schemas/DateSpotReviewFormRequestData"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/date_spot_review.yaml#/components/schemas/DateSpotReviewResponseData"
-    delete:
-      tags: ["date_spot_review"]
-      parameters:
-         - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/date_spot_review.yaml#/components/schemas/DateSpotReviewResponseData"
+    $ref: "./paths/date_spot_reviews_id.yaml"
   /api/v1/prefectures/{id}:
-    get:
-      tags: ["prefecture"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+    $ref: "./paths/prefectures_id.yaml"
   /api/v1/genres/{id}:
-    get:
-      tags: ["genre"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: "Successful response"
+    $ref: "./paths/genres_id.yaml"
   /api/v1/courses:
-    get:
-      tags: ["course"]
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
-    post:
-      tags: ["course"]
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "./components/schemas/request/courses.yaml#/components/schemas/CourseFormRequestData"
-      responses:
-        "201":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                $ref: "./components/schemas/response/courses.yaml#/components/schemas/CourseFormResponseData"
+    $ref: "./paths/courses.yaml"
   /api/v1/courses/{id}:
-    get:
-      tags: ["course"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "200":
-          description: "Successful response"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
-    delete:
-      tags: ["course"]
-      parameters:
-        - $ref: "./components/schemas/parameter.yaml#/components/parameters/IdParam"
-      responses:
-        "204":
-          description: "Successful response"
+    $ref: "./paths/courses_id.yaml"
 
