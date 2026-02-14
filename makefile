@@ -7,7 +7,7 @@ openapi-generate:
 	bash scripts/openapi-generator-cli.sh
 
 go-generate:
-	go generate ./internal/infrastructure/cmd/api
+	go generate ./internal/infrastructure/cmd/api/apigen
 
 run:
 	go run ./cmd/main.go
