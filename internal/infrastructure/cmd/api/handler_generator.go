@@ -13,7 +13,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/apigen"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
 	"github.com/samber/lo"
 )
 
@@ -22,7 +22,7 @@ var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 const handlerRootPath = "../handler"
 
 // Templates are loaded from the repository's existing templates directory.
-// This generator is expected to be invoked from `internal/infrastructure/cmd/api/apigen`
+// This generator is expected to be invoked from `internal/infrastructure/cmd/api/gen`
 // via `go generate`, so paths are relative to that directory.
 const handlerTemplatePath = "../../../../../templates/handler.tmpl"
 const constructorTemplatePath = "../../../../../templates/handler_constructor.tmpl"
@@ -37,7 +37,7 @@ func extractMethodNames() []reflect.Method {
 	// reflect.TypeOf((*api.ServerInterface)(nil))は、ServerInterface型のnilポインタを取得
 	// nilポインタを取得するのは、インターフェースの型情報を取得するために具体的なインスタンスを作成する必要がないから
 	// .Elem()は、そのポインタが指す要素の型を取得
-	serverInterfaceType := reflect.TypeOf((*apigen.ServerInterface)(nil)).Elem()
+	serverInterfaceType := reflect.TypeOf((*gen.ServerInterface)(nil)).Elem()
 
 	var methods []reflect.Method
 	// NumMethod()でインターフェイスに定義されているメソッドの数を取得する
