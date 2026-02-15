@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/apigen"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
 	"github.com/labstack/echo/v4"
@@ -25,7 +25,7 @@ func Run(ctx context.Context) error {
 	container.Provide(handler.NewHandler)
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
-		apigen.RegisterHandlers(e, handler)
+		gen.RegisterHandlers(e, handler)
 
 		addr := ":8080"
 		srv := &http.Server{
