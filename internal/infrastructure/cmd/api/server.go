@@ -8,9 +8,11 @@ import (
 	"syscall"
 	"time"
 
+	"log/slog"
+
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
-	"github.com/daisuke-harada/date-courses-go/pkg/logger"
+	apimw "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/dig"
@@ -38,7 +40,7 @@ func Run(ctx context.Context) error {
 		// 起動goroutineが終了できずに残り続ける(= goroutine leak っぽい状態)可能性があります。
 		errCh := make(chan error, 1)
 		go func() {
-			logger.Info(notifyCtx, "server starting", "addr", addr)
+			slog.InfoContext(notifyCtx, "server starting", "addr", addr)
 			// StartServer は shutdown 経由の停止時も http.ErrServerClosed を返します。
 			// それ以外のエラーは異常終了として扱います。
 			err := e.StartServer(srv)
@@ -52,21 +54,21 @@ func Run(ctx context.Context) error {
 		select {
 		case err := <-errCh:
 			if err != nil {
-				logger.Error(notifyCtx, "server stopped with error", "err", err)
+				slog.ErrorContext(notifyCtx, "server stopped with error", "err", err)
 				return err
 			}
 		case <-notifyCtx.Done():
 			// notifyCtx はシグナルでも親ctxのキャンセルでも Done になります。
-			logger.Info(notifyCtx, "context canceled", "err", notifyCtx.Err())
+			slog.InfoContext(notifyCtx, "context canceled", "err", notifyCtx.Err())
 		}
 
 		shutdownCtx, cancel := context.WithTimeout(notifyCtx, 10*time.Second)
 		defer cancel()
 		if err := e.Shutdown(shutdownCtx); err != nil {
-			logger.Error(ctx, "graceful shutdown failed", "err", err)
+			slog.ErrorContext(ctx, "graceful shutdown failed", "err", err)
 			return err
 		}
-		logger.Info(ctx, "server shutdown complete")
+		slog.InfoContext(ctx, "server shutdown complete")
 		return nil
 	})
 }
@@ -75,6 +77,9 @@ func NewEcho() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
+	// our middleware injects the request id into request.Context so that
+	// slog.InfoContext/etc can automatically include request_id
+	e.Use(apimw.RequestIDMiddleware)
 	e.Use(middleware.Logger())
 	return e
 }
