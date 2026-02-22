@@ -7,6 +7,7 @@ require (
 	github.com/oapi-codegen/runtime v1.1.1
 	go.uber.org/dig v1.18.1
 	go.uber.org/zap v1.27.0
+	github.com/lib/pq v1.10.7
 )
 
 require (
