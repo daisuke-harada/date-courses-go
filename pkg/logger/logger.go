@@ -41,6 +41,10 @@ func RequestIDFromContext(ctx context.Context) (string, bool) {
 	if ctx == nil {
 		return "", false
 	}
+
+	// context から request_id を取り出すためにキーで検索する。
+	// - キーにはパッケージローカルな型 ctxKeyRequestID の空値を使う（型を分けることで他パッケージとの衝突を防ぐ）。
+	// - ctx.Value はキーが存在しなければ nil を返すので、下で型アサーションと空文字列チェックを行う。
 	v := ctx.Value(ctxKeyRequestID{})
 	s, ok := v.(string)
 	if !ok || s == "" {
