@@ -1,3 +1,4 @@
+// This file does not contain a stray opening code fence.
 package logger
 
 import (
@@ -12,7 +13,7 @@ import (
 )
 
 var (
-	mu      sync.Mutex
+	mu      sync.RWMutex
 	appName string
 	debug   bool
 	logger  *slog.Logger
@@ -42,9 +43,6 @@ func RequestIDFromContext(ctx context.Context) (string, bool) {
 		return "", false
 	}
 
-	// context から request_id を取り出すためにキーで検索する。
-	// - キーにはパッケージローカルな型 ctxKeyRequestID の空値を使う（型を分けることで他パッケージとの衝突を防ぐ）。
-	// - ctx.Value はキーが存在しなければ nil を返すので、下で型アサーションと空文字列チェックを行う。
 	v := ctx.Value(ctxKeyRequestID{})
 	s, ok := v.(string)
 	if !ok || s == "" {
@@ -53,29 +51,14 @@ func RequestIDFromContext(ctx context.Context) (string, bool) {
 	return s, true
 }
 
-// Init はアプリケーション名とデバッグモードを設定し、ロガーを初期化する。
-// 複数回呼ばれても初期化は1回だけ実行される（sync.Once）。
-// 初期化後は slog.SetDefault が呼ばれるため、パッケージレベルの
-// slog.Info/Error 等がこのロガーを使うようになる。
-//
 // 環境変数:
 //   - LOG_FORMAT: "text" (デフォルト) / "json"
 //   - LOG_LEVEL: "debug" / "info" (デフォルト) / "warn" / "error"
 //   - LOG_BUFFERED: "true" にすると 64KB バッファ付き出力を使う
 func Init(name string, debugFlag bool) {
-	mu.Lock()
-	appName = name
-	debug = debugFlag
-	mu.Unlock()
-
 	// sync.Once により初期化は1回のみ実行され、以降はリクエスト毎のロック不要
 	once.Do(func() {
-		mu.Lock()
-		n := appName
-		d := debug
-		mu.Unlock()
-
-		l := newSlogLoggerFromEnv(n, d)
+		l := newSlogLoggerFromEnv(name, debugFlag)
 		logger = l
 		// slog のパッケージレベルヘルパー (slog.Info 等) がこのロガーを使うように設定
 		slog.SetDefault(logger)
@@ -101,36 +84,58 @@ func Close() {
 	once = sync.Once{}
 	mu.Unlock()
 
-	// ロック外で flush を実行（ブロックを避けるため）
+	// アプリバッファがある場合はflushを呼ぶ
+	// flush()を呼ぶとアプリバッファを下流に落とす、ファイルが出力先だったらバッファの情報もろともディスクに書き出される
+	// ロック外で I/O 関連の終了処理を行う
+	// 処理順と理由:
+	// 1) logFlush (アプリ側の bufio.Flush 相当) を優先して呼ぶ
+	//    - bufio.Writer 等のアプリ内バッファに溜まったデータを下流の Writer
+	//      (例: os.Stdout や *os.File) に書き出す。
+	//    - まずアプリバッファを吐き出すことで、ログがメモリに残るのを防ぐ。
+	// 2) 下流が Sync() を実装している場合は Sync() を試す
+	//    - これは *os.File の Sync() のように、カーネルのキャッシュから
+	//      物理ディスクへ確実に書き込む（永続化）ための操作。重いので
+	//      シャットダウン時にのみ行うのが普通。
+	// 3) 次に汎用的な Flush() を試す（外部ライブラリ等の実装に対応）
+	// 4) 最後に Close() を試してリソースを解放する（ソケットやファイル）
+	//
+	// いずれの I/O もブロッキングする可能性があるため、上ではロックを
+	// 外してから実行している（ロック下では参照の取得と状態リセットのみ行う）。
+
+	// すべてのクリーンアップを順に試す（早期 return をしない）
+	// 1) アプリ側のバッファを落とす（logFlush）
 	if flush != nil {
 		if err := flush(); err != nil {
-			// logger はすでに nil なので stderr に直接出力
-			_, _ = fmt.Fprintf(os.Stderr, "logger.Close flush error: %v\n", err)
+			_, _ = fmt.Fprintf(os.Stderr, "logger.Close app flush error: %v\n", err)
 		}
+	}
+
+	if sink == nil {
 		return
 	}
 
-	// flush がない場合、sink が Sync/Flush/Close を実装していれば呼ぶ
-	type syncer interface{ Sync() error }
-	if s, ok := sink.(syncer); ok {
+	// 2) sink が Flush() error を持つ場合は呼ぶ
+	if f, ok := sink.(interface{ Flush() error }); ok {
+		if err := f.Flush(); err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "logger.Close sink flush error: %v\n", err)
+		}
+	} else if f2, ok := sink.(interface{ Flush() }); ok {
+		// Flush() を返さない型（例: 一部のストリーム）のためのフォールバック
+		f2.Flush()
+	}
+
+	// 3) sink が Sync() を持つなら永続化を試みる
+	if s, ok := sink.(interface{ Sync() error }); ok {
 		if err := s.Sync(); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "logger.Close sync error: %v\n", err)
 		}
-		return
 	}
-	type flusher interface{ Flush() error }
-	if f, ok := sink.(flusher); ok {
-		if err := f.Flush(); err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "logger.Close flush error: %v\n", err)
-		}
-		return
-	}
-	type closer interface{ Close() error }
-	if c, ok := sink.(closer); ok {
+
+	// 4) 最後に Close() を試してリソースを解放
+	if c, ok := sink.(interface{ Close() error }); ok {
 		if err := c.Close(); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "logger.Close close error: %v\n", err)
 		}
-		return
 	}
 }
 
@@ -138,10 +143,10 @@ func get() *slog.Logger {
 	// 初期化が完了していることを保証する。once.Do はメモリ同期も提供するため、
 	// 以降は logger の読み取りをロックなしで安全に行える。
 	once.Do(func() {
-		mu.Lock()
+		mu.RLock()
 		n := appName
 		d := debug
-		mu.Unlock()
+		mu.RUnlock()
 
 		l := newSlogLoggerFromEnv(n, d)
 		logger = l
