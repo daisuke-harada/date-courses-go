@@ -50,7 +50,7 @@ func Run(ctx context.Context) error {
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
 		gen.RegisterHandlers(e, handler)
 
-		addr := ":8080"
+		addr := ":7777"
 		srv := &http.Server{
 			Addr: addr,
 		}
