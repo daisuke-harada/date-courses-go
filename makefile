@@ -7,7 +7,8 @@ openapi-generate:
 	bash scripts/openapi-generator-cli.sh
 
 go-generate:
-	go generate ./internal/infrastructure/cmd/api/gen
+	# ensure modules are tidy before generating code
+	go mod tidy && go generate ./internal/infrastructure/cmd/api/gen
 
 run:
 	go run ./cmd/main.go

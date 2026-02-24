@@ -2,75 +2,54 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
-	"os"
-	"strconv"
 	"time"
+
+	"github.com/daisuke-harada/date-courses-go/internal/config"
+	pg "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-// Connect connects to Postgres using environment variables and returns *sql.DB.
-// Environment variables (with sensible defaults):
-//   - POSTGRES_HOST (default "localhost")
-//   - POSTGRES_PORT (default "5432")
-//   - POSTGRES_USER (default "postgres")
-//   - POSTGRES_PASSWORD (default "")
-//   - POSTGRES_DB (default "postgres")
-//   - POSTGRES_SSLMODE (default "disable")
-//   - DB_MAX_OPEN_CONNS, DB_MAX_IDLE_CONNS, DB_CONN_MAX_LIFETIME (optional)
-func Connect(ctx context.Context) (*sql.DB, error) {
-	host := getenv("POSTGRES_HOST", "localhost")
-	port := getenv("POSTGRES_PORT", "5432")
-	user := getenv("POSTGRES_USER", "postgres")
-	pass := getenv("POSTGRES_PASSWORD", "")
-	dbname := getenv("POSTGRES_DB", "postgres")
-	sslmode := getenv("POSTGRES_SSLMODE", "disable")
+type Connector interface {
+	Open(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error)
+}
 
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		host, port, user, pass, dbname, sslmode)
+type PostgresConnector struct{}
 
-	dbConn, err := sql.Open("postgres", dsn)
+func (PostgresConnector) Open(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name, cfg.SSLMode)
+
+	gdb, err := gorm.Open(pg.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 
-	// pool settings
-	if v := os.Getenv("DB_MAX_OPEN_CONNS"); v != "" {
-		if n, err := strconv.Atoi(v); err == nil {
-			dbConn.SetMaxOpenConns(n)
-		}
-	} else {
-		dbConn.SetMaxOpenConns(25)
-	}
-	if v := os.Getenv("DB_MAX_IDLE_CONNS"); v != "" {
-		if n, err := strconv.Atoi(v); err == nil {
-			dbConn.SetMaxIdleConns(n)
-		}
-	} else {
-		dbConn.SetMaxIdleConns(25)
-	}
-	if v := os.Getenv("DB_CONN_MAX_LIFETIME"); v != "" {
-		if d, err := time.ParseDuration(v); err == nil {
-			dbConn.SetConnMaxLifetime(d)
-		}
-	} else {
-		dbConn.SetConnMaxLifetime(5 * time.Minute)
-	}
-
-	// quick ping with timeout to verify connectivity
-	pingCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-	if err := dbConn.PingContext(pingCtx); err != nil {
-		dbConn.Close()
+	sqlDB, err := gdb.DB()
+	if err != nil {
 		return nil, err
 	}
 
-	return dbConn, nil
+	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
+	sqlDB.SetConnMaxLifetime(cfg.ConnMaxLifetime)
+
+	pingCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	if err := sqlDB.PingContext(pingCtx); err != nil {
+		_ = sqlDB.Close()
+		return nil, err
+	}
+
+	return gdb, nil
 }
 
-func getenv(key, def string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return def
+func NewConnector() Connector {
+	return PostgresConnector{}
+}
+
+// Connect uses a Connector to open a *gorm.DB. Currently delegates to PostgresConnector.
+func Connect(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error) {
+	connector := NewConnector()
+	return connector.Open(ctx, cfg)
 }

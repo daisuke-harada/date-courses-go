@@ -10,6 +10,8 @@ import (
 
 	"log/slog"
 
+	"github.com/daisuke-harada/date-courses-go/internal/config"
+	"github.com/daisuke-harada/date-courses-go/internal/di"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
 	apimw "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
@@ -23,8 +25,27 @@ func Run(ctx context.Context) error {
 	defer stop()
 
 	container := dig.New()
-	container.Provide(NewEcho)
-	container.Provide(handler.NewHandler)
+	if err := container.Provide(NewEcho); err != nil {
+		slog.Error("failed to provide NewEcho", "err", err)
+		return err
+	}
+
+	// provide config via constructor function
+	if err := container.Provide(config.Get); err != nil {
+		slog.Error("failed to provide config", "err", err)
+		return err
+	}
+
+	// provide DB constructed from config
+	if err := container.Provide(di.ProvideDB); err != nil {
+		slog.Error("failed to provide db", "err", err)
+		return err
+	}
+
+	if err := container.Provide(handler.NewHandler); err != nil {
+		slog.Error("failed to provide handler", "err", err)
+		return err
+	}
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
 		gen.RegisterHandlers(e, handler)
@@ -77,8 +98,6 @@ func NewEcho() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
-	// our middleware injects the request id into request.Context so that
-	// slog.InfoContext/etc can automatically include request_id
 	e.Use(apimw.RequestIDMiddleware)
 	e.Use(middleware.Logger())
 	return e
