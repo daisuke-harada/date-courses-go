@@ -1,7 +1,9 @@
 gen: openapi-generate go-generate apply-schema
 
 apply-schema:
-	psqldef -U ${POSTGRES_USER} --password ${POSTGRES_PASSWORD}  -h ${POSTGRES_HOST} -p ${POSTGRES_PORT} ${POSTGRES_DB} < ./internal/infrastructure/db/schema.sql
+	# use DB_* variables (kept in .envrc) and pass password via PGPASSWORD to avoid
+	# treating an empty -U value as the next flag. This also avoids interactive prompt.
+	PGPASSWORD="${DB_PASSWORD}" psqldef -U "${DB_USER}" -h "${DB_HOST}" -p "${DB_PORT}" "${DB_NAME}" < ./internal/infrastructure/db/schema.sql
 
 openapi-generate:
 	bash scripts/openapi-generator-cli.sh
