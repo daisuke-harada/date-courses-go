@@ -6,7 +6,6 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/oapi-codegen/runtime v1.1.1
-	github.com/samber/lo v1.52.0
 	go.uber.org/dig v1.18.1
 	gorm.io/driver/postgres v1.5.0
 	gorm.io/gorm v1.26.0

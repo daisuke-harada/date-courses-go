@@ -14,7 +14,6 @@ import (
 	"text/template"
 
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
-	"github.com/samber/lo"
 )
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
@@ -80,9 +79,10 @@ func fileNoExists(filePath string) bool {
 }
 
 func createHandlerConstractor(methods []reflect.Method) {
-	handlerNames := lo.Map(methods, func(method reflect.Method, _ int) string {
-		return method.Name
-	})
+	handlerNames := make([]string, 0, len(methods))
+	for _, method := range methods {
+		handlerNames = append(handlerNames, method.Name)
+	}
 
 	constractorTmpl, err := template.ParseFiles(constructorTemplatePath)
 	if err != nil {
