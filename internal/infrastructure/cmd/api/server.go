@@ -99,6 +99,6 @@ func NewEcho() *echo.Echo {
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 	e.Use(apimw.RequestIDMiddleware)
-	e.Use(middleware.Logger())
+	e.Use(apimw.AccessLogMiddleware) // slog ベースのアクセスログ (request_id 付き)
 	return e
 }
