@@ -5,7 +5,7 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
-	"github.com/daisuke-harada/date-courses-go/internal/repository"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
 	"gorm.io/gorm"
 )
 
@@ -17,11 +17,11 @@ func ProvideDB(cfg *config.Config) (*gorm.DB, error) {
 // ProvideRepositories は全リポジトリのコンストラクタを Container に登録します。
 // dig が *gorm.DB を解決して各リポジトリに注入します。
 func ProvideRepositories(ct *Container) {
-	ct.MustProvide(repository.NewUserRepository)
-	ct.MustProvide(repository.NewDateSpotRepository)
-	ct.MustProvide(repository.NewAddressRepository)
-	ct.MustProvide(repository.NewCourseRepository)
-	ct.MustProvide(repository.NewDateSpotReviewRepository)
-	ct.MustProvide(repository.NewDuringSpotRepository)
-	ct.MustProvide(repository.NewRelationshipRepository)
+	ct.MustProvide(persistence.NewUserRepository)
+	ct.MustProvide(persistence.NewDateSpotRepository)
+	ct.MustProvide(persistence.NewAddressRepository)
+	ct.MustProvide(persistence.NewCourseRepository)
+	ct.MustProvide(persistence.NewDateSpotReviewRepository)
+	ct.MustProvide(persistence.NewDuringSpotRepository)
+	ct.MustProvide(persistence.NewRelationshipRepository)
 }
