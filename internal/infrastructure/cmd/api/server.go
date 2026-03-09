@@ -28,6 +28,7 @@ func Run(ctx context.Context) error {
 	container.MustProvide(config.Get)
 	container.MustProvide(di.ProvideDB)
 	container.MustProvide(handler.NewHandler)
+	di.ProvideRepositories(container)
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
 		gen.RegisterHandlers(e, handler)
