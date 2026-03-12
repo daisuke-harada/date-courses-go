@@ -17,35 +17,18 @@ import (
 	apimw "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"go.uber.org/dig"
 )
 
 func Run(ctx context.Context) error {
 	notifyCtx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	container := dig.New()
-	if err := container.Provide(NewEcho); err != nil {
-		slog.Error("failed to provide NewEcho", "err", err)
-		return err
-	}
-
-	// provide config via constructor function
-	if err := container.Provide(config.Get); err != nil {
-		slog.Error("failed to provide config", "err", err)
-		return err
-	}
-
-	// provide DB constructed from config
-	if err := container.Provide(di.ProvideDB); err != nil {
-		slog.Error("failed to provide db", "err", err)
-		return err
-	}
-
-	if err := container.Provide(handler.NewHandler); err != nil {
-		slog.Error("failed to provide handler", "err", err)
-		return err
-	}
+	container := di.NewContainer()
+	container.MustProvide(NewEcho)
+	container.MustProvide(config.Get)
+	container.MustProvide(di.ProvideDB)
+	container.MustProvide(handler.NewHandler)
+	di.ProvideRepositories(container)
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
 		gen.RegisterHandlers(e, handler)
@@ -99,6 +82,6 @@ func NewEcho() *echo.Echo {
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 	e.Use(apimw.RequestIDMiddleware)
-	e.Use(apimw.AccessLogMiddleware) // slog ベースのアクセスログ (request_id 付き)
+	e.Use(apimw.AccessLogMiddleware)
 	return e
 }
