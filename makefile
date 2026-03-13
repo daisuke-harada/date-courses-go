@@ -14,3 +14,6 @@ go-generate:
 
 run:
 	go run ./cmd/main.go
+
+db-seed:
+	go run ./tools/seed/main.go
