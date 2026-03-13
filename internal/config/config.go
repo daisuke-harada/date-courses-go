@@ -14,7 +14,12 @@ var (
 )
 
 type Config struct {
-	DB DBConfig
+	DB         DBConfig
+	GoogleMaps GoogleMapsConfig
+}
+
+type GoogleMapsConfig struct {
+	APIKey string `envconfig:"GOOGLE_MAPS_API_KEY" required:"true"`
 }
 
 type DBConfig struct {
@@ -37,6 +42,9 @@ func Get() *Config {
 		if e := envconfig.Process("", &cfg.DB); e != nil {
 			// use conventional key name "err"
 			slog.Error("failed to process environment db", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.GoogleMaps); e != nil {
+			slog.Error("failed to process environment google maps", "err", e)
 		}
 	})
 
