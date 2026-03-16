@@ -1,4 +1,14 @@
-gen: openapi-generate go-generate apply-schema
+setup: deps gen docker-up apply-schema db-seed
+
+deps:
+	go mod download
+
+docker-up:
+	docker compose up -d
+	# wait for PostgreSQL to be ready before proceeding
+	docker compose exec db sh -c 'until pg_isready -U "$$POSTGRES_USER"; do sleep 1; done'
+
+gen: openapi-generate go-generate
 
 apply-schema:
 	# use DB_* variables (kept in .envrc) and pass password via PGPASSWORD to avoid
