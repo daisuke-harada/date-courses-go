@@ -11,4 +11,5 @@ type AddressRepository interface {
 	GetByID(ctx context.Context, id uint) (*model.Address, error)
 	Update(ctx context.Context, address *model.Address) error
 	Delete(ctx context.Context, id uint) error
+	FindByDateSpotID(ctx context.Context, dateSpotID uint) (*model.Address, error)
 }

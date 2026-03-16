@@ -52,3 +52,12 @@ func (r *addressRepository) Delete(ctx context.Context, id uint) error {
 	slog.InfoContext(ctx, "addressRepository.Delete succeeded", "address_id", id)
 	return nil
 }
+
+func (r *addressRepository) FindByDateSpotID(ctx context.Context, dateSpotID uint) (*model.Address, error) {
+	var address model.Address
+	if err := r.db.WithContext(ctx).Where("date_spot_id = ?", dateSpotID).First(&address).Error; err != nil {
+		slog.ErrorContext(ctx, "addressRepository.FindByDateSpotID failed", "date_spot_id", dateSpotID, "err", err)
+		return nil, err
+	}
+	return &address, nil
+}

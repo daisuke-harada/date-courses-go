@@ -27,8 +27,9 @@ func Run(ctx context.Context) error {
 	container.MustProvide(NewEcho)
 	container.MustProvide(config.Get)
 	container.MustProvide(di.ProvideDB)
-	container.MustProvide(handler.NewHandler)
 	di.ProvideRepositories(container)
+	di.ProvideUsecases(container)
+	container.MustProvide(handler.NewHandler)
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
 		gen.RegisterHandlers(e, handler)
@@ -81,6 +82,11 @@ func NewEcho() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:8080"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"Accept", "Content-Type", "Authorization"},
+	}))
 	e.Use(apimw.RequestIDMiddleware)
 	e.Use(apimw.AccessLogMiddleware)
 	return e
