@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/daisuke-harada/date-courses-go/internal/domain"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/repository"
 	"gorm.io/gorm"
 )
@@ -17,7 +17,7 @@ func NewAddressRepository(db *gorm.DB) repository.AddressRepository {
 	return &addressRepository{db: db}
 }
 
-func (r *addressRepository) Create(ctx context.Context, address *domain.Address) error {
+func (r *addressRepository) Create(ctx context.Context, address *model.Address) error {
 	if err := r.db.WithContext(ctx).Create(address).Error; err != nil {
 		slog.ErrorContext(ctx, "addressRepository.Create failed", "err", err)
 		return err
@@ -26,8 +26,8 @@ func (r *addressRepository) Create(ctx context.Context, address *domain.Address)
 	return nil
 }
 
-func (r *addressRepository) GetByID(ctx context.Context, id uint) (*domain.Address, error) {
-	var address domain.Address
+func (r *addressRepository) GetByID(ctx context.Context, id uint) (*model.Address, error) {
+	var address model.Address
 	if err := r.db.WithContext(ctx).First(&address, id).Error; err != nil {
 		slog.ErrorContext(ctx, "addressRepository.GetByID failed", "address_id", id, "err", err)
 		return nil, err
@@ -35,7 +35,7 @@ func (r *addressRepository) GetByID(ctx context.Context, id uint) (*domain.Addre
 	return &address, nil
 }
 
-func (r *addressRepository) Update(ctx context.Context, address *domain.Address) error {
+func (r *addressRepository) Update(ctx context.Context, address *model.Address) error {
 	if err := r.db.WithContext(ctx).Save(address).Error; err != nil {
 		slog.ErrorContext(ctx, "addressRepository.Update failed", "address_id", address.ID, "err", err)
 		return err
@@ -45,7 +45,7 @@ func (r *addressRepository) Update(ctx context.Context, address *domain.Address)
 }
 
 func (r *addressRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&domain.Address{}, id).Error; err != nil {
+	if err := r.db.WithContext(ctx).Delete(&model.Address{}, id).Error; err != nil {
 		slog.ErrorContext(ctx, "addressRepository.Delete failed", "address_id", id, "err", err)
 		return err
 	}

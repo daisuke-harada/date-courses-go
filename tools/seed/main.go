@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
-	"github.com/daisuke-harada/date-courses-go/internal/domain"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
@@ -141,12 +141,12 @@ func spotAndAddressCreate(
 	apiKey string,
 ) {
 	// DateSpot を重複チェックしながら登録 (find_or_create_by 相当)
-	var dateSpot domain.DateSpot
+	var dateSpot model.DateSpot
 	if err := gdb.WithContext(ctx).Where("name = ?", name).First(&dateSpot).Error; err != nil {
 		// 画像はジャンル名.jpg (ActiveStorage の代替として文字列パスを保存)
 		imagePath := fmt.Sprintf("public/images/date_spot_images/%s.jpg", genreNames[genreID])
 		gid := genreID
-		dateSpot = domain.DateSpot{
+		dateSpot = model.DateSpot{
 			GenreID:     &gid,
 			Name:        name,
 			Image:       &imagePath,
@@ -165,12 +165,12 @@ func spotAndAddressCreate(
 
 	// Address を重複チェックしながら登録
 	dsID := int(dateSpot.ID)
-	var address domain.Address
+	var address model.Address
 	if err := gdb.WithContext(ctx).Where("date_spot_id = ?", dsID).First(&address).Error; err != nil {
 		fullCityName := prefectureNames[prefectureID] + cityName
 		lat, lng := geocode(apiKey, fullCityName)
 		pid := prefectureID
-		address = domain.Address{
+		address = model.Address{
 			PrefectureID: &pid,
 			DateSpotID:   &dsID,
 			CityName:     fullCityName,
@@ -230,12 +230,12 @@ func seedUsers(ctx context.Context, gdb *gorm.DB) {
 	}
 
 	for _, u := range users {
-		var existing domain.User
+		var existing model.User
 		if err := gdb.WithContext(ctx).Where("email = ?", u.Email).First(&existing).Error; err == nil {
 			slog.InfoContext(ctx, "User already exists, skip", "email", u.Email)
 			continue
 		}
-		user := domain.User{
+		user := model.User{
 			Name:  u.Name,
 			Email: u.Email,
 		}
@@ -264,14 +264,14 @@ func seedRelationships(ctx context.Context, gdb *gorm.DB) {
 		}
 
 		for _, followID := range followIDs {
-			var existing domain.Relationship
+			var existing model.Relationship
 			if err := gdb.WithContext(ctx).
 				Where("user_id = ? AND follow_id = ?", userID, followID).
 				First(&existing).Error; err == nil {
 				slog.InfoContext(ctx, "Relationship already exists, skip", "user_id", userID, "follow_id", followID)
 				continue
 			}
-			rel := domain.Relationship{
+			rel := model.Relationship{
 				UserID:   uint(userID),
 				FollowID: followID,
 			}
@@ -295,7 +295,7 @@ func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
 	repo := persistence.NewDateSpotReviewRepository(gdb)
 
 	// 非管理者ユーザー (adminstrator@gmail.com 以外) を取得
-	var users []domain.User
+	var users []model.User
 	if err := gdb.WithContext(ctx).
 		Where("email != ?", "adminstrator@gmail.com").
 		Find(&users).Error; err != nil {
@@ -305,7 +305,7 @@ func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
 
 	// Address の件数を取得
 	var addressCount int64
-	gdb.WithContext(ctx).Model(&domain.Address{}).Count(&addressCount)
+	gdb.WithContext(ctx).Model(&model.Address{}).Count(&addressCount)
 	if addressCount == 0 {
 		slog.Warn("seedDateSpotReviews: no addresses found, skip")
 		return
@@ -315,7 +315,7 @@ func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
 	for _, user := range users {
 		for i := 0; i < 5; i++ {
 			// ランダムな Address を取得
-			var addr domain.Address
+			var addr model.Address
 			offset := rand.Int63n(addressCount)
 			if err := gdb.WithContext(ctx).Offset(int(offset)).First(&addr).Error; err != nil {
 				continue
@@ -326,7 +326,7 @@ func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
 			dateSpotID := uint(*addr.DateSpotID)
 
 			// 同ユーザー × 同スポットの重複チェック
-			var existing domain.DateSpotReview
+			var existing model.DateSpotReview
 			if err := gdb.WithContext(ctx).
 				Where("user_id = ? AND date_spot_id = ?", user.ID, dateSpotID).
 				First(&existing).Error; err == nil {
@@ -334,7 +334,7 @@ func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
 			}
 
 			rate := rates[rand.Intn(len(rates))]
-			review := domain.DateSpotReview{
+			review := model.DateSpotReview{
 				Rate:       &rate,
 				Content:    &content,
 				UserID:     user.ID,
@@ -362,7 +362,7 @@ func courseCreate(
 	courseRepo := persistence.NewCourseRepository(gdb)
 	duringSpotRepo := persistence.NewDuringSpotRepository(gdb)
 
-	var users []domain.User
+	var users []model.User
 	if err := gdb.WithContext(ctx).
 		Where("id BETWEEN ? AND ?", userIDStart, userIDEnd).
 		Find(&users).Error; err != nil {
@@ -372,7 +372,7 @@ func courseCreate(
 
 	for _, user := range users {
 		// 既にコースを持つユーザーはスキップ
-		var existingCourse domain.Course
+		var existingCourse model.Course
 		if err := gdb.WithContext(ctx).
 			Where("user_id = ?", user.ID).
 			First(&existingCourse).Error; err == nil {
@@ -385,7 +385,7 @@ func courseCreate(
 		copy(shuffled, dateSpotIDs)
 		rand.Shuffle(len(shuffled), func(i, j int) { shuffled[i], shuffled[j] = shuffled[j], shuffled[i] })
 
-		course := domain.Course{
+		course := model.Course{
 			UserID:     user.ID,
 			TravelMode: travelMode,
 			Authority:  "公開",
@@ -401,7 +401,7 @@ func courseCreate(
 			if idx >= len(shuffled) {
 				continue
 			}
-			ds := domain.DuringSpot{
+			ds := model.DuringSpot{
 				CourseID:   course.ID,
 				DateSpotID: shuffled[idx],
 			}

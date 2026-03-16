@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/daisuke-harada/date-courses-go/internal/domain"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/repository"
 	"gorm.io/gorm"
 )
@@ -17,7 +17,7 @@ func NewRelationshipRepository(db *gorm.DB) repository.RelationshipRepository {
 	return &relationshipRepository{db: db}
 }
 
-func (r *relationshipRepository) Create(ctx context.Context, relationship *domain.Relationship) error {
+func (r *relationshipRepository) Create(ctx context.Context, relationship *model.Relationship) error {
 	if err := r.db.WithContext(ctx).Create(relationship).Error; err != nil {
 		slog.ErrorContext(ctx, "relationshipRepository.Create failed", "err", err)
 		return err
@@ -26,8 +26,8 @@ func (r *relationshipRepository) Create(ctx context.Context, relationship *domai
 	return nil
 }
 
-func (r *relationshipRepository) GetByID(ctx context.Context, id uint) (*domain.Relationship, error) {
-	var relationship domain.Relationship
+func (r *relationshipRepository) GetByID(ctx context.Context, id uint) (*model.Relationship, error) {
+	var relationship model.Relationship
 	if err := r.db.WithContext(ctx).First(&relationship, id).Error; err != nil {
 		slog.ErrorContext(ctx, "relationshipRepository.GetByID failed", "relationship_id", id, "err", err)
 		return nil, err
@@ -35,7 +35,7 @@ func (r *relationshipRepository) GetByID(ctx context.Context, id uint) (*domain.
 	return &relationship, nil
 }
 
-func (r *relationshipRepository) Update(ctx context.Context, relationship *domain.Relationship) error {
+func (r *relationshipRepository) Update(ctx context.Context, relationship *model.Relationship) error {
 	if err := r.db.WithContext(ctx).Save(relationship).Error; err != nil {
 		slog.ErrorContext(ctx, "relationshipRepository.Update failed", "relationship_id", relationship.ID, "err", err)
 		return err
@@ -45,7 +45,7 @@ func (r *relationshipRepository) Update(ctx context.Context, relationship *domai
 }
 
 func (r *relationshipRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&domain.Relationship{}, id).Error; err != nil {
+	if err := r.db.WithContext(ctx).Delete(&model.Relationship{}, id).Error; err != nil {
 		slog.ErrorContext(ctx, "relationshipRepository.Delete failed", "relationship_id", id, "err", err)
 		return err
 	}
