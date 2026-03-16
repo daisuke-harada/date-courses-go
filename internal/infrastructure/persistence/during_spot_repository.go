@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/daisuke-harada/date-courses-go/internal/domain"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/repository"
 	"gorm.io/gorm"
 )
@@ -17,7 +17,7 @@ func NewDuringSpotRepository(db *gorm.DB) repository.DuringSpotRepository {
 	return &duringSpotRepository{db: db}
 }
 
-func (r *duringSpotRepository) Create(ctx context.Context, duringSpot *domain.DuringSpot) error {
+func (r *duringSpotRepository) Create(ctx context.Context, duringSpot *model.DuringSpot) error {
 	if err := r.db.WithContext(ctx).Create(duringSpot).Error; err != nil {
 		slog.ErrorContext(ctx, "duringSpotRepository.Create failed", "err", err)
 		return err
@@ -26,8 +26,8 @@ func (r *duringSpotRepository) Create(ctx context.Context, duringSpot *domain.Du
 	return nil
 }
 
-func (r *duringSpotRepository) GetByID(ctx context.Context, id uint) (*domain.DuringSpot, error) {
-	var duringSpot domain.DuringSpot
+func (r *duringSpotRepository) GetByID(ctx context.Context, id uint) (*model.DuringSpot, error) {
+	var duringSpot model.DuringSpot
 	if err := r.db.WithContext(ctx).First(&duringSpot, id).Error; err != nil {
 		slog.ErrorContext(ctx, "duringSpotRepository.GetByID failed", "during_spot_id", id, "err", err)
 		return nil, err
@@ -35,7 +35,7 @@ func (r *duringSpotRepository) GetByID(ctx context.Context, id uint) (*domain.Du
 	return &duringSpot, nil
 }
 
-func (r *duringSpotRepository) Update(ctx context.Context, duringSpot *domain.DuringSpot) error {
+func (r *duringSpotRepository) Update(ctx context.Context, duringSpot *model.DuringSpot) error {
 	if err := r.db.WithContext(ctx).Save(duringSpot).Error; err != nil {
 		slog.ErrorContext(ctx, "duringSpotRepository.Update failed", "during_spot_id", duringSpot.ID, "err", err)
 		return err
@@ -45,7 +45,7 @@ func (r *duringSpotRepository) Update(ctx context.Context, duringSpot *domain.Du
 }
 
 func (r *duringSpotRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&domain.DuringSpot{}, id).Error; err != nil {
+	if err := r.db.WithContext(ctx).Delete(&model.DuringSpot{}, id).Error; err != nil {
 		slog.ErrorContext(ctx, "duringSpotRepository.Delete failed", "during_spot_id", id, "err", err)
 		return err
 	}
