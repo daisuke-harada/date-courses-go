@@ -23,3 +23,16 @@ func (ct *Container) MustProvide(constructor any, opts ...dig.ProvideOption) {
 		panic(err)
 	}
 }
+
+func (ct *Container) MustInvoke(function any, opts ...dig.InvokeOption) {
+	if err := ct.Invoke(function, opts...); err != nil {
+		slog.Error("di.MustInvoke failed", "err", err)
+		panic(err)
+	}
+}
+
+func MustInvoke[T any](ct *Container) T {
+	var result T
+	ct.MustInvoke(func(res T) { result = res })
+	return result
+}

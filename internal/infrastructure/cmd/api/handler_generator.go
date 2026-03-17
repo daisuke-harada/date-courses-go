@@ -89,8 +89,8 @@ func createHandlerConstractor(methods []reflect.Method) {
 		log.Fatalf("Failed to parse template: %s", err)
 	}
 
-	// handlerのconstractorを作成
-	constractorFile, err := os.Create(filepath.Join(handlerRootPath, "handler.go"))
+	// Handler 構造体定義を handler_gen.go に生成する（NewHandler は手書きの handler.go に残す）
+	constractorFile, err := os.Create(filepath.Join(handlerRootPath, "handler_gen.go"))
 	if err != nil {
 		log.Fatalf("Failed to create file: %s", err)
 	}

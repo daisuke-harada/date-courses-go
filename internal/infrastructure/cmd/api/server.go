@@ -27,20 +27,18 @@ func Run(ctx context.Context) error {
 	container.MustProvide(NewEcho)
 	container.MustProvide(config.Get)
 	container.MustProvide(di.ProvideDB)
-	di.ProvideRepositories(container)
-	di.ProvideUsecases(container)
-	container.MustProvide(handler.NewHandler)
+	di.BuildContainer(container)
 
-	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
-		openapi.RegisterHandlers(e, handler)
+	return container.Invoke(func(e *echo.Echo) error {
+		openapi.RegisterHandlers(e, handler.NewHandler(container))
 
 		addr := ":7777"
 		srv := &http.Server{
 			Addr: addr,
 		}
 
-		// errCh をバッファ1にしているのは、select が ctx.Done() 側を先に選ぶ可能性があるためです。
-		// もし errCh がバッファ0だと、select が ctx.Done() を選んで先に進んだ後は errCh を受信する箇所が無くなるので、
+		// errCh をバッファ1にしているのは、select が notifyCtx.Done() 側を先に選ぶ可能性があるためです。
+		// もし errCh がバッファ0だと、select が notifyCtx.Done() を選んで先に進んだ後は errCh を受信する箇所が無くなるので、
 		// StartServer が shutdown の結果として戻ってきたタイミングで errCh <- nil/err がブロックし、
 		// 起動goroutineが終了できずに残り続ける(= goroutine leak っぽい状態)可能性があります。
 		errCh := make(chan error, 1)
