@@ -20,7 +20,7 @@ openapi-generate:
 
 go-generate:
 	# ensure modules are tidy before generating code
-	go generate ./internal/infrastructure/cmd/api/gen
+	go generate ./internal/infrastructure/cmd/api/openapi
 
 run:
 	go run ./cmd/main.go

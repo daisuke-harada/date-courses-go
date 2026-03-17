@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -18,7 +18,7 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "error"})
 	}
 
-	response := make([]gen.AddressAndDateSpotsData, 0, len(output.DateSpots))
+	response := make([]openapi.AddressAndDateSpotsData, 0, len(output.DateSpots))
 	for i, ds := range output.DateSpots {
 		addr := output.Addresses[i]
 
@@ -37,7 +37,7 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context) error {
 			}
 		}
 
-		dateSpotData := gen.DateSpotData{
+		dateSpotData := openapi.DateSpotData{
 			Id:        int(ds.ID),
 			Name:      ds.Name,
 			CreatedAt: ds.CreatedAt,
@@ -53,7 +53,7 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context) error {
 			dateSpotData.ClosingTime = *ds.ClosingTime
 		}
 
-		response = append(response, gen.AddressAndDateSpotsData{
+		response = append(response, openapi.AddressAndDateSpotsData{
 			Id: func() int {
 				if addr != nil {
 					return int(addr.ID)

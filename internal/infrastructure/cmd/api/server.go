@@ -12,9 +12,9 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/di"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
 	apimw "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -32,7 +32,7 @@ func Run(ctx context.Context) error {
 	container.MustProvide(handler.NewHandler)
 
 	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
-		gen.RegisterHandlers(e, handler)
+		openapi.RegisterHandlers(e, handler)
 
 		addr := ":7777"
 		srv := &http.Server{
