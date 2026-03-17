@@ -13,10 +13,10 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/di"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
-	apimw "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 func Run(ctx context.Context) error {
@@ -78,14 +78,10 @@ func Run(ctx context.Context) error {
 
 func NewEcho() *echo.Echo {
 	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.RequestID())
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:8080"},
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders: []string{"Accept", "Content-Type", "Authorization"},
-	}))
-	e.Use(apimw.RequestIDMiddleware)
-	e.Use(apimw.AccessLogMiddleware)
+	e.Use(echoMiddleware.Recover())
+	e.Use(echoMiddleware.RequestID())
+	e.Use(middleware.CORSMiddleware())
+	e.Use(middleware.RequestIDMiddleware)
+	e.Use(middleware.AccessLogMiddleware)
 	return e
 }
