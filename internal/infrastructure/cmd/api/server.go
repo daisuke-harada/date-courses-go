@@ -12,11 +12,11 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/di"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/gen"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
-	apimw "github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 func Run(ctx context.Context) error {
@@ -27,19 +27,18 @@ func Run(ctx context.Context) error {
 	container.MustProvide(NewEcho)
 	container.MustProvide(config.Get)
 	container.MustProvide(di.ProvideDB)
-	container.MustProvide(handler.NewHandler)
-	di.ProvideRepositories(container)
+	di.BuildContainer(container)
 
-	return container.Invoke(func(e *echo.Echo, handler *handler.Handler) error {
-		gen.RegisterHandlers(e, handler)
+	return container.Invoke(func(e *echo.Echo) error {
+		openapi.RegisterHandlers(e, handler.NewHandler(container))
 
 		addr := ":7777"
 		srv := &http.Server{
 			Addr: addr,
 		}
 
-		// errCh をバッファ1にしているのは、select が ctx.Done() 側を先に選ぶ可能性があるためです。
-		// もし errCh がバッファ0だと、select が ctx.Done() を選んで先に進んだ後は errCh を受信する箇所が無くなるので、
+		// errCh をバッファ1にしているのは、select が notifyCtx.Done() 側を先に選ぶ可能性があるためです。
+		// もし errCh がバッファ0だと、select が notifyCtx.Done() を選んで先に進んだ後は errCh を受信する箇所が無くなるので、
 		// StartServer が shutdown の結果として戻ってきたタイミングで errCh <- nil/err がブロックし、
 		// 起動goroutineが終了できずに残り続ける(= goroutine leak っぽい状態)可能性があります。
 		errCh := make(chan error, 1)
@@ -79,9 +78,10 @@ func Run(ctx context.Context) error {
 
 func NewEcho() *echo.Echo {
 	e := echo.New()
-	e.Use(middleware.Recover())
-	e.Use(middleware.RequestID())
-	e.Use(apimw.RequestIDMiddleware)
-	e.Use(apimw.AccessLogMiddleware)
+	e.Use(echoMiddleware.Recover())
+	e.Use(echoMiddleware.RequestID())
+	e.Use(middleware.CORSMiddleware())
+	e.Use(middleware.RequestIDMiddleware)
+	e.Use(middleware.AccessLogMiddleware)
 	return e
 }

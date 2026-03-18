@@ -6,6 +6,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
+	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"gorm.io/gorm"
 )
 
@@ -24,4 +25,9 @@ func ProvideRepositories(ct *Container) {
 	ct.MustProvide(persistence.NewDateSpotReviewRepository)
 	ct.MustProvide(persistence.NewDuringSpotRepository)
 	ct.MustProvide(persistence.NewRelationshipRepository)
+}
+
+// ProvideUsecases は全ユースケースのコンストラクタを Container に登録します。
+func ProvideUsecases(ct *Container) {
+	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 }
