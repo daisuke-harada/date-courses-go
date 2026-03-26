@@ -1,5 +1,11 @@
 get:
   tags: ["course"]
+  parameters:
+    - name: prefecture_id
+      in: query
+      required: false
+      schema:
+        type: integer
   responses:
     "200":
       description: "Successful response"

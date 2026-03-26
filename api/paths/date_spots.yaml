@@ -1,5 +1,26 @@
 get:
   tags: ["date_spot"]
+  parameters:
+    - name: date_spot_name
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: prefecture_id
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: genre_id
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: come_time
+      in: query
+      required: false
+      schema:
+        type: string
   responses:
     "200":
       description: "Successful response"
