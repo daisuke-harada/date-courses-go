@@ -78,6 +78,7 @@ func Run(ctx context.Context) error {
 
 func NewEcho() *echo.Echo {
 	e := echo.New()
+	e.HTTPErrorHandler = middleware.CustomHTTPErrorHandler
 	e.Use(echoMiddleware.Recover())
 	e.Use(echoMiddleware.RequestID())
 	e.Use(middleware.CORSMiddleware())
