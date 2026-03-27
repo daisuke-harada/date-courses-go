@@ -1,0 +1,15 @@
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - errorMessages
+      properties:
+        errorMessages:
+          type: array
+          items:
+            type: string
+          description: "エラーメッセージの配列"
+          example:
+            - "invalid parameter: id"
+            - "not found"

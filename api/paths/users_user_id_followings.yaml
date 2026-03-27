@@ -9,3 +9,9 @@ get:
         application/json:
           schema:
             $ref: "../components/schemas/response/relationship.yaml#/components/schemas/RelationShipResponsData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"

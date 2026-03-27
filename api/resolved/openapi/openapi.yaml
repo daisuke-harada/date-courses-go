@@ -34,6 +34,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/WelcomeResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
   /api/v1/top:
     get:
       responses:
@@ -43,6 +49,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/TopResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - top
   /api/v1/signup:
@@ -60,6 +72,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/SignUpResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - session
   /api/v1/login:
@@ -77,6 +95,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - session
   /api/v1/users:
@@ -96,6 +120,12 @@ paths:
                   $ref: "#/components/schemas/UserResponseData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/users/{id}:
@@ -109,6 +139,12 @@ paths:
       responses:
         "204":
           description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
     get:
@@ -125,6 +161,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
     put:
@@ -147,6 +189,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/users/{user_id}/followings:
@@ -164,6 +212,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/RelationShipResponsData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/users/{user_id}/followers:
@@ -181,6 +235,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/RelationShipResponsData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/relationships:
@@ -198,6 +258,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/FollowResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/relationships/{current_user_id}/{other_user_id}:
@@ -220,6 +286,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/FollowResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/date_spots:
@@ -254,6 +326,12 @@ paths:
                   $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
     post:
@@ -270,6 +348,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotFormResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
   /api/v1/date_spots/{id}:
@@ -283,6 +367,12 @@ paths:
       responses:
         "204":
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
     get:
@@ -299,6 +389,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AddressAndDateSpotsData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
     put:
@@ -321,6 +417,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotFormResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
   /api/v1/date_spot_reviews:
@@ -338,6 +440,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot_review
   /api/v1/date_spot_reviews/{id}:
@@ -377,6 +485,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot_review
   /api/v1/prefectures/{id}:
@@ -396,6 +510,12 @@ paths:
                   $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - prefecture
   /api/v1/genres/{id}:
@@ -409,6 +529,12 @@ paths:
       responses:
         "200":
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - genre
   /api/v1/courses:
@@ -426,6 +552,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/CourseResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - course
     post:
@@ -473,6 +605,12 @@ paths:
                   $ref: "#/components/schemas/CourseResponseData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - course
 components:
@@ -511,6 +649,23 @@ components:
           type: string
       required:
       - message
+      type: object
+    ErrorResponse:
+      example:
+        errorMessages:
+        - "invalid parameter: id"
+        - not found
+      properties:
+        errorMessages:
+          description: エラーメッセージの配列
+          example:
+          - "invalid parameter: id"
+          - not found
+          items:
+            type: string
+          type: array
+      required:
+      - errorMessages
       type: object
     TopResponseData:
       example:

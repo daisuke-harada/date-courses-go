@@ -9,6 +9,12 @@ get:
         application/json:
           schema:
             $ref: "../components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 put:
   tags: ["date_spot"]
   parameters:
@@ -26,6 +32,12 @@ put:
         application/json:
           schema:
             $ref: "../components/schemas/response/date_spots.yaml#/components/schemas/DateSpotFormResponseData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 delete:
   tags: ["date_spot"]
   parameters:
@@ -33,3 +45,9 @@ delete:
   responses:
     "204":
       description: "Successful response"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"

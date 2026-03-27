@@ -126,6 +126,12 @@ type DateSpotReviewResponseDataDateSpotReviewsInner struct {
 	UserName   string    `json:"user_name"`
 }
 
+// ErrorResponse defines model for ErrorResponse.
+type ErrorResponse struct {
+	// ErrorMessages エラーメッセージの配列
+	ErrorMessages []string `json:"errorMessages"`
+}
+
 // FollowReauestData defines model for FollowReauestData.
 type FollowReauestData struct {
 	CurrentUserId  int `json:"current_user_id"`

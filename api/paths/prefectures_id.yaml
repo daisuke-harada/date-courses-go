@@ -11,3 +11,9 @@ get:
             type: array
             items:
               $ref: "../components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
