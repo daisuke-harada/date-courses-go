@@ -20,15 +20,11 @@ type Handler struct {
 	GetApiV1UsersUserIdFollowersHandler
 	GetApiV1UsersUserIdFollowingsHandler
 	PostApiV1CoursesHandler
-	PostApiV1CoursesSortHandler
-	PostApiV1DateSpotNameSearchHandler
 	PostApiV1DateSpotReviewsHandler
 	PostApiV1DateSpotsHandler
-	PostApiV1DateSpotsSortHandler
 	PostApiV1LoginHandler
 	PostApiV1RelationshipsHandler
 	PostApiV1SignupHandler
-	PostApiV1UserNameSearchHandler
 	PutApiV1DateSpotReviewsIdHandler
 	PutApiV1DateSpotsIdHandler
 	PutApiV1UsersIdHandler

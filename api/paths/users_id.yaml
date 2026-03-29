@@ -9,6 +9,12 @@ get:
         application/json:
           schema:
             $ref: "../components/schemas/response/user.yaml#/components/schemas/UserResponseData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 put:
   tags: ["user"]
   parameters:
@@ -26,6 +32,12 @@ put:
         application/json:
           schema:
             $ref: "../components/schemas/response/user.yaml#/components/schemas/UserResponseData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 delete:
   tags: ["user"]
   parameters:
@@ -33,3 +45,9 @@ delete:
   responses:
     "204":
       description: "No Content"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"

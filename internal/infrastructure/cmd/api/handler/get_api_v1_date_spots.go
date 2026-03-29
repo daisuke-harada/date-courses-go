@@ -12,7 +12,8 @@ type GetApiV1DateSpotsHandler struct {
 	InputPort usecase.GetDateSpotsInputPort
 }
 
-func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context) error {
+// TODO: 検索ロジックの作成が必要
+func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context, params openapi.GetApiV1DateSpotsParams) error {
 	output, err := h.InputPort.Execute(ctx.Request().Context())
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "error"})

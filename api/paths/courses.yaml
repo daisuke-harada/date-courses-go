@@ -13,6 +13,12 @@ get:
         application/json:
           schema:
             $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
+    default:
+      description: "Error response"
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 post:
   tags: ["course"]
   requestBody:

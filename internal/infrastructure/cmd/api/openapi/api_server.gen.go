@@ -18,22 +18,16 @@ type ServerInterface interface {
 	Get(ctx echo.Context) error
 
 	// (GET /api/v1/courses)
-	GetApiV1Courses(ctx echo.Context) error
+	GetApiV1Courses(ctx echo.Context, params GetApiV1CoursesParams) error
 
 	// (POST /api/v1/courses)
 	PostApiV1Courses(ctx echo.Context) error
-
-	// (POST /api/v1/courses/sort)
-	PostApiV1CoursesSort(ctx echo.Context) error
 
 	// (DELETE /api/v1/courses/{id})
 	DeleteApiV1CoursesId(ctx echo.Context, id int) error
 
 	// (GET /api/v1/courses/{id})
 	GetApiV1CoursesId(ctx echo.Context, id int) error
-
-	// (POST /api/v1/date_spot_name_search)
-	PostApiV1DateSpotNameSearch(ctx echo.Context) error
 
 	// (POST /api/v1/date_spot_reviews)
 	PostApiV1DateSpotReviews(ctx echo.Context) error
@@ -45,13 +39,10 @@ type ServerInterface interface {
 	PutApiV1DateSpotReviewsId(ctx echo.Context, id int) error
 
 	// (GET /api/v1/date_spots)
-	GetApiV1DateSpots(ctx echo.Context) error
+	GetApiV1DateSpots(ctx echo.Context, params GetApiV1DateSpotsParams) error
 
 	// (POST /api/v1/date_spots)
 	PostApiV1DateSpots(ctx echo.Context) error
-
-	// (POST /api/v1/date_spots/sort)
-	PostApiV1DateSpotsSort(ctx echo.Context) error
 
 	// (DELETE /api/v1/date_spots/{id})
 	DeleteApiV1DateSpotsId(ctx echo.Context, id int) error
@@ -83,11 +74,8 @@ type ServerInterface interface {
 	// (GET /api/v1/top)
 	GetApiV1Top(ctx echo.Context) error
 
-	// (POST /api/v1/user_name_search)
-	PostApiV1UserNameSearch(ctx echo.Context) error
-
 	// (GET /api/v1/users)
-	GetApiV1Users(ctx echo.Context) error
+	GetApiV1Users(ctx echo.Context, params GetApiV1UsersParams) error
 
 	// (DELETE /api/v1/users/{id})
 	DeleteApiV1UsersId(ctx echo.Context, id int) error
@@ -123,8 +111,17 @@ func (w *ServerInterfaceWrapper) Get(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetApiV1Courses(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetApiV1CoursesParams
+	// ------------- Optional query parameter "prefecture_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "prefecture_id", ctx.QueryParams(), &params.PrefectureId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter prefecture_id: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetApiV1Courses(ctx)
+	err = w.Handler.GetApiV1Courses(ctx, params)
 	return err
 }
 
@@ -134,15 +131,6 @@ func (w *ServerInterfaceWrapper) PostApiV1Courses(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostApiV1Courses(ctx)
-	return err
-}
-
-// PostApiV1CoursesSort converts echo context to params.
-func (w *ServerInterfaceWrapper) PostApiV1CoursesSort(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostApiV1CoursesSort(ctx)
 	return err
 }
 
@@ -175,15 +163,6 @@ func (w *ServerInterfaceWrapper) GetApiV1CoursesId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetApiV1CoursesId(ctx, id)
-	return err
-}
-
-// PostApiV1DateSpotNameSearch converts echo context to params.
-func (w *ServerInterfaceWrapper) PostApiV1DateSpotNameSearch(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostApiV1DateSpotNameSearch(ctx)
 	return err
 }
 
@@ -232,8 +211,38 @@ func (w *ServerInterfaceWrapper) PutApiV1DateSpotReviewsId(ctx echo.Context) err
 func (w *ServerInterfaceWrapper) GetApiV1DateSpots(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetApiV1DateSpotsParams
+	// ------------- Optional query parameter "date_spot_name" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "date_spot_name", ctx.QueryParams(), &params.DateSpotName)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter date_spot_name: %s", err))
+	}
+
+	// ------------- Optional query parameter "prefecture_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "prefecture_id", ctx.QueryParams(), &params.PrefectureId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter prefecture_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "genre_id" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "genre_id", ctx.QueryParams(), &params.GenreId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter genre_id: %s", err))
+	}
+
+	// ------------- Optional query parameter "come_time" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "come_time", ctx.QueryParams(), &params.ComeTime)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter come_time: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetApiV1DateSpots(ctx)
+	err = w.Handler.GetApiV1DateSpots(ctx, params)
 	return err
 }
 
@@ -243,15 +252,6 @@ func (w *ServerInterfaceWrapper) PostApiV1DateSpots(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostApiV1DateSpots(ctx)
-	return err
-}
-
-// PostApiV1DateSpotsSort converts echo context to params.
-func (w *ServerInterfaceWrapper) PostApiV1DateSpotsSort(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostApiV1DateSpotsSort(ctx)
 	return err
 }
 
@@ -395,21 +395,21 @@ func (w *ServerInterfaceWrapper) GetApiV1Top(ctx echo.Context) error {
 	return err
 }
 
-// PostApiV1UserNameSearch converts echo context to params.
-func (w *ServerInterfaceWrapper) PostApiV1UserNameSearch(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostApiV1UserNameSearch(ctx)
-	return err
-}
-
 // GetApiV1Users converts echo context to params.
 func (w *ServerInterfaceWrapper) GetApiV1Users(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetApiV1UsersParams
+	// ------------- Optional query parameter "name" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "name", ctx.QueryParams(), &params.Name)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetApiV1Users(ctx)
+	err = w.Handler.GetApiV1Users(ctx, params)
 	return err
 }
 
@@ -524,16 +524,13 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/", wrapper.Get)
 	router.GET(baseURL+"/api/v1/courses", wrapper.GetApiV1Courses)
 	router.POST(baseURL+"/api/v1/courses", wrapper.PostApiV1Courses)
-	router.POST(baseURL+"/api/v1/courses/sort", wrapper.PostApiV1CoursesSort)
 	router.DELETE(baseURL+"/api/v1/courses/:id", wrapper.DeleteApiV1CoursesId)
 	router.GET(baseURL+"/api/v1/courses/:id", wrapper.GetApiV1CoursesId)
-	router.POST(baseURL+"/api/v1/date_spot_name_search", wrapper.PostApiV1DateSpotNameSearch)
 	router.POST(baseURL+"/api/v1/date_spot_reviews", wrapper.PostApiV1DateSpotReviews)
 	router.DELETE(baseURL+"/api/v1/date_spot_reviews/:id", wrapper.DeleteApiV1DateSpotReviewsId)
 	router.PUT(baseURL+"/api/v1/date_spot_reviews/:id", wrapper.PutApiV1DateSpotReviewsId)
 	router.GET(baseURL+"/api/v1/date_spots", wrapper.GetApiV1DateSpots)
 	router.POST(baseURL+"/api/v1/date_spots", wrapper.PostApiV1DateSpots)
-	router.POST(baseURL+"/api/v1/date_spots/sort", wrapper.PostApiV1DateSpotsSort)
 	router.DELETE(baseURL+"/api/v1/date_spots/:id", wrapper.DeleteApiV1DateSpotsId)
 	router.GET(baseURL+"/api/v1/date_spots/:id", wrapper.GetApiV1DateSpotsId)
 	router.PUT(baseURL+"/api/v1/date_spots/:id", wrapper.PutApiV1DateSpotsId)
@@ -544,7 +541,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/api/v1/relationships/:current_user_id/:other_user_id", wrapper.DeleteApiV1RelationshipsCurrentUserIdOtherUserId)
 	router.POST(baseURL+"/api/v1/signup", wrapper.PostApiV1Signup)
 	router.GET(baseURL+"/api/v1/top", wrapper.GetApiV1Top)
-	router.POST(baseURL+"/api/v1/user_name_search", wrapper.PostApiV1UserNameSearch)
 	router.GET(baseURL+"/api/v1/users", wrapper.GetApiV1Users)
 	router.DELETE(baseURL+"/api/v1/users/:id", wrapper.DeleteApiV1UsersId)
 	router.GET(baseURL+"/api/v1/users/:id", wrapper.GetApiV1UsersId)

@@ -34,6 +34,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/WelcomeResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
   /api/v1/top:
     get:
       responses:
@@ -43,6 +49,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/TopResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - top
   /api/v1/signup:
@@ -60,6 +72,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/SignUpResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - session
   /api/v1/login:
@@ -77,10 +95,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - session
   /api/v1/users:
     get:
+      parameters:
+      - in: query
+        name: name
+        required: false
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -90,6 +120,12 @@ paths:
                   $ref: "#/components/schemas/UserResponseData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/users/{id}:
@@ -103,6 +139,12 @@ paths:
       responses:
         "204":
           description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
     get:
@@ -119,6 +161,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
     put:
@@ -141,25 +189,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserResponseData"
           description: Successful response
-      tags:
-      - user
-  /api/v1/user_name_search:
-    post:
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/UserNameSearchData"
-        required: true
-      responses:
-        "200":
+        default:
           content:
             application/json:
               schema:
-                items:
-                  $ref: "#/components/schemas/UserResponseData"
-                type: array
-          description: Successful response
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/users/{user_id}/followings:
@@ -177,6 +212,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/RelationShipResponsData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/users/{user_id}/followers:
@@ -194,6 +235,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/RelationShipResponsData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/relationships:
@@ -211,6 +258,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/FollowResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
   /api/v1/relationships/{current_user_id}/{other_user_id}:
@@ -233,65 +286,37 @@ paths:
               schema:
                 $ref: "#/components/schemas/FollowResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - user
-  /api/v1/date_spot_name_search:
-    post:
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/DateSpotNameSearchData"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: "#/components/schemas/AddressAndDateSpotsData"
-                type: array
-          description: Successful response
-      tags:
-      - date_spot
-  /api/v1/date_spots/sort:
-    post:
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/DateSpotSortData"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: "#/components/schemas/DateSpotSortResponseData"
-                type: array
-          description: Successful response
-      tags:
-      - date_spot
-  /api/v1/courses/sort:
-    post:
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/CourseSortRequestData"
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CourseSortResponseData"
-          description: Successful response
-      tags:
-      - course
   /api/v1/date_spots:
     get:
+      parameters:
+      - in: query
+        name: date_spot_name
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: prefecture_id
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: genre_id
+        required: false
+        schema:
+          type: integer
+      - in: query
+        name: come_time
+        required: false
+        schema:
+          type: string
       responses:
         "200":
           content:
@@ -301,6 +326,12 @@ paths:
                   $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
     post:
@@ -317,6 +348,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotFormResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
   /api/v1/date_spots/{id}:
@@ -330,6 +367,12 @@ paths:
       responses:
         "204":
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
     get:
@@ -346,6 +389,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/AddressAndDateSpotsData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
     put:
@@ -368,6 +417,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotFormResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot
   /api/v1/date_spot_reviews:
@@ -385,6 +440,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot_review
   /api/v1/date_spot_reviews/{id}:
@@ -424,6 +485,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - date_spot_review
   /api/v1/prefectures/{id}:
@@ -443,6 +510,12 @@ paths:
                   $ref: "#/components/schemas/AddressAndDateSpotsData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - prefecture
   /api/v1/genres/{id}:
@@ -456,10 +529,22 @@ paths:
       responses:
         "200":
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - genre
   /api/v1/courses:
     get:
+      parameters:
+      - in: query
+        name: prefecture_id
+        required: false
+        schema:
+          type: integer
       responses:
         "200":
           content:
@@ -467,6 +552,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/CourseResponseData"
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - course
     post:
@@ -514,6 +605,12 @@ paths:
                   $ref: "#/components/schemas/CourseResponseData"
                 type: array
           description: Successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error response
       tags:
       - course
 components:
@@ -552,6 +649,23 @@ components:
           type: string
       required:
       - message
+      type: object
+    ErrorResponse:
+      example:
+        errorMessages:
+        - "invalid parameter: id"
+        - not found
+      properties:
+        errorMessages:
+          description: エラーメッセージの配列
+          example:
+          - "invalid parameter: id"
+          - not found
+          items:
+            type: string
+          type: array
+      required:
+      - errorMessages
       type: object
     TopResponseData:
       example:
@@ -888,13 +1002,6 @@ components:
       - name
       - password
       - password_confirmation
-      type: object
-    UserNameSearchData:
-      properties:
-        user_name:
-          type: string
-      required:
-      - user_name
       type: object
     RelationShipResponsData:
       example:
@@ -1834,13 +1941,6 @@ components:
       - followed_user
       - users
       type: object
-    DateSpotNameSearchData:
-      properties:
-        date_spot_name:
-          type: string
-      required:
-      - date_spot_name
-      type: object
     AddressAndDateSpotsData:
       example:
         city_name: city_name
@@ -1894,290 +1994,6 @@ components:
       - longitude
       - prefecture_name
       - review_total_number
-      type: object
-    DateSpotSortData:
-      properties:
-        prefecture_id:
-          type: integer
-        genre_id:
-          type: integer
-        come_time:
-          format: date-time
-          type: string
-      required:
-      - come_time
-      - genre_id
-      - prefecture_id
-      type: object
-    DateSpotSortResponseData:
-      example:
-        come_time: 2000-01-23T04:56:07.000+00:00
-        prefecture_id: 0
-        address_and_date_spots:
-        - city_name: city_name
-          prefecture_name: prefecture_name
-          latitude: 6.0274563
-          review_total_number: 5
-          average_rate: 5.637377
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
-          genre_name: genre_name
-          longitude: 1.4658129
-        - city_name: city_name
-          prefecture_name: prefecture_name
-          latitude: 6.0274563
-          review_total_number: 5
-          average_rate: 5.637377
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
-          genre_name: genre_name
-          longitude: 1.4658129
-        genre_id: 6
-      properties:
-        address_and_date_spots:
-          items:
-            $ref: "#/components/schemas/AddressAndDateSpotsData"
-          type: array
-        prefecture_id:
-          type: integer
-        genre_id:
-          type: integer
-        come_time:
-          format: date-time
-          type: string
-      required:
-      - address_and_date_spots
-      - come_time
-      - genre_id
-      - prefecture_id
-      type: object
-    CourseSortRequestData:
-      properties:
-        prefecture_id:
-          type: integer
-      required:
-      - prefecture_id
-      type: object
-    CourseSortResponseData:
-      example:
-        courses:
-        - no_duplicate_prefecture_names:
-          - no_duplicate_prefecture_names
-          - no_duplicate_prefecture_names
-          date_spots:
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            genre_name: genre_name
-            longitude: 1.4658129
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            genre_name: genre_name
-            longitude: 1.4658129
-          travel_mode: travel_mode
-          authority: authority
-          id: 5
-          user:
-            image:
-              url: https://openapi-generator.tech
-            gender: gender
-            name: name
-            admin: true
-            id: 5
-            email: email
-        - no_duplicate_prefecture_names:
-          - no_duplicate_prefecture_names
-          - no_duplicate_prefecture_names
-          date_spots:
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            genre_name: genre_name
-            longitude: 1.4658129
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            genre_name: genre_name
-            longitude: 1.4658129
-          travel_mode: travel_mode
-          authority: authority
-          id: 5
-          user:
-            image:
-              url: https://openapi-generator.tech
-            gender: gender
-            name: name
-            admin: true
-            id: 5
-            email: email
-        prefecture_id: 0
-      properties:
-        courses:
-          items:
-            $ref: "#/components/schemas/CourseResponseData"
-          type: array
-        prefecture_id:
-          type: integer
-      required:
-      - courses
-      - prefecture_id
-      type: object
-    CourseResponseData:
-      example:
-        no_duplicate_prefecture_names:
-        - no_duplicate_prefecture_names
-        - no_duplicate_prefecture_names
-        date_spots:
-        - city_name: city_name
-          prefecture_name: prefecture_name
-          latitude: 6.0274563
-          review_total_number: 5
-          average_rate: 5.637377
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
-          genre_name: genre_name
-          longitude: 1.4658129
-        - city_name: city_name
-          prefecture_name: prefecture_name
-          latitude: 6.0274563
-          review_total_number: 5
-          average_rate: 5.637377
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
-          genre_name: genre_name
-          longitude: 1.4658129
-        travel_mode: travel_mode
-        authority: authority
-        id: 5
-        user:
-          image:
-            url: https://openapi-generator.tech
-          gender: gender
-          name: name
-          admin: true
-          id: 5
-          email: email
-      properties:
-        id:
-          type: integer
-        authority:
-          type: string
-        travel_mode:
-          type: string
-        user:
-          $ref: "#/components/schemas/UserData"
-        no_duplicate_prefecture_names:
-          items:
-            type: string
-          type: array
-        date_spots:
-          items:
-            $ref: "#/components/schemas/AddressAndDateSpotsData"
-          type: array
-      required:
-      - authority
-      - date_spots
-      - id
-      - no_duplicate_prefecture_names
-      - travel_mode
-      - user
       type: object
     DateSpotFormRequestData:
       properties:
@@ -2265,6 +2081,86 @@ components:
       required:
       - date_spot_reviews
       - review_average_rate
+      type: object
+    CourseResponseData:
+      example:
+        no_duplicate_prefecture_names:
+        - no_duplicate_prefecture_names
+        - no_duplicate_prefecture_names
+        date_spots:
+        - city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
+        - city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
+        travel_mode: travel_mode
+        authority: authority
+        id: 5
+        user:
+          image:
+            url: https://openapi-generator.tech
+          gender: gender
+          name: name
+          admin: true
+          id: 5
+          email: email
+      properties:
+        id:
+          type: integer
+        authority:
+          type: string
+        travel_mode:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserData"
+        no_duplicate_prefecture_names:
+          items:
+            type: string
+          type: array
+        date_spots:
+          items:
+            $ref: "#/components/schemas/AddressAndDateSpotsData"
+          type: array
+      required:
+      - authority
+      - date_spots
+      - id
+      - no_duplicate_prefecture_names
+      - travel_mode
+      - user
       type: object
     CourseFormRequestData:
       properties:
@@ -2389,6 +2285,15 @@ components:
       - opening_time
       - updated_at
       type: object
+    ImageData_1:
+      properties:
+        url:
+          format: binary
+          nullable: true
+          type: string
+      required:
+      - url
+      type: object
     UserData:
       example:
         image:
@@ -2419,15 +2324,6 @@ components:
       - id
       - image
       - name
-      type: object
-    ImageData_1:
-      properties:
-        url:
-          format: binary
-          nullable: true
-          type: string
-      required:
-      - url
       type: object
     DateSpotReviewResponseData_date_spot_reviews_inner:
       example:

@@ -63,17 +63,6 @@ type CourseResponseData struct {
 	User                       UserData                  `json:"user"`
 }
 
-// CourseSortRequestData defines model for CourseSortRequestData.
-type CourseSortRequestData struct {
-	PrefectureId int `json:"prefecture_id"`
-}
-
-// CourseSortResponseData defines model for CourseSortResponseData.
-type CourseSortResponseData struct {
-	Courses      []CourseResponseData `json:"courses"`
-	PrefectureId int                  `json:"prefecture_id"`
-}
-
 // DateSpotData defines model for DateSpotData.
 type DateSpotData struct {
 	AverageRate float32   `json:"average_rate"`
@@ -101,11 +90,6 @@ type DateSpotFormRequestData struct {
 // DateSpotFormResponseData defines model for DateSpotFormResponseData.
 type DateSpotFormResponseData struct {
 	DateSpotId int `json:"date_spot_id"`
-}
-
-// DateSpotNameSearchData defines model for DateSpotNameSearchData.
-type DateSpotNameSearchData struct {
-	DateSpotName string `json:"date_spot_name"`
 }
 
 // DateSpotReviewData defines model for DateSpotReviewData.
@@ -142,19 +126,10 @@ type DateSpotReviewResponseDataDateSpotReviewsInner struct {
 	UserName   string    `json:"user_name"`
 }
 
-// DateSpotSortData defines model for DateSpotSortData.
-type DateSpotSortData struct {
-	ComeTime     time.Time `json:"come_time"`
-	GenreId      int       `json:"genre_id"`
-	PrefectureId int       `json:"prefecture_id"`
-}
-
-// DateSpotSortResponseData defines model for DateSpotSortResponseData.
-type DateSpotSortResponseData struct {
-	AddressAndDateSpots []AddressAndDateSpotsData `json:"address_and_date_spots"`
-	ComeTime            time.Time                 `json:"come_time"`
-	GenreId             int                       `json:"genre_id"`
-	PrefectureId        int                       `json:"prefecture_id"`
+// ErrorResponse defines model for ErrorResponse.
+type ErrorResponse struct {
+	// ErrorMessages エラーメッセージの配列
+	ErrorMessages []string `json:"errorMessages"`
 }
 
 // FollowReauestData defines model for FollowReauestData.
@@ -243,11 +218,6 @@ type UserFormRequestData struct {
 	PasswordConfirmation string              `json:"password_confirmation"`
 }
 
-// UserNameSearchData defines model for UserNameSearchData.
-type UserNameSearchData struct {
-	UserName string `json:"user_name"`
-}
-
 // UserResponseData defines model for UserResponseData.
 type UserResponseData struct {
 	Admin           bool                 `json:"admin"`
@@ -267,14 +237,26 @@ type WelcomeResponseData struct {
 	Message string `json:"message"`
 }
 
+// GetApiV1CoursesParams defines parameters for GetApiV1Courses.
+type GetApiV1CoursesParams struct {
+	PrefectureId *int `form:"prefecture_id,omitempty" json:"prefecture_id,omitempty"`
+}
+
+// GetApiV1DateSpotsParams defines parameters for GetApiV1DateSpots.
+type GetApiV1DateSpotsParams struct {
+	DateSpotName *string `form:"date_spot_name,omitempty" json:"date_spot_name,omitempty"`
+	PrefectureId *int    `form:"prefecture_id,omitempty" json:"prefecture_id,omitempty"`
+	GenreId      *int    `form:"genre_id,omitempty" json:"genre_id,omitempty"`
+	ComeTime     *string `form:"come_time,omitempty" json:"come_time,omitempty"`
+}
+
+// GetApiV1UsersParams defines parameters for GetApiV1Users.
+type GetApiV1UsersParams struct {
+	Name *string `form:"name,omitempty" json:"name,omitempty"`
+}
+
 // PostApiV1CoursesFormdataRequestBody defines body for PostApiV1Courses for application/x-www-form-urlencoded ContentType.
 type PostApiV1CoursesFormdataRequestBody = CourseFormRequestData
-
-// PostApiV1CoursesSortFormdataRequestBody defines body for PostApiV1CoursesSort for application/x-www-form-urlencoded ContentType.
-type PostApiV1CoursesSortFormdataRequestBody = CourseSortRequestData
-
-// PostApiV1DateSpotNameSearchFormdataRequestBody defines body for PostApiV1DateSpotNameSearch for application/x-www-form-urlencoded ContentType.
-type PostApiV1DateSpotNameSearchFormdataRequestBody = DateSpotNameSearchData
 
 // PostApiV1DateSpotReviewsMultipartRequestBody defines body for PostApiV1DateSpotReviews for multipart/form-data ContentType.
 type PostApiV1DateSpotReviewsMultipartRequestBody = DateSpotReviewFormRequestData
@@ -284,9 +266,6 @@ type PutApiV1DateSpotReviewsIdMultipartRequestBody = DateSpotReviewFormRequestDa
 
 // PostApiV1DateSpotsMultipartRequestBody defines body for PostApiV1DateSpots for multipart/form-data ContentType.
 type PostApiV1DateSpotsMultipartRequestBody = DateSpotFormRequestData
-
-// PostApiV1DateSpotsSortFormdataRequestBody defines body for PostApiV1DateSpotsSort for application/x-www-form-urlencoded ContentType.
-type PostApiV1DateSpotsSortFormdataRequestBody = DateSpotSortData
 
 // PutApiV1DateSpotsIdMultipartRequestBody defines body for PutApiV1DateSpotsId for multipart/form-data ContentType.
 type PutApiV1DateSpotsIdMultipartRequestBody = DateSpotFormRequestData
@@ -299,9 +278,6 @@ type PostApiV1RelationshipsFormdataRequestBody = FollowReauestData
 
 // PostApiV1SignupMultipartRequestBody defines body for PostApiV1Signup for multipart/form-data ContentType.
 type PostApiV1SignupMultipartRequestBody = SignupFormRequestData
-
-// PostApiV1UserNameSearchFormdataRequestBody defines body for PostApiV1UserNameSearch for application/x-www-form-urlencoded ContentType.
-type PostApiV1UserNameSearchFormdataRequestBody = UserNameSearchData
 
 // PutApiV1UsersIdMultipartRequestBody defines body for PutApiV1UsersId for multipart/form-data ContentType.
 type PutApiV1UsersIdMultipartRequestBody = UserFormRequestData
