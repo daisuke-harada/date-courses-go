@@ -27,3 +27,6 @@ run:
 
 db-seed:
 	go run ./tools/seed/main.go
+
+db-drop:
+	docker compose exec db psql -U "${DB_USER}" -d "${DB_NAME}" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
