@@ -25,30 +25,3 @@ func (r *duringSpotRepository) Create(ctx context.Context, duringSpot *model.Dur
 	slog.InfoContext(ctx, "duringSpotRepository.Create succeeded", "during_spot_id", duringSpot.ID)
 	return nil
 }
-
-func (r *duringSpotRepository) GetByID(ctx context.Context, id uint) (*model.DuringSpot, error) {
-	var duringSpot model.DuringSpot
-	if err := r.db.WithContext(ctx).First(&duringSpot, id).Error; err != nil {
-		slog.ErrorContext(ctx, "duringSpotRepository.GetByID failed", "during_spot_id", id, "err", err)
-		return nil, err
-	}
-	return &duringSpot, nil
-}
-
-func (r *duringSpotRepository) Update(ctx context.Context, duringSpot *model.DuringSpot) error {
-	if err := r.db.WithContext(ctx).Save(duringSpot).Error; err != nil {
-		slog.ErrorContext(ctx, "duringSpotRepository.Update failed", "during_spot_id", duringSpot.ID, "err", err)
-		return err
-	}
-	slog.InfoContext(ctx, "duringSpotRepository.Update succeeded", "during_spot_id", duringSpot.ID)
-	return nil
-}
-
-func (r *duringSpotRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&model.DuringSpot{}, id).Error; err != nil {
-		slog.ErrorContext(ctx, "duringSpotRepository.Delete failed", "during_spot_id", id, "err", err)
-		return err
-	}
-	slog.InfoContext(ctx, "duringSpotRepository.Delete succeeded", "during_spot_id", id)
-	return nil
-}

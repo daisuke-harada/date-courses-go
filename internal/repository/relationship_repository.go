@@ -8,7 +8,4 @@ import (
 
 type RelationshipRepository interface {
 	Create(ctx context.Context, relationship *model.Relationship) error
-	GetByID(ctx context.Context, id uint) (*model.Relationship, error)
-	Update(ctx context.Context, relationship *model.Relationship) error
-	Delete(ctx context.Context, id uint) error
 }

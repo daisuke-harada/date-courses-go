@@ -8,7 +8,4 @@ import (
 
 type DateSpotReviewRepository interface {
 	Create(ctx context.Context, review *model.DateSpotReview) error
-	GetByID(ctx context.Context, id uint) (*model.DateSpotReview, error)
-	Update(ctx context.Context, review *model.DateSpotReview) error
-	Delete(ctx context.Context, id uint) error
 }

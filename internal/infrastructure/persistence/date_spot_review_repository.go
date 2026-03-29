@@ -25,30 +25,3 @@ func (r *dateSpotReviewRepository) Create(ctx context.Context, review *model.Dat
 	slog.InfoContext(ctx, "dateSpotReviewRepository.Create succeeded", "review_id", review.ID)
 	return nil
 }
-
-func (r *dateSpotReviewRepository) GetByID(ctx context.Context, id uint) (*model.DateSpotReview, error) {
-	var review model.DateSpotReview
-	if err := r.db.WithContext(ctx).First(&review, id).Error; err != nil {
-		slog.ErrorContext(ctx, "dateSpotReviewRepository.GetByID failed", "review_id", id, "err", err)
-		return nil, err
-	}
-	return &review, nil
-}
-
-func (r *dateSpotReviewRepository) Update(ctx context.Context, review *model.DateSpotReview) error {
-	if err := r.db.WithContext(ctx).Save(review).Error; err != nil {
-		slog.ErrorContext(ctx, "dateSpotReviewRepository.Update failed", "review_id", review.ID, "err", err)
-		return err
-	}
-	slog.InfoContext(ctx, "dateSpotReviewRepository.Update succeeded", "review_id", review.ID)
-	return nil
-}
-
-func (r *dateSpotReviewRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&model.DateSpotReview{}, id).Error; err != nil {
-		slog.ErrorContext(ctx, "dateSpotReviewRepository.Delete failed", "review_id", id, "err", err)
-		return err
-	}
-	slog.InfoContext(ctx, "dateSpotReviewRepository.Delete succeeded", "review_id", id)
-	return nil
-}

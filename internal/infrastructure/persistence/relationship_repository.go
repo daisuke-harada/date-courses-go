@@ -25,30 +25,3 @@ func (r *relationshipRepository) Create(ctx context.Context, relationship *model
 	slog.InfoContext(ctx, "relationshipRepository.Create succeeded", "relationship_id", relationship.ID)
 	return nil
 }
-
-func (r *relationshipRepository) GetByID(ctx context.Context, id uint) (*model.Relationship, error) {
-	var relationship model.Relationship
-	if err := r.db.WithContext(ctx).First(&relationship, id).Error; err != nil {
-		slog.ErrorContext(ctx, "relationshipRepository.GetByID failed", "relationship_id", id, "err", err)
-		return nil, err
-	}
-	return &relationship, nil
-}
-
-func (r *relationshipRepository) Update(ctx context.Context, relationship *model.Relationship) error {
-	if err := r.db.WithContext(ctx).Save(relationship).Error; err != nil {
-		slog.ErrorContext(ctx, "relationshipRepository.Update failed", "relationship_id", relationship.ID, "err", err)
-		return err
-	}
-	slog.InfoContext(ctx, "relationshipRepository.Update succeeded", "relationship_id", relationship.ID)
-	return nil
-}
-
-func (r *relationshipRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&model.Relationship{}, id).Error; err != nil {
-		slog.ErrorContext(ctx, "relationshipRepository.Delete failed", "relationship_id", id, "err", err)
-		return err
-	}
-	slog.InfoContext(ctx, "relationshipRepository.Delete succeeded", "relationship_id", id)
-	return nil
-}
