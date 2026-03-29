@@ -1,6 +1,7 @@
 package apperror
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -27,28 +28,36 @@ func (e *appError) Unwrap() error {
 }
 
 // HTTPStatus は error が appError かどうか判定し、HTTPステータス・メッセージ・原因エラーを返します。
+// errors.As を使うことで、何重にWrapされていても appError を検出できます。
 // error_handler.go で使用します。
 func HTTPStatus(err error) (statusCode int, messages []string, cause error, ok bool) {
-	e, ok := err.(*appError)
-	if !ok {
+	var e *appError
+	if !errors.As(err, &e) {
 		return 0, nil, nil, false
 	}
 	return e.statusCode, e.messages, e.cause, true
 }
 
-// --- コンストラクタ（返り値は error 型） ---
-// usecase・handler どこからでも普通の error として扱えます。
-
 // NotFound は 404 エラーを返します。
-func NotFound(msg string) error {
+// msg を省略した場合は "リソースが見つかりません" がデフォルトメッセージになります。
+func NotFound(msg ...string) error {
+	message := "リソースが見つかりません"
+	if len(msg) > 0 {
+		message = msg[0]
+	}
 	return &appError{
 		statusCode: http.StatusNotFound,
-		messages:   []string{msg},
+		messages:   []string{message},
 	}
 }
 
 // BadRequest は 400 エラーを返します。複数メッセージを渡せます（バリデーションエラー等）。
-func BadRequest(messages ...string) error {
+// msg を省略した場合は "リクエストが不正です" がデフォルトメッセージになります。
+func BadRequest(msg ...string) error {
+	messages := []string{"リクエストが不正です"}
+	if len(msg) > 0 {
+		messages = msg
+	}
 	return &appError{
 		statusCode: http.StatusBadRequest,
 		messages:   messages,
@@ -57,27 +66,42 @@ func BadRequest(messages ...string) error {
 
 // InternalServerError は 500 エラーを返します。
 // cause に原因エラーを渡すと slog でログに記録されます（クライアントには返しません）。
-func InternalServerError(cause error, msg string) error {
+// msg を省略した場合は "サーバーエラーが発生しました" がデフォルトメッセージになります。
+func InternalServerError(cause error, msg ...string) error {
+	message := "サーバーエラーが発生しました"
+	if len(msg) > 0 {
+		message = msg[0]
+	}
 	return &appError{
 		statusCode: http.StatusInternalServerError,
-		messages:   []string{msg},
+		messages:   []string{message},
 		cause:      cause,
 	}
 }
 
 // Unauthorized は 401 エラーを返します。
-func Unauthorized(msg string) error {
+// msg を省略した場合は "認証が必要です" がデフォルトメッセージになります。
+func Unauthorized(msg ...string) error {
+	message := "認証が必要です"
+	if len(msg) > 0 {
+		message = msg[0]
+	}
 	return &appError{
 		statusCode: http.StatusUnauthorized,
-		messages:   []string{msg},
+		messages:   []string{message},
 	}
 }
 
 // Forbidden は 403 エラーを返します。
-func Forbidden(msg string) error {
+// msg を省略した場合は "アクセスが禁止されています" がデフォルトメッセージになります。
+func Forbidden(msg ...string) error {
+	message := "アクセスが禁止されています"
+	if len(msg) > 0 {
+		message = msg[0]
+	}
 	return &appError{
 		statusCode: http.StatusForbidden,
-		messages:   []string{msg},
+		messages:   []string{message},
 	}
 }
 

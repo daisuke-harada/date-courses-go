@@ -30,44 +30,48 @@ func CustomHTTPErrorHandler(err error, ctx echo.Context) {
 		return
 	}
 
-	var code = http.StatusInternalServerError
-	var messages []string
-
-	switch {
-	// ① apperror（usecase・handler どこからでも渡せる）
-	case func() bool { _, _, _, ok := apperror.HTTPStatus(err); return ok }():
-		status, msgs, cause, _ := apperror.HTTPStatus(err)
-		code = status
-		messages = msgs
-		if cause != nil {
-			// cause（原因エラー）はサーバーログにのみ記録し、クライアントには返しません
-			slog.Error("app error", "status", code, "messages", messages, "cause", cause)
-		} else {
-			// 4xx 系など cause なし → Warn レベル
-			slog.Warn("app error", "status", code, "messages", messages)
-		}
-
-	// ② echo.HTTPError（oapi-codegen のパラメータバインドエラーや Echo 内部から来る場合）
-	case errors.As(err, new(*echo.HTTPError)):
-		var echoErr *echo.HTTPError
-		errors.As(err, &echoErr)
-		code = echoErr.Code
-		switch m := echoErr.Message.(type) {
-		case string:
-			messages = []string{m}
-		case []string:
-			messages = m
-		default:
-			messages = []string{http.StatusText(code)}
-		}
-		slog.Error("echo http error", "status", code, "messages", messages)
-
-	// ③ 予期しない error（バグや未ハンドルのケース）
-	default:
-		slog.Error("unexpected error", "err", err)
-	}
+	code, messages := resolveError(err)
 
 	if writeErr := ctx.JSON(code, ErrorResponse{ErrorMessages: messages}); writeErr != nil {
 		slog.Error("failed to write error response", "err", writeErr)
+	}
+}
+
+// resolveError はエラーの種別を判定し、HTTPステータスコードとメッセージを返します。
+func resolveError(err error) (code int, messages []string) {
+	// ① apperror（usecase・handler どこからでも渡せる）
+	if status, msgs, cause, ok := apperror.HTTPStatus(err); ok {
+		if cause != nil {
+			// cause（原因エラー）はサーバーログにのみ記録し、クライアントには返しません
+			slog.Error("app error", "status", status, "messages", msgs, "cause", cause)
+		} else {
+			// 4xx 系など cause なし → Warn レベル
+			slog.Warn("app error", "status", status, "messages", msgs)
+		}
+		return status, msgs
+	}
+
+	// ② echo.HTTPError（oapi-codegen のパラメータバインドエラーや Echo 内部から来る場合）
+	var echoErr *echo.HTTPError
+	if errors.As(err, &echoErr) {
+		msgs := echoMessagesToSlice(echoErr)
+		slog.Error("echo http error", "status", echoErr.Code, "messages", msgs)
+		return echoErr.Code, msgs
+	}
+
+	// ③ 予期しない error（バグや未ハンドルのケース）
+	slog.Error("unexpected error", "err", err)
+	return http.StatusInternalServerError, []string{http.StatusText(http.StatusInternalServerError)}
+}
+
+// echoMessagesToSlice は echo.HTTPError の Message フィールドを []string に変換します。
+func echoMessagesToSlice(echoErr *echo.HTTPError) []string {
+	switch m := echoErr.Message.(type) {
+	case string:
+		return []string{m}
+	case []string:
+		return m
+	default:
+		return []string{http.StatusText(echoErr.Code)}
 	}
 }
