@@ -11,8 +11,12 @@ CREATE TABLE users (
 CREATE TABLE date_spots (
   id SERIAL PRIMARY KEY,
   genre_id INTEGER,
+  prefecture_id INTEGER,
   name VARCHAR(255) NOT NULL,
+  city_name VARCHAR(255) NOT NULL,
   image VARCHAR(255),
+  latitude DOUBLE PRECISION,
+  longitude DOUBLE PRECISION,
   opening_time TIMESTAMP,
   closing_time TIMESTAMP,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -21,26 +25,7 @@ CREATE TABLE date_spots (
 
 -- indexes (date_spots)
 CREATE INDEX index_date_spots_on_genre_id_and_created_at ON date_spots (genre_id, created_at);
-
--- テーブル: addresses
-CREATE TABLE addresses (
-  id SERIAL PRIMARY KEY,
-  prefecture_id INTEGER,
-  date_spot_id INTEGER,
-  city_name VARCHAR(255) NOT NULL,
-  latitude DOUBLE PRECISION,
-  longitude DOUBLE PRECISION,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_addresses_date_spots FOREIGN KEY (date_spot_id) REFERENCES date_spots (id)
-  -- NOTE: prefectures テーブルを追加したら、以下の外部キーを追加してください
-  -- , CONSTRAINT fk_addresses_prefectures FOREIGN KEY (prefecture_id) REFERENCES prefectures (id)
-);
-
--- indexes (addresses)
-CREATE INDEX index_addresses_on_date_spot_id_and_created_at ON addresses (date_spot_id, created_at);
--- NOTE: prefectures テーブルを追加したら有効化してください
--- CREATE INDEX index_addresses_on_prefecture_id_and_created_at ON addresses (prefecture_id, created_at);
+CREATE INDEX index_date_spots_on_prefecture_id_and_created_at ON date_spots (prefecture_id, created_at);
 
 -- テーブル: courses
 CREATE TABLE courses (

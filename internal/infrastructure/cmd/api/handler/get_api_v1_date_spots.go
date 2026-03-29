@@ -20,22 +20,16 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context, params op
 	}
 
 	response := make([]openapi.AddressAndDateSpotsData, 0, len(output.DateSpots))
-	for i, ds := range output.DateSpots {
-		addr := output.Addresses[i]
-
+	for _, ds := range output.DateSpots {
 		var (
-			cityName  string
 			latitude  float32
 			longitude float32
 		)
-		if addr != nil {
-			cityName = addr.CityName
-			if addr.Latitude != nil {
-				latitude = float32(*addr.Latitude)
-			}
-			if addr.Longitude != nil {
-				longitude = float32(*addr.Longitude)
-			}
+		if ds.Latitude != nil {
+			latitude = float32(*ds.Latitude)
+		}
+		if ds.Longitude != nil {
+			longitude = float32(*ds.Longitude)
 		}
 
 		dateSpotData := openapi.DateSpotData{
@@ -55,13 +49,8 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context, params op
 		}
 
 		response = append(response, openapi.AddressAndDateSpotsData{
-			Id: func() int {
-				if addr != nil {
-					return int(addr.ID)
-				}
-				return 0
-			}(),
-			CityName:  cityName,
+			Id:        int(ds.ID),
+			CityName:  ds.CityName,
 			Latitude:  latitude,
 			Longitude: longitude,
 			DateSpot:  dateSpotData,

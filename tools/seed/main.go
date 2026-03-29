@@ -146,12 +146,19 @@ func spotAndAddressCreate(
 		// 画像はジャンル名.jpg (ActiveStorage の代替として文字列パスを保存)
 		imagePath := fmt.Sprintf("public/images/date_spot_images/%s.jpg", genreNames[genreID])
 		gid := genreID
+		pid := prefectureID
+		fullCityName := prefectureNames[prefectureID] + cityName
+		lat, lng := geocode(apiKey, fullCityName)
 		dateSpot = model.DateSpot{
-			GenreID:     &gid,
-			Name:        name,
-			Image:       &imagePath,
-			OpeningTime: openingTime,
-			ClosingTime: closingTime,
+			GenreID:      &gid,
+			PrefectureID: &pid,
+			Name:         name,
+			CityName:     fullCityName,
+			Image:        &imagePath,
+			Latitude:     lat,
+			Longitude:    lng,
+			OpeningTime:  openingTime,
+			ClosingTime:  closingTime,
 		}
 		repo := persistence.NewDateSpotRepository(gdb)
 		if err := repo.Create(ctx, &dateSpot); err != nil {
@@ -161,30 +168,6 @@ func spotAndAddressCreate(
 		slog.InfoContext(ctx, "DateSpot created", "name", name, "id", dateSpot.ID)
 	} else {
 		slog.InfoContext(ctx, "DateSpot already exists, skip", "name", name, "id", dateSpot.ID)
-	}
-
-	// Address を重複チェックしながら登録
-	dsID := int(dateSpot.ID)
-	var address model.Address
-	if err := gdb.WithContext(ctx).Where("date_spot_id = ?", dsID).First(&address).Error; err != nil {
-		fullCityName := prefectureNames[prefectureID] + cityName
-		lat, lng := geocode(apiKey, fullCityName)
-		pid := prefectureID
-		address = model.Address{
-			PrefectureID: &pid,
-			DateSpotID:   &dsID,
-			CityName:     fullCityName,
-			Latitude:     lat,
-			Longitude:    lng,
-		}
-		addrRepo := persistence.NewAddressRepository(gdb)
-		if err := addrRepo.Create(ctx, &address); err != nil {
-			slog.ErrorContext(ctx, "spotAndAddressCreate: address create failed", "city_name", fullCityName, "err", err)
-			return
-		}
-		slog.InfoContext(ctx, "Address created", "city_name", fullCityName, "id", address.ID)
-	} else {
-		slog.InfoContext(ctx, "Address already exists, skip", "date_spot_id", dsID)
 	}
 }
 
@@ -303,27 +286,24 @@ func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
 		return
 	}
 
-	// Address の件数を取得
-	var addressCount int64
-	gdb.WithContext(ctx).Model(&model.Address{}).Count(&addressCount)
-	if addressCount == 0 {
-		slog.Warn("seedDateSpotReviews: no addresses found, skip")
+	// DateSpot の件数を取得
+	var dateSpotCount int64
+	gdb.WithContext(ctx).Model(&model.DateSpot{}).Count(&dateSpotCount)
+	if dateSpotCount == 0 {
+		slog.Warn("seedDateSpotReviews: no date spots found, skip")
 		return
 	}
 
 	// 各ユーザーにランダムに 5 件レビューを投稿 (重複スキップ)
 	for _, user := range users {
 		for i := 0; i < 5; i++ {
-			// ランダムな Address を取得
-			var addr model.Address
-			offset := rand.Int63n(addressCount)
-			if err := gdb.WithContext(ctx).Offset(int(offset)).First(&addr).Error; err != nil {
+			// ランダムな DateSpot を取得
+			var ds model.DateSpot
+			offset := rand.Int63n(dateSpotCount)
+			if err := gdb.WithContext(ctx).Offset(int(offset)).First(&ds).Error; err != nil {
 				continue
 			}
-			if addr.DateSpotID == nil {
-				continue
-			}
-			dateSpotID := uint(*addr.DateSpotID)
+			dateSpotID := ds.ID
 
 			// 同ユーザー × 同スポットの重複チェック
 			var existing model.DateSpotReview
