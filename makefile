@@ -20,10 +20,10 @@ openapi-generate:
 
 go-generate:
 	# ensure modules are tidy before generating code
-	go generate ./internal/infrastructure/cmd/api/openapi
+	go generate ./internal/interface/openapi
 
 run:
-	go run ./cmd/main.go
+	go run ./cmd/api/main.go
 
 db-seed:
 	go run ./tools/seed/main.go

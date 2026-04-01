@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/labstack/echo/v4"
 )
 
