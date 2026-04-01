@@ -14,7 +14,13 @@ type GetApiV1DateSpotsHandler struct {
 
 // TODO: 検索ロジックの作成が必要
 func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context, params openapi.GetApiV1DateSpotsParams) error {
-	output, err := h.InputPort.Execute(ctx.Request().Context())
+	input := usecase.GetDateSpotsInput{
+		DateSpotName: params.DateSpotName,
+		PrefectureID: params.PrefectureId,
+		GenreID:      params.GenreId,
+		ComeTime:     params.ComeTime,
+	}
+	output, err := h.InputPort.Execute(ctx.Request().Context(), input)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "error"})
 	}

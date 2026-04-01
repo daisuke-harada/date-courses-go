@@ -26,10 +26,26 @@ func (r *dateSpotRepository) Create(ctx context.Context, dateSpot *model.DateSpo
 	return nil
 }
 
-func (r *dateSpotRepository) FindAll(ctx context.Context) ([]*model.DateSpot, error) {
+func (r *dateSpotRepository) Search(ctx context.Context, params repository.DateSpotSearchParams) ([]*model.DateSpot, error) {
+	db := r.db.WithContext(ctx).Model(&model.DateSpot{})
+
+	if params.Name != nil && *params.Name != "" {
+		db = db.Where("name LIKE ?", "%"+*params.Name+"%")
+	}
+	if params.PrefectureID != nil {
+		db = db.Where("prefecture_id = ?", *params.PrefectureID)
+	}
+	if params.GenreID != nil {
+		db = db.Where("genre_id = ?", *params.GenreID)
+	}
+	if params.ComeTime != nil && *params.ComeTime != "" {
+		db = db.Where("opening_time <= ?", *params.ComeTime).
+			Where("closing_time >= ?", *params.ComeTime)
+	}
+
 	var dateSpots []*model.DateSpot
-	if err := r.db.WithContext(ctx).Find(&dateSpots).Error; err != nil {
-		slog.ErrorContext(ctx, "dateSpotRepository.FindAll failed", "err", err)
+	if err := db.Find(&dateSpots).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotRepository.Search failed", "err", err)
 		return nil, err
 	}
 	return dateSpots, nil
