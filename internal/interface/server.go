@@ -1,4 +1,4 @@
-package api
+package iface
 
 import (
 	"context"
@@ -12,9 +12,9 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/di"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/handler"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/middleware"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )

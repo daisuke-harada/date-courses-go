@@ -13,7 +13,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/cmd/api/openapi"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 )
 
 var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
@@ -21,10 +21,10 @@ var re *regexp.Regexp = regexp.MustCompile("([a-z0-9])([A-Z])")
 const handlerRootPath = "../handler"
 
 // Templates are loaded from the repository's existing templates directory.
-// This generator is expected to be invoked from `internal/infrastructure/cmd/api/openapi`
+// This generator is expected to be invoked from `internal/interface/openapi`
 // via `go generate`, so paths are relative to that directory.
-const handlerTemplatePath = "../../../../../templates/handler.tmpl"
-const constructorTemplatePath = "../../../../../templates/handler_constructor.tmpl"
+const handlerTemplatePath = "../../../templates/handler.tmpl"
+const constructorTemplatePath = "../../../templates/handler_constructor.tmpl"
 
 func toSnakeCase(str string) string {
 	snake := re.ReplaceAllString(str, "${1}_${2}")

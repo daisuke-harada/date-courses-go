@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
-	"github.com/daisuke-harada/date-courses-go/internal/repository"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 )
 
 type GetDateSpotsInputPort interface {
