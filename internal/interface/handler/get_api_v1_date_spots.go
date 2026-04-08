@@ -25,43 +25,5 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context, params op
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "error"})
 	}
 
-	response := make([]openapi.AddressAndDateSpotsData, 0, len(output.DateSpots))
-	for _, ds := range output.DateSpots {
-		var (
-			latitude  float32
-			longitude float32
-		)
-		if ds.Latitude != nil {
-			latitude = float32(*ds.Latitude)
-		}
-		if ds.Longitude != nil {
-			longitude = float32(*ds.Longitude)
-		}
-
-		dateSpotData := openapi.DateSpotData{
-			Id:        int(ds.ID),
-			Name:      ds.Name,
-			CreatedAt: ds.CreatedAt,
-			UpdatedAt: ds.UpdatedAt,
-		}
-		if ds.GenreID != nil {
-			dateSpotData.GenreId = *ds.GenreID
-		}
-		if ds.OpeningTime != nil {
-			dateSpotData.OpeningTime = *ds.OpeningTime
-		}
-		if ds.ClosingTime != nil {
-			dateSpotData.ClosingTime = *ds.ClosingTime
-		}
-
-		response = append(response, openapi.AddressAndDateSpotsData{
-			Id:        int(ds.ID),
-			CityName:  ds.CityName,
-			Latitude:  latitude,
-			Longitude: longitude,
-			DateSpot:  dateSpotData,
-		})
-	}
-
-	return ctx.JSON(http.StatusOK, response)
+	return ctx.JSON(http.StatusOK, openapi.NewDateSpotsResponse(output.DateSpots))
 }
