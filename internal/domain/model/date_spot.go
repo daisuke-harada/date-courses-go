@@ -15,4 +15,9 @@ type DateSpot struct {
 	ClosingTime  *time.Time
 	CreatedAt    time.Time `gorm:"not null;autoCreateTime"`
 	UpdatedAt    time.Time `gorm:"not null;autoUpdateTime"`
+
+	// DB集計フィールド (SELECT時のみ使用、マイグレーション対象外)
+	// gorm:"->" だと Find() でカラムがマッピングされないケースがあるため column タグのみ指定する
+	AverageRate       float64 `gorm:"column:average_rate;<-:false"`
+	ReviewTotalNumber int     `gorm:"column:review_total_number;<-:false"`
 }

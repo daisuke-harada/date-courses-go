@@ -4,7 +4,7 @@ info:
   version: 0.1.1
 servers:
 - description: Development server
-  url: http://localhost:7777
+  url: http://localhost:1099
 - description: Production server
   url: https://api.datecourses.com
 tags:

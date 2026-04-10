@@ -32,7 +32,7 @@ func Run(ctx context.Context) error {
 	return container.Invoke(func(e *echo.Echo) error {
 		openapi.RegisterHandlers(e, handler.NewHandler(container))
 
-		addr := ":7777"
+		addr := ":1099"
 		srv := &http.Server{
 			Addr: addr,
 		}

@@ -27,20 +27,26 @@ func (r *dateSpotRepository) Create(ctx context.Context, dateSpot *model.DateSpo
 }
 
 func (r *dateSpotRepository) Search(ctx context.Context, params repository.DateSpotSearchParams) ([]*model.DateSpot, error) {
-	db := r.db.WithContext(ctx).Model(&model.DateSpot{})
+	db := r.db.WithContext(ctx).
+		Model(&model.DateSpot{}).
+		Select(`date_spots.*,
+			COALESCE(AVG(date_spot_reviews.rate), 0)  AS average_rate,
+			COUNT(date_spot_reviews.id)               AS review_total_number`).
+		Joins("LEFT JOIN date_spot_reviews ON date_spot_reviews.date_spot_id = date_spots.id").
+		Group("date_spots.id")
 
 	if params.Name != nil && *params.Name != "" {
-		db = db.Where("name LIKE ?", "%"+*params.Name+"%")
+		db = db.Where("date_spots.name LIKE ?", "%"+*params.Name+"%")
 	}
 	if params.PrefectureID != nil {
-		db = db.Where("prefecture_id = ?", *params.PrefectureID)
+		db = db.Where("date_spots.prefecture_id = ?", *params.PrefectureID)
 	}
 	if params.GenreID != nil {
-		db = db.Where("genre_id = ?", *params.GenreID)
+		db = db.Where("date_spots.genre_id = ?", *params.GenreID)
 	}
 	if params.ComeTime != nil && *params.ComeTime != "" {
-		db = db.Where("opening_time <= ?", *params.ComeTime).
-			Where("closing_time >= ?", *params.ComeTime)
+		db = db.Where("date_spots.opening_time <= ?", *params.ComeTime).
+			Where("date_spots.closing_time >= ?", *params.ComeTime)
 	}
 
 	var dateSpots []*model.DateSpot
