@@ -4,17 +4,44 @@ components:
       type: object
       required:
         - id
+        - name
+        - genre_id
+        - image
+        - average_rate
+        - created_at
+        - updated_at
         - city_name
         - latitude
         - longitude
         - prefecture_name
         - genre_name
         - review_total_number
-        - average_rate
-        - date_spot
       properties:
         id:
           type: integer
+        name:
+          type: string
+        genre_id:
+          type: integer
+        image:
+          $ref: "./image.yaml#/components/schemas/ImageData"
+        closing_time:
+          type: string
+          format: date-time
+          nullable: true
+        opening_time:
+          type: string
+          format: date-time
+          nullable: true
+        average_rate:
+          type: number
+          format: float
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         city_name:
           type: string
         latitude:
@@ -29,8 +56,3 @@ components:
           type: string
         review_total_number:
           type: integer
-        average_rate:
-          type: number
-          format: float
-        date_spot:
-          $ref: "./date_spots.yaml#/components/schemas/DateSpotData"
