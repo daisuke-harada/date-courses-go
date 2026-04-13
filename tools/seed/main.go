@@ -14,6 +14,7 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
@@ -182,33 +183,59 @@ type userInput struct {
 
 func seedUsers(ctx context.Context, gdb *gorm.DB) {
 	repo := persistence.NewUserRepository(gdb)
+	auth := service.NewAuthService()
 
-	users := []userInput{
-		{Email: "guest@gmail.com", Name: "guest", Gender: "男性", Image: "public/images/user_images/man1.jpg"},
-		{Email: "daisuke@gmail.com", Name: "daisuke", Gender: "男性", Image: "public/images/user_images/man2.jpg"},
-		{Email: "kenta@gmail.com", Name: "peter", Gender: "男性", Image: "public/images/user_images/spiderman.png"},
-		{Email: "marika@gmail.com", Name: "marika", Gender: "女性", Image: "public/images/user_images/woman1.jpg"},
-		{Email: "nanase@gmail.com", Name: "nanase", Gender: "女性", Image: "public/images/user_images/woman2.jpg"},
-		{Email: "kanakana@gmail.com", Name: "kanakana", Gender: "女性", Image: "public/images/user_images/woman3.jpg"},
-		{Email: "adminstrator@gmail.com", Name: "admin", Gender: "男性", Image: "public/images/user_images/man1.jpg"},
+	// seed 用の共通パスワード（Rails の seed と同じ "foobar"）
+	defaultPassword, err := auth.HashPassword("foobar")
+	if err != nil {
+		slog.ErrorContext(ctx, "seedUsers: failed to hash default password", "err", err)
+		return
+	}
+	// admin 用パスワード（Rails の seed と同じ "adminstrator"）
+	adminPassword, err := auth.HashPassword("adminstrator")
+	if err != nil {
+		slog.ErrorContext(ctx, "seedUsers: failed to hash admin password", "err", err)
+		return
+	}
+
+	type userSeed struct {
+		userInput
+		Password string
+		Admin    bool
+	}
+
+	users := []userSeed{
+		{userInput: userInput{Email: "guest@gmail.com", Name: "guest", Gender: "男性", Image: "public/images/user_images/man1.jpg"}, Password: defaultPassword},
+		{userInput: userInput{Email: "daisuke@gmail.com", Name: "daisuke", Gender: "男性", Image: "public/images/user_images/man2.jpg"}, Password: defaultPassword},
+		{userInput: userInput{Email: "kenta@gmail.com", Name: "peter", Gender: "男性", Image: "public/images/user_images/spiderman.png"}, Password: defaultPassword},
+		{userInput: userInput{Email: "marika@gmail.com", Name: "marika", Gender: "女性", Image: "public/images/user_images/woman1.jpg"}, Password: defaultPassword},
+		{userInput: userInput{Email: "nanase@gmail.com", Name: "nanase", Gender: "女性", Image: "public/images/user_images/woman2.jpg"}, Password: defaultPassword},
+		{userInput: userInput{Email: "kanakana@gmail.com", Name: "kanakana", Gender: "女性", Image: "public/images/user_images/woman3.jpg"}, Password: defaultPassword},
+		{userInput: userInput{Email: "adminstrator@gmail.com", Name: "admin", Gender: "男性", Image: "public/images/user_images/man1.jpg"}, Password: adminPassword, Admin: true},
 	}
 
 	// test1〜12 (男性)
 	for i := 1; i <= 12; i++ {
-		users = append(users, userInput{
-			Email:  fmt.Sprintf("%d@gmail.com", i),
-			Name:   fmt.Sprintf("test%d", i),
-			Gender: "男性",
-			Image:  fmt.Sprintf("public/images/user_images/man%d.jpg", rand.Intn(3)+1),
+		users = append(users, userSeed{
+			userInput: userInput{
+				Email:  fmt.Sprintf("%d@gmail.com", i),
+				Name:   fmt.Sprintf("test%d", i),
+				Gender: "男性",
+				Image:  fmt.Sprintf("public/images/user_images/man%d.jpg", rand.Intn(3)+1),
+			},
+			Password: defaultPassword,
 		})
 	}
 	// test13〜24 (女性)
 	for i := 13; i <= 24; i++ {
-		users = append(users, userInput{
-			Email:  fmt.Sprintf("%d@gmail.com", i),
-			Name:   fmt.Sprintf("test%d", i),
-			Gender: "女性",
-			Image:  fmt.Sprintf("public/images/user_images/woman%d.jpg", rand.Intn(3)+1),
+		users = append(users, userSeed{
+			userInput: userInput{
+				Email:  fmt.Sprintf("%d@gmail.com", i),
+				Name:   fmt.Sprintf("test%d", i),
+				Gender: "女性",
+				Image:  fmt.Sprintf("public/images/user_images/woman%d.jpg", rand.Intn(3)+1),
+			},
+			Password: defaultPassword,
 		})
 	}
 
@@ -218,9 +245,14 @@ func seedUsers(ctx context.Context, gdb *gorm.DB) {
 			slog.InfoContext(ctx, "User already exists, skip", "email", u.Email)
 			continue
 		}
+		img := u.Image
 		user := model.User{
-			Name:  u.Name,
-			Email: u.Email,
+			Name:           u.Name,
+			Email:          u.Email,
+			Gender:         u.Gender,
+			Image:          &img,
+			Admin:          u.Admin,
+			PasswordDigest: u.Password,
 		}
 		if err := repo.Create(ctx, &user); err != nil {
 			slog.ErrorContext(ctx, "seedUsers: create failed", "email", u.Email, "err", err)
