@@ -2,8 +2,6 @@ package usecase
 
 import (
 	"context"
-	"regexp"
-	"strings"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -47,50 +45,7 @@ func NewSignupUsecase(
 	}
 }
 
-// emailRegex は Rails の validates_format_of :email と同等の正規表現です。
-var emailRegex = regexp.MustCompile(`(?i)^[^@\s]+@(?:[-a-z0-9]+\.)+[a-z]{2,}$`)
-
 func (i *SignupInteractor) Execute(ctx context.Context, input SignupInput) (*SignupOutput, error) {
-	// ─── バリデーション（Rails の validates に対応）─────────────────────
-	var errs []string
-
-	// name: presence, length(max:50)
-	if strings.TrimSpace(input.Name) == "" {
-		errs = append(errs, "名前を入力してください")
-	} else if len(input.Name) > 50 {
-		errs = append(errs, "名前は50文字以内で入力してください")
-	}
-
-	// email: presence, length(max:250), format
-	if strings.TrimSpace(input.Email) == "" {
-		errs = append(errs, "メールアドレスを入力してください")
-	} else if len(input.Email) > 250 {
-		errs = append(errs, "メールアドレスは250文字以内で入力してください")
-	} else if !emailRegex.MatchString(input.Email) {
-		errs = append(errs, "メールアドレスは正しい形式で入力してください")
-	}
-
-	// gender: presence
-	if strings.TrimSpace(input.Gender) == "" {
-		errs = append(errs, "性別を入力してください")
-	}
-
-	// password: presence, length(min:6)
-	if input.Password == "" {
-		errs = append(errs, "パスワードを入力してください")
-	} else if len(input.Password) < 6 {
-		errs = append(errs, "パスワードは6文字以上で入力してください")
-	}
-
-	// password_confirmation: match
-	if input.Password != input.PasswordConfirmation {
-		errs = append(errs, "パスワード（確認）が一致しません")
-	}
-
-	if len(errs) > 0 {
-		return nil, apperror.UnprocessableEntity(errs...)
-	}
-
 	// ─── 一意性チェック（Rails の uniqueness に対応）─────────────────────
 	nameExists, err := i.UserRepository.ExistsByName(ctx, input.Name)
 	if err != nil {
