@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -19,11 +21,19 @@ type PostApiV1SignupHandler struct {
 }
 
 func (h *PostApiV1SignupHandler) PostApiV1Signup(ctx echo.Context) error {
+	// ─── バリデーション（Rails の validates に対応）─────────────────────
+	var errs []string
+
 	// multipart/form-data からフィールドを取得
+	gender, err := NewModelGender(ctx.FormValue("gender"))
+	if err != nil {
+		errs = append(errs, "性別は「男性」または「女性」で入力してください")
+	}
+
 	input := usecase.SignupInput{
 		Name:                 ctx.FormValue("name"),
 		Email:                ctx.FormValue("email"),
-		Gender:               ctx.FormValue("gender"),
+		Gender:               gender,
 		Password:             ctx.FormValue("password"),
 		PasswordConfirmation: ctx.FormValue("password_confirmation"),
 	}
@@ -32,9 +42,6 @@ func (h *PostApiV1SignupHandler) PostApiV1Signup(ctx echo.Context) error {
 	if image := ctx.FormValue("image"); image != "" {
 		input.Image = &image
 	}
-
-	// ─── バリデーション（Rails の validates に対応）─────────────────────
-	var errs []string
 
 	// name: presence, length(max:50)
 	if strings.TrimSpace(input.Name) == "" {
@@ -50,11 +57,6 @@ func (h *PostApiV1SignupHandler) PostApiV1Signup(ctx echo.Context) error {
 		errs = append(errs, "メールアドレスは250文字以内で入力してください")
 	} else if !emailRegex.MatchString(input.Email) {
 		errs = append(errs, "メールアドレスは正しい形式で入力してください")
-	}
-
-	// gender: presence
-	if strings.TrimSpace(input.Gender) == "" {
-		errs = append(errs, "性別を入力してください")
 	}
 
 	// password: presence, length(min:6)
@@ -79,5 +81,22 @@ func (h *PostApiV1SignupHandler) PostApiV1Signup(ctx echo.Context) error {
 		return err
 	}
 
-	return ctx.JSON(http.StatusCreated, openapi.NewSignupResponse(output.User))
+	response, err := openapi.NewSignupResponse(output.User)
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(http.StatusCreated, response)
+}
+
+// toModelGender は FormValue の文字列を model.Gender に変換します。
+// 「男性」「女性」以外の値は error を返します。
+func NewModelGender(s string) (model.Gender, error) {
+	switch model.Gender(s) {
+	case model.GenderMale:
+		return model.GenderMale, nil
+	case model.GenderFemale:
+		return model.GenderFemale, nil
+	default:
+		return "", fmt.Errorf("invalid gender value: %q", s)
+	}
 }

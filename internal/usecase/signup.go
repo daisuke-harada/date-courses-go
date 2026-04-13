@@ -19,7 +19,7 @@ type SignupInputPort interface {
 type SignupInput struct {
 	Name                 string
 	Email                string
-	Gender               string
+	Gender               model.Gender
 	Password             string
 	PasswordConfirmation string
 	Image                *string

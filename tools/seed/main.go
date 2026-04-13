@@ -177,7 +177,7 @@ func spotAndAddressCreate(
 type userInput struct {
 	Email  string
 	Name   string
-	Gender string
+	Gender model.Gender
 	Image  string
 }
 

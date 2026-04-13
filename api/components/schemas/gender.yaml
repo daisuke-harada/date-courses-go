@@ -1,0 +1,7 @@
+components:
+  schemas:
+    Gender:
+      type: string
+      enum:
+        - 男性
+        - 女性
