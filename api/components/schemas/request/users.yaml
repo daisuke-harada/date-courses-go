@@ -16,7 +16,7 @@ components:
           type: string
           format: email
         gender:
-          type: string
+          $ref: "../gender.yaml#/components/schemas/Gender"
         password:
           type: string
         password_confirmation:

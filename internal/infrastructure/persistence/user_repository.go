@@ -41,3 +41,24 @@ func (r *userRepository) FindByName(ctx context.Context, name string) (*model.Us
 	slog.InfoContext(ctx, "userRepository.FindByName succeeded", "user_id", user.ID)
 	return &user, nil
 }
+
+func (r *userRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
+	var count int64
+	if err := r.db.WithContext(ctx).Model(&model.User{}).Where("name = ?", name).Count(&count).Error; err != nil {
+		slog.ErrorContext(ctx, "userRepository.ExistsByName failed", "err", err)
+		return false, err
+	}
+	return count > 0, nil
+}
+
+func (r *userRepository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
+	var count int64
+	if err := r.db.WithContext(ctx).Model(&model.User{}).Where("email = ?", email).Count(&count).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+		slog.ErrorContext(ctx, "userRepository.ExistsByEmail failed", "err", err)
+		return false, err
+	}
+	return count > 0, nil
+}
