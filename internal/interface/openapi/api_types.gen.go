@@ -11,14 +11,20 @@ import (
 
 // Defines values for CourseFormRequestDataAuthority.
 const (
-	Empty CourseFormRequestDataAuthority = "公開"
-	N1    CourseFormRequestDataAuthority = "非公開"
+	CourseFormRequestDataAuthorityEmpty CourseFormRequestDataAuthority = "公開"
+	CourseFormRequestDataAuthorityN1    CourseFormRequestDataAuthority = "非公開"
 )
 
 // Defines values for CourseFormRequestDataTravelMode.
 const (
 	DRIVING CourseFormRequestDataTravelMode = "DRIVING"
 	WALKING CourseFormRequestDataTravelMode = "WALKING"
+)
+
+// Defines values for Gender.
+const (
+	GenderEmpty Gender = "男性"
+	GenderN1    Gender = "女性"
 )
 
 // AddressAndDateSpotsData defines model for AddressAndDateSpotsData.
@@ -145,6 +151,9 @@ type FollowResponseData struct {
 	Users        []UserResponseData `json:"users"`
 }
 
+// Gender defines model for Gender.
+type Gender string
+
 // ImageData defines model for ImageData.
 type ImageData struct {
 	Url *string `json:"url"`
@@ -181,7 +190,7 @@ type SigninFormRequestData struct {
 // SignupFormRequestData defines model for SignupFormRequestData.
 type SignupFormRequestData struct {
 	Email                string              `json:"email"`
-	Gender               string              `json:"gender"`
+	Gender               Gender              `json:"gender"`
 	Image                *openapi_types.File `json:"image,omitempty"`
 	Name                 string              `json:"name"`
 	Password             string              `json:"password"`
@@ -201,7 +210,7 @@ type TopResponseData struct {
 type UserData struct {
 	Admin  bool                `json:"admin"`
 	Email  openapi_types.Email `json:"email"`
-	Gender string              `json:"gender"`
+	Gender Gender              `json:"gender"`
 	Id     int                 `json:"id"`
 	Image  ImageData           `json:"image"`
 	Name   string              `json:"name"`
@@ -210,7 +219,7 @@ type UserData struct {
 // UserFormRequestData defines model for UserFormRequestData.
 type UserFormRequestData struct {
 	Email                openapi_types.Email `json:"email"`
-	Gender               string              `json:"gender"`
+	Gender               Gender              `json:"gender"`
 	Id                   string              `json:"id"`
 	Image                *openapi_types.File `json:"image,omitempty"`
 	Name                 string              `json:"name"`
@@ -226,7 +235,7 @@ type UserResponseData struct {
 	Email           string               `json:"email"`
 	FollowerIds     []int                `json:"followerIds"`
 	FollowingIds    []int                `json:"followingIds"`
-	Gender          string               `json:"gender"`
+	Gender          Gender               `json:"gender"`
 	Id              int                  `json:"id"`
 	Image           ImageData            `json:"image"`
 	Name            string               `json:"name"`

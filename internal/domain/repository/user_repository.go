@@ -8,4 +8,6 @@ import (
 
 type UserRepository interface {
 	Create(ctx context.Context, user *model.User) error
+	ExistsByName(ctx context.Context, name string) (bool, error)
+	ExistsByEmail(ctx context.Context, email string) (bool, error)
 }

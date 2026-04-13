@@ -105,6 +105,19 @@ func Forbidden(msg ...string) error {
 	}
 }
 
+// UnprocessableEntity は 422 エラーを返します。バリデーションエラー等で使用します。
+// 複数メッセージを渡せます。
+func UnprocessableEntity(msg ...string) error {
+	messages := []string{"入力内容に誤りがあります"}
+	if len(msg) > 0 {
+		messages = msg
+	}
+	return &appError{
+		statusCode: http.StatusUnprocessableEntity,
+		messages:   messages,
+	}
+}
+
 // Wrap は任意のステータスコードで既存の error をラップします。
 func Wrap(cause error, statusCode int, msg string) error {
 	return &appError{

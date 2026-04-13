@@ -739,7 +739,7 @@ components:
         email:
           type: string
         gender:
-          type: string
+          $ref: "#/components/schemas/Gender"
         password:
           type: string
         password_confirmation:
@@ -838,7 +838,7 @@ components:
           user:
             image:
               url: https://openapi-generator.tech
-            gender: gender
+            gender: null
             name: name
             admin: true
             id: 5
@@ -891,12 +891,12 @@ components:
           user:
             image:
               url: https://openapi-generator.tech
-            gender: gender
+            gender: null
             name: name
             admin: true
             id: 5
             email: email
-        gender: gender
+        gender: 男性
         followerIds:
         - 6
         - 6
@@ -944,7 +944,7 @@ components:
         email:
           type: string
         gender:
-          type: string
+          $ref: "#/components/schemas/Gender"
         image:
           $ref: "#/components/schemas/ImageData"
         name:
@@ -985,7 +985,7 @@ components:
           format: email
           type: string
         gender:
-          type: string
+          $ref: "#/components/schemas/Gender"
         password:
           type: string
         password_confirmation:
@@ -1058,7 +1058,7 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
@@ -1111,12 +1111,12 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
               email: email
-          gender: gender
+          gender: 男性
           followerIds:
           - 6
           - 6
@@ -1207,7 +1207,7 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
@@ -1260,12 +1260,12 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
               email: email
-          gender: gender
+          gender: 男性
           followerIds:
           - 6
           - 6
@@ -1380,7 +1380,7 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
@@ -1433,12 +1433,12 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
               email: email
-          gender: gender
+          gender: 男性
           followerIds:
           - 6
           - 6
@@ -1530,7 +1530,7 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
@@ -1583,12 +1583,12 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
               email: email
-          gender: gender
+          gender: 男性
           followerIds:
           - 6
           - 6
@@ -1679,7 +1679,7 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
@@ -1732,12 +1732,12 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
               email: email
-          gender: gender
+          gender: 男性
           followerIds:
           - 6
           - 6
@@ -1829,7 +1829,7 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
@@ -1882,12 +1882,12 @@ components:
             user:
               image:
                 url: https://openapi-generator.tech
-              gender: gender
+              gender: null
               name: name
               admin: true
               id: 5
               email: email
-          gender: gender
+          gender: 男性
           followerIds:
           - 6
           - 6
@@ -2132,7 +2132,7 @@ components:
         user:
           image:
             url: https://openapi-generator.tech
-          gender: gender
+          gender: null
           name: name
           admin: true
           id: 5
@@ -2195,6 +2195,11 @@ components:
       required:
       - course_id
       type: object
+    Gender:
+      enum:
+      - 男性
+      - 女性
+      type: string
     ImageData:
       example:
         url: https://openapi-generator.tech
@@ -2298,7 +2303,7 @@ components:
       example:
         image:
           url: https://openapi-generator.tech
-        gender: gender
+        gender: null
         name: name
         admin: true
         id: 5
@@ -2312,7 +2317,7 @@ components:
           format: email
           type: string
         gender:
-          type: string
+          $ref: "#/components/schemas/Gender"
         image:
           $ref: "#/components/schemas/ImageData"
         admin:
