@@ -79,16 +79,16 @@ func InternalServerError(cause error, msg ...string) error {
 	}
 }
 
-// Unauthorized は 401 エラーを返します。
+// Unauthorized は 401 エラーを返します。複数メッセージを渡せます。
 // msg を省略した場合は "認証が必要です" がデフォルトメッセージになります。
 func Unauthorized(msg ...string) error {
-	message := "認証が必要です"
+	messages := []string{"認証が必要です"}
 	if len(msg) > 0 {
-		message = msg[0]
+		messages = msg
 	}
 	return &appError{
 		statusCode: http.StatusUnauthorized,
-		messages:   []string{message},
+		messages:   messages,
 	}
 }
 

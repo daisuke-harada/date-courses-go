@@ -42,5 +42,9 @@ func (h *PostApiV1LoginHandler) PostApiV1Login(ctx echo.Context) error {
 		return err
 	}
 
-	return ctx.JSON(http.StatusOK, openapi.NewLoginResponse(output.User))
+	resp, err := openapi.NewLoginResponse(output.User)
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(http.StatusOK, resp)
 }

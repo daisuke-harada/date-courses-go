@@ -14,22 +14,26 @@ type LoginUserResponseData struct {
 	ID     uint    `json:"id"`
 	Name   string  `json:"name"`
 	Email  string  `json:"email"`
-	Gender string  `json:"gender"`
+	Gender Gender  `json:"gender"`
 	Image  *string `json:"image"`
 	Admin  bool    `json:"admin"`
 }
 
 // NewLoginResponse は LoginOutput からレスポンス型を生成します。
-func NewLoginResponse(user *model.User) LoginResponseBody {
+func NewLoginResponse(user *model.User) (LoginResponseBody, error) {
+	gender, err := NewGender(user.Gender)
+	if err != nil {
+		return LoginResponseBody{}, err
+	}
 	return LoginResponseBody{
 		User: LoginUserResponseData{
 			ID:     user.ID,
 			Name:   user.Name,
 			Email:  user.Email,
-			Gender: user.Gender,
+			Gender: gender,
 			Image:  user.Image,
 			Admin:  user.Admin,
 		},
 		LoginStatus: true,
-	}
+	}, nil
 }
