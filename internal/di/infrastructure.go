@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"gorm.io/gorm"
@@ -36,4 +36,5 @@ func ProvideServices(ct *Container) {
 func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 	ct.MustProvide(usecase.NewSignupUsecase)
+	ct.MustProvide(usecase.NewLoginUsecase)
 }

@@ -10,10 +10,10 @@ const (
 )
 
 type User struct {
-	ID             uint   `gorm:"primaryKey;autoIncrement"`
-	Name           string `gorm:"not null;uniqueIndex"`
-	Email          string `gorm:"not null;uniqueIndex"`
-	Gender         Gender `gorm:"not null"`
+	ID             uint      `gorm:"primaryKey;autoIncrement"`
+	Name           string    `gorm:"not null;uniqueIndex"`
+	Email          string    `gorm:"not null;uniqueIndex"`
+	Gender         Gender    `gorm:"not null"`
 	Image          *string
 	Admin          bool      `gorm:"not null;default:false"`
 	PasswordDigest string    `gorm:"not null"`
