@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	model "github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	"gorm.io/gorm"
 )
@@ -24,4 +24,17 @@ func (r *dateSpotReviewRepository) Create(ctx context.Context, review *model.Dat
 	}
 	slog.InfoContext(ctx, "dateSpotReviewRepository.Create succeeded", "review_id", review.ID)
 	return nil
+}
+
+// FindByUserID は指定ユーザーのレビュー一覧を DateSpot 込みで返します。
+func (r *dateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
+	var reviews []*model.DateSpotReview
+	if err := r.db.WithContext(ctx).
+		Where("user_id = ?", userID).
+		Preload("DateSpot").
+		Find(&reviews).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotReviewRepository.FindByUserID failed", "err", err)
+		return nil, err
+	}
+	return reviews, nil
 }

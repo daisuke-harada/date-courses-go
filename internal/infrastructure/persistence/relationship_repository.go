@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	model "github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	"gorm.io/gorm"
 )
@@ -24,4 +24,32 @@ func (r *relationshipRepository) Create(ctx context.Context, relationship *model
 	}
 	slog.InfoContext(ctx, "relationshipRepository.Create succeeded", "relationship_id", relationship.ID)
 	return nil
+}
+
+// FindFollowingsByUserID は指定ユーザーがフォローしているユーザー一覧（管理者除く）を返します。
+// Rails: user.followings.includes(...).non_admins に相当します。
+func (r *relationshipRepository) FindFollowingsByUserID(ctx context.Context, userID uint) ([]*model.User, error) {
+	var users []*model.User
+	if err := r.db.WithContext(ctx).
+		Joins("JOIN relationships ON relationships.follow_id = users.id").
+		Where("relationships.user_id = ? AND users.admin = false", userID).
+		Find(&users).Error; err != nil {
+		slog.ErrorContext(ctx, "relationshipRepository.FindFollowingsByUserID failed", "err", err)
+		return nil, err
+	}
+	return users, nil
+}
+
+// FindFollowersByUserID は指定ユーザーをフォローしているユーザー一覧（管理者除く）を返します。
+// Rails: user.followers.includes(...).non_admins に相当します。
+func (r *relationshipRepository) FindFollowersByUserID(ctx context.Context, userID uint) ([]*model.User, error) {
+	var users []*model.User
+	if err := r.db.WithContext(ctx).
+		Joins("JOIN relationships ON relationships.user_id = users.id").
+		Where("relationships.follow_id = ? AND users.admin = false", userID).
+		Find(&users).Error; err != nil {
+		slog.ErrorContext(ctx, "relationshipRepository.FindFollowersByUserID failed", "err", err)
+		return nil, err
+	}
+	return users, nil
 }

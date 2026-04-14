@@ -17,7 +17,6 @@ func ProvideDB(cfg *config.Config) (*gorm.DB, error) {
 }
 
 // ProvideRepositories は全リポジトリのコンストラクタを Container に登録します。
-// dig が *gorm.DB を解決して各リポジトリに注入します。
 func ProvideRepositories(ct *Container) {
 	ct.MustProvide(persistence.NewUserRepository)
 	ct.MustProvide(persistence.NewDateSpotRepository)
@@ -37,4 +36,5 @@ func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 	ct.MustProvide(usecase.NewSignupUsecase)
 	ct.MustProvide(usecase.NewLoginUsecase)
+	ct.MustProvide(usecase.NewGetUsersUsecase)
 }
