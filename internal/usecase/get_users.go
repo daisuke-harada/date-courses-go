@@ -67,22 +67,33 @@ func (i *GetUsersInteractor) Execute(ctx context.Context, input GetUsersInput) (
 }
 
 func (i *GetUsersInteractor) buildUserWithRelations(ctx context.Context, user *model.User) (*UserWithRelations, error) {
-	followerIDs, err := i.UserRepository.FindFollowerIDsByUserID(ctx, user.ID)
+	return buildUserWithRelations(ctx, i.UserRepository, i.CourseRepository, i.DateSpotReviewRepository, user)
+}
+
+// buildUserWithRelations はユーザーと関連データをまとめた UserWithRelations を構築する共有ヘルパーです。
+func buildUserWithRelations(
+	ctx context.Context,
+	userRepo repository.UserRepository,
+	courseRepo repository.CourseRepository,
+	reviewRepo repository.DateSpotReviewRepository,
+	user *model.User,
+) (*UserWithRelations, error) {
+	followerIDs, err := userRepo.FindFollowerIDsByUserID(ctx, user.ID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
 
-	followingIDs, err := i.UserRepository.FindFollowingIDsByUserID(ctx, user.ID)
+	followingIDs, err := userRepo.FindFollowingIDsByUserID(ctx, user.ID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
 
-	courses, err := i.CourseRepository.FindByUserID(ctx, user.ID)
+	courses, err := courseRepo.FindByUserID(ctx, user.ID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
 
-	reviews, err := i.DateSpotReviewRepository.FindByUserID(ctx, user.ID)
+	reviews, err := reviewRepo.FindByUserID(ctx, user.ID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
