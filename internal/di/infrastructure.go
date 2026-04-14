@@ -41,4 +41,5 @@ func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewUpdateUserUsecase)
 	ct.MustProvide(usecase.NewDeleteUserUsecase)
 	ct.MustProvide(usecase.NewGetUserFollowingsUsecase)
+	ct.MustProvide(usecase.NewGetUserFollowersUsecase)
 }
