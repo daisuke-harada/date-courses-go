@@ -31,7 +31,9 @@ func NewHandler(container *di.Container) *Handler {
 			InputPort: di.MustInvoke[usecase.GetUserInputPort](container),
 		},
 		GetApiV1UsersUserIdFollowersHandler:  GetApiV1UsersUserIdFollowersHandler{},
-		GetApiV1UsersUserIdFollowingsHandler: GetApiV1UsersUserIdFollowingsHandler{},
+		GetApiV1UsersUserIdFollowingsHandler: GetApiV1UsersUserIdFollowingsHandler{
+			InputPort: di.MustInvoke[usecase.GetUserFollowingsInputPort](container),
+		},
 		PostApiV1CoursesHandler:              PostApiV1CoursesHandler{},
 		PostApiV1DateSpotReviewsHandler:      PostApiV1DateSpotReviewsHandler{},
 		PostApiV1DateSpotsHandler:            PostApiV1DateSpotsHandler{},
