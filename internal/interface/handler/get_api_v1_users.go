@@ -3,14 +3,28 @@ package handler
 import (
 	"net/http"
 
+	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
+	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
 
-type GetApiV1UsersHandler struct{}
+type GetApiV1UsersHandler struct {
+	InputPort usecase.GetUsersInputPort
+}
 
-func (h *GetApiV1UsersHandler) GetApiV1Users(ctx echo.Context, arg1 openapi.GetApiV1UsersParams) error {
-	// TODO: Implement your logic here
-	// Example: return ctx.JSON(http.StatusOK, map[string]string{"message": "success"})
-	return ctx.JSON(http.StatusOK, map[string]string{"message": "success"})
+func (h *GetApiV1UsersHandler) GetApiV1Users(ctx echo.Context, params openapi.GetApiV1UsersParams) error {
+	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.GetUsersInput{
+		Name: params.Name,
+	})
+	if err != nil {
+		return err
+	}
+
+	responses, err := openapi.NewGetUsersResponse(output.Users)
+	if err != nil {
+		return apperror.InternalServerError(err)
+	}
+
+	return ctx.JSON(http.StatusOK, responses)
 }
