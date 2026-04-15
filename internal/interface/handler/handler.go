@@ -42,7 +42,9 @@ func NewHandler(container *di.Container) *Handler {
 		PostApiV1LoginHandler: PostApiV1LoginHandler{
 			InputPort: di.MustInvoke[usecase.LoginInputPort](container),
 		},
-		PostApiV1RelationshipsHandler: PostApiV1RelationshipsHandler{},
+		PostApiV1RelationshipsHandler: PostApiV1RelationshipsHandler{
+			InputPort: di.MustInvoke[usecase.CreateRelationshipInputPort](container),
+		},
 		PostApiV1SignupHandler: PostApiV1SignupHandler{
 			InputPort: di.MustInvoke[usecase.SignupInputPort](container),
 		},
