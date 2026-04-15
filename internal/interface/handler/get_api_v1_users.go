@@ -21,10 +21,10 @@ func (h *GetApiV1UsersHandler) GetApiV1Users(ctx echo.Context, params openapi.Ge
 		return err
 	}
 
-	responses, err := openapi.NewGetUsersResponse(output.Users)
+	response, err := openapi.NewGetUsersResponse(output.Users)
 	if err != nil {
 		return apperror.InternalServerError(err)
 	}
 
-	return ctx.JSON(http.StatusOK, responses)
+	return ctx.JSON(http.StatusOK, response)
 }

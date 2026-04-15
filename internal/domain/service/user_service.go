@@ -12,6 +12,7 @@ import (
 // UserService はユーザーに関するドメインサービスです。
 type UserService interface {
 	BuildUserWithRelations(ctx context.Context, user *model.User) (*model.UserWithRelations, error)
+	BuildUsersWithRelations(ctx context.Context, users []*model.User) ([]*model.UserWithRelations, error)
 }
 
 type userService struct {
@@ -98,4 +99,33 @@ func (s *userService) BuildUserWithRelations(ctx context.Context, user *model.Us
 		Courses:      courses,
 		Reviews:      reviews,
 	}, nil
+}
+
+// BuildUsersWithRelations は複数ユーザーの関連データを並列取得して UserWithRelations のスライスを返します。
+func (s *userService) BuildUsersWithRelations(ctx context.Context, users []*model.User) ([]*model.UserWithRelations, error) {
+	result := make([]*model.UserWithRelations, len(users))
+	errCh := make(chan error, len(users))
+	var wg sync.WaitGroup
+
+	for idx, user := range users {
+		wg.Add(1)
+		go func(idx int, user *model.User) {
+			defer wg.Done()
+			uwr, err := s.BuildUserWithRelations(ctx, user)
+			if err != nil {
+				errCh <- err
+				return
+			}
+			result[idx] = uwr
+		}(idx, user)
+	}
+
+	wg.Wait()
+	close(errCh)
+
+	if err := <-errCh; err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

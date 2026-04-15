@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"sync"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -44,27 +43,8 @@ func (i *GetUsersInteractor) Execute(ctx context.Context, input GetUsersInput) (
 		return nil, apperror.InternalServerError(err)
 	}
 
-	result := make([]*model.UserWithRelations, len(users))
-	errCh := make(chan error, len(users))
-	var wg sync.WaitGroup
-
-	for idx, user := range users {
-		wg.Add(1)
-		go func(idx int, user *model.User) {
-			defer wg.Done()
-			uwr, err := i.UserService.BuildUserWithRelations(ctx, user)
-			if err != nil {
-				errCh <- err
-				return
-			}
-			result[idx] = uwr
-		}(idx, user)
-	}
-
-	wg.Wait()
-	close(errCh)
-
-	if err := <-errCh; err != nil {
+	result, err := i.UserService.BuildUsersWithRelations(ctx, users)
+	if err != nil {
 		return nil, err
 	}
 
