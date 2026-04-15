@@ -68,15 +68,6 @@ func (r *userRepository) Search(ctx context.Context, name *string) ([]*model.Use
 	return users, nil
 }
 
-func (r *userRepository) ExistsByName(ctx context.Context, name string) (bool, error) {
-	var count int64
-	if err := r.db.WithContext(ctx).Model(&model.User{}).Where("name = ?", name).Count(&count).Error; err != nil {
-		slog.ErrorContext(ctx, "userRepository.ExistsByName failed", "err", err)
-		return false, err
-	}
-	return count > 0, nil
-}
-
 func (r *userRepository) ExistsByEmail(ctx context.Context, email string) (bool, error) {
 	var count int64
 	if err := r.db.WithContext(ctx).Model(&model.User{}).Where("email = ?", email).Count(&count).Error; err != nil {

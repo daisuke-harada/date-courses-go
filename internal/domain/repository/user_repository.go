@@ -11,7 +11,6 @@ type UserRepository interface {
 	FindByID(ctx context.Context, id uint) (*model.User, error)
 	FindByName(ctx context.Context, name string) (*model.User, error)
 	Search(ctx context.Context, name *string) ([]*model.User, error)
-	ExistsByName(ctx context.Context, name string) (bool, error)
 	ExistsByEmail(ctx context.Context, email string) (bool, error)
 	FindFollowerIDsByUserID(ctx context.Context, userID uint) ([]int, error)
 	FindFollowingIDsByUserID(ctx context.Context, userID uint) ([]int, error)

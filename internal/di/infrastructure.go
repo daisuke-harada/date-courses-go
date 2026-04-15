@@ -29,6 +29,7 @@ func ProvideRepositories(ct *Container) {
 // ProvideServices は全ドメインサービスのコンストラクタを Container に登録します。
 func ProvideServices(ct *Container) {
 	ct.MustProvide(service.NewAuthService)
+	ct.MustProvide(service.NewUserService)
 }
 
 // ProvideUsecases は全ユースケースのコンストラクタを Container に登録します。
@@ -38,4 +39,5 @@ func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewLoginUsecase)
 	ct.MustProvide(usecase.NewGetUsersUsecase)
 	ct.MustProvide(usecase.NewGetUserUsecase)
+	ct.MustProvide(usecase.NewUpdateUserUsecase)
 }
