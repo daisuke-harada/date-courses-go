@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
 )
 
 // GetUserFollowingsInputPort はユーザーのフォロー一覧取得ユースケースの入力ポートです。
@@ -17,48 +19,42 @@ type GetUserFollowingsInput struct {
 }
 
 type GetUserFollowingsOutput struct {
-	Users []*UserWithRelations
+	Users []*model.UserWithRelations
 }
 
 type GetUserFollowingsInteractor struct {
-	UserRepository           repository.UserRepository
-	RelationshipRepository   repository.RelationshipRepository
-	CourseRepository         repository.CourseRepository
-	DateSpotReviewRepository repository.DateSpotReviewRepository
+	UserRepository         repository.UserRepository
+	RelationshipRepository repository.RelationshipRepository
+	UserService            service.UserService
 }
 
 func NewGetUserFollowingsUsecase(
 	userRepository repository.UserRepository,
 	relationshipRepository repository.RelationshipRepository,
-	courseRepository repository.CourseRepository,
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
+	userService service.UserService,
 ) GetUserFollowingsInputPort {
 	return &GetUserFollowingsInteractor{
-		UserRepository:           userRepository,
-		RelationshipRepository:   relationshipRepository,
-		CourseRepository:         courseRepository,
-		DateSpotReviewRepository: dateSpotReviewRepository,
+		UserRepository:         userRepository,
+		RelationshipRepository: relationshipRepository,
+		UserService:            userService,
 	}
 }
 
 func (i *GetUserFollowingsInteractor) Execute(ctx context.Context, input GetUserFollowingsInput) (*GetUserFollowingsOutput, error) {
 	// ユーザーの存在確認
-	if _, err := i.UserRepository.FindByID(ctx, input.UserID); err != nil {
+	user, err := i.UserRepository.FindByID(ctx, input.UserID)
+	if err != nil {
 		return nil, apperror.NotFound()
 	}
 
-	followings, err := i.RelationshipRepository.FindFollowingsByUserID(ctx, input.UserID)
+	followings, err := i.RelationshipRepository.FindFollowingsByUserID(ctx, user.ID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
 
-	result := make([]*UserWithRelations, 0, len(followings))
-	for _, user := range followings {
-		uwr, err := buildUserWithRelations(ctx, i.UserRepository, i.CourseRepository, i.DateSpotReviewRepository, user)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, uwr)
+	result, err := i.UserService.BuildUsersWithRelations(ctx, followings)
+	if err != nil {
+		return nil, err
 	}
 
 	return &GetUserFollowingsOutput{Users: result}, nil

@@ -46,15 +46,6 @@ func NewSignupUsecase(
 }
 
 func (i *SignupInteractor) Execute(ctx context.Context, input SignupInput) (*SignupOutput, error) {
-	// ─── 一意性チェック（Rails の uniqueness に対応）─────────────────────
-	nameExists, err := i.UserRepository.ExistsByName(ctx, input.Name)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-	if nameExists {
-		return nil, apperror.UnprocessableEntity("名前はすでに存在します")
-	}
-
 	emailExists, err := i.UserRepository.ExistsByEmail(ctx, input.Email)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
@@ -69,14 +60,7 @@ func (i *SignupInteractor) Execute(ctx context.Context, input SignupInput) (*Sig
 		return nil, apperror.InternalServerError(err)
 	}
 
-	// ─── ユーザー作成 ───────────────────────────────────────────────────
-	user := &model.User{
-		Name:           input.Name,
-		Email:          input.Email,
-		Gender:         input.Gender,
-		Image:          input.Image,
-		PasswordDigest: passwordDigest,
-	}
+	user := model.NewUser(input.Name, input.Email, input.Gender, input.Image, passwordDigest)
 
 	if err := i.UserRepository.Create(ctx, user); err != nil {
 		return nil, apperror.InternalServerError(err)

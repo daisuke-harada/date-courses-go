@@ -21,20 +21,10 @@ func (h *GetApiV1UsersHandler) GetApiV1Users(ctx echo.Context, params openapi.Ge
 		return err
 	}
 
-	responses := make([]openapi.UserResponseBody, 0, len(output.Users))
-	for _, uwr := range output.Users {
-		resp, err := openapi.BuildUserResponseBody(
-			uwr.User,
-			uwr.FollowerIDs,
-			uwr.FollowingIDs,
-			uwr.Courses,
-			uwr.Reviews,
-		)
-		if err != nil {
-			return apperror.InternalServerError(err)
-		}
-		responses = append(responses, resp)
+	response, err := openapi.NewGetUsersResponse(output.Users)
+	if err != nil {
+		return apperror.InternalServerError(err)
 	}
 
-	return ctx.JSON(http.StatusOK, responses)
+	return ctx.JSON(http.StatusOK, response)
 }

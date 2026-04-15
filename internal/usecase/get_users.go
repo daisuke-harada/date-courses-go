@@ -6,6 +6,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
 )
 
 // GetUsersInputPort はユーザー一覧取得ユースケースの入力ポートです。
@@ -18,33 +19,21 @@ type GetUsersInput struct {
 }
 
 type GetUsersOutput struct {
-	Users []*UserWithRelations
-}
-
-// UserWithRelations はユーザーと関連データをまとめた中間型です。
-type UserWithRelations struct {
-	User         *model.User
-	FollowerIDs  []int
-	FollowingIDs []int
-	Courses      []*model.Course
-	Reviews      []*model.DateSpotReview
+	Users []*model.UserWithRelations
 }
 
 type GetUsersInteractor struct {
-	UserRepository          repository.UserRepository
-	CourseRepository        repository.CourseRepository
-	DateSpotReviewRepository repository.DateSpotReviewRepository
+	UserRepository repository.UserRepository
+	UserService    service.UserService
 }
 
 func NewGetUsersUsecase(
 	userRepository repository.UserRepository,
-	courseRepository repository.CourseRepository,
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
+	userService service.UserService,
 ) GetUsersInputPort {
 	return &GetUsersInteractor{
-		UserRepository:          userRepository,
-		CourseRepository:        courseRepository,
-		DateSpotReviewRepository: dateSpotReviewRepository,
+		UserRepository: userRepository,
+		UserService:    userService,
 	}
 }
 
@@ -54,55 +43,10 @@ func (i *GetUsersInteractor) Execute(ctx context.Context, input GetUsersInput) (
 		return nil, apperror.InternalServerError(err)
 	}
 
-	result := make([]*UserWithRelations, 0, len(users))
-	for _, user := range users {
-		uwr, err := i.buildUserWithRelations(ctx, user)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, uwr)
+	result, err := i.UserService.BuildUsersWithRelations(ctx, users)
+	if err != nil {
+		return nil, err
 	}
 
 	return &GetUsersOutput{Users: result}, nil
-}
-
-func (i *GetUsersInteractor) buildUserWithRelations(ctx context.Context, user *model.User) (*UserWithRelations, error) {
-	return buildUserWithRelations(ctx, i.UserRepository, i.CourseRepository, i.DateSpotReviewRepository, user)
-}
-
-// buildUserWithRelations はユーザーと関連データをまとめた UserWithRelations を構築する共有ヘルパーです。
-func buildUserWithRelations(
-	ctx context.Context,
-	userRepo repository.UserRepository,
-	courseRepo repository.CourseRepository,
-	reviewRepo repository.DateSpotReviewRepository,
-	user *model.User,
-) (*UserWithRelations, error) {
-	followerIDs, err := userRepo.FindFollowerIDsByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	followingIDs, err := userRepo.FindFollowingIDsByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	courses, err := courseRepo.FindByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	reviews, err := reviewRepo.FindByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	return &UserWithRelations{
-		User:         user,
-		FollowerIDs:  followerIDs,
-		FollowingIDs: followingIDs,
-		Courses:      courses,
-		Reviews:      reviews,
-	}, nil
 }

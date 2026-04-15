@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
 )
 
 // GetUserInputPort はユーザー単体取得ユースケースの入力ポートです。
@@ -17,24 +19,21 @@ type GetUserInput struct {
 }
 
 type GetUserOutput struct {
-	UserWithRelations *UserWithRelations
+	UserWithRelations *model.UserWithRelations
 }
 
 type GetUserInteractor struct {
-	UserRepository           repository.UserRepository
-	CourseRepository         repository.CourseRepository
-	DateSpotReviewRepository repository.DateSpotReviewRepository
+	UserRepository repository.UserRepository
+	UserService    service.UserService
 }
 
 func NewGetUserUsecase(
 	userRepository repository.UserRepository,
-	courseRepository repository.CourseRepository,
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
+	userService service.UserService,
 ) GetUserInputPort {
 	return &GetUserInteractor{
-		UserRepository:           userRepository,
-		CourseRepository:         courseRepository,
-		DateSpotReviewRepository: dateSpotReviewRepository,
+		UserRepository: userRepository,
+		UserService:    userService,
 	}
 }
 
@@ -44,7 +43,7 @@ func (i *GetUserInteractor) Execute(ctx context.Context, input GetUserInput) (*G
 		return nil, apperror.NotFound()
 	}
 
-	uwr, err := buildUserWithRelations(ctx, i.UserRepository, i.CourseRepository, i.DateSpotReviewRepository, user)
+	uwr, err := i.UserService.BuildUserWithRelations(ctx, user)
 	if err != nil {
 		return nil, err
 	}
