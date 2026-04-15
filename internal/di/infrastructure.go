@@ -40,4 +40,5 @@ func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewGetUsersUsecase)
 	ct.MustProvide(usecase.NewGetUserUsecase)
 	ct.MustProvide(usecase.NewUpdateUserUsecase)
+	ct.MustProvide(usecase.NewDeleteUserUsecase)
 }
