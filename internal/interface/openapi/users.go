@@ -3,22 +3,23 @@ package openapi
 import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	"github.com/oapi-codegen/runtime/types"
 )
 
 // UserResponseBody は UserResponseData の代替型です。
 // CourseResponseDataBody / DateSpotReviewDataBody を使うことで
 // OpeningTime / ClosingTime の nullable を正しく扱います。
 type UserResponseBody struct {
-	Admin           bool                    `json:"admin"`
+	Admin           bool                     `json:"admin"`
 	Courses         []CourseResponseDataBody `json:"courses"`
 	DateSpotReviews []DateSpotReviewDataBody `json:"date_spot_reviews"`
-	Email           string                  `json:"email"`
-	FollowerIds     []int                   `json:"followerIds"`
-	FollowingIds    []int                   `json:"followingIds"`
-	Gender          Gender                  `json:"gender"`
-	Id              int                     `json:"id"`
-	Image           ImageData               `json:"image"`
-	Name            string                  `json:"name"`
+	Email           string                   `json:"email"`
+	FollowerIds     []int                    `json:"followerIds"`
+	FollowingIds    []int                    `json:"followingIds"`
+	Gender          Gender                   `json:"gender"`
+	Id              int                      `json:"id"`
+	Image           ImageData                `json:"image"`
+	Name            string                   `json:"name"`
 }
 
 // CourseResponseDataBody は CourseResponseData の代替型です。
@@ -121,7 +122,7 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseDataBody, erro
 		courseUser = UserData{
 			Id:     int(course.User.ID),
 			Name:   course.User.Name,
-			Email:  course.User.Email,
+			Email:  types.Email(course.User.Email),
 			Gender: gender,
 			Image:  ImageData{Url: course.User.Image},
 			Admin:  course.User.Admin,
@@ -161,4 +162,23 @@ func buildDateSpotReviewDataBody(review *model.DateSpotReview) DateSpotReviewDat
 		Content:  content,
 		DateSpot: dateSpot,
 	}
+}
+
+// NewGetUsersResponse は output.Users から []UserResponseBody を構築します。
+func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseBody, error) {
+	responses := make([]UserResponseBody, 0, len(users))
+	for _, uwr := range users {
+		resp, err := BuildUserResponseBody(
+			uwr.User,
+			uwr.FollowerIDs,
+			uwr.FollowingIDs,
+			uwr.Courses,
+			uwr.Reviews,
+		)
+		if err != nil {
+			return nil, err
+		}
+		responses = append(responses, resp)
+	}
+	return responses, nil
 }

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"sync"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -18,21 +19,12 @@ type GetUsersInput struct {
 }
 
 type GetUsersOutput struct {
-	Users []*UserWithRelations
-}
-
-// UserWithRelations はユーザーと関連データをまとめた中間型です。
-type UserWithRelations struct {
-	User         *model.User
-	FollowerIDs  []int
-	FollowingIDs []int
-	Courses      []*model.Course
-	Reviews      []*model.DateSpotReview
+	Users []*model.UserWithRelations
 }
 
 type GetUsersInteractor struct {
-	UserRepository          repository.UserRepository
-	CourseRepository        repository.CourseRepository
+	UserRepository           repository.UserRepository
+	CourseRepository         repository.CourseRepository
 	DateSpotReviewRepository repository.DateSpotReviewRepository
 }
 
@@ -42,8 +34,8 @@ func NewGetUsersUsecase(
 	dateSpotReviewRepository repository.DateSpotReviewRepository,
 ) GetUsersInputPort {
 	return &GetUsersInteractor{
-		UserRepository:          userRepository,
-		CourseRepository:        courseRepository,
+		UserRepository:           userRepository,
+		CourseRepository:         courseRepository,
 		DateSpotReviewRepository: dateSpotReviewRepository,
 	}
 }
@@ -54,51 +46,92 @@ func (i *GetUsersInteractor) Execute(ctx context.Context, input GetUsersInput) (
 		return nil, apperror.InternalServerError(err)
 	}
 
-	result := make([]*UserWithRelations, 0, len(users))
-	for _, user := range users {
-		uwr, err := i.buildUserWithRelations(ctx, user)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, uwr)
+	result := make([]*model.UserWithRelations, len(users))
+	errCh := make(chan error, len(users))
+	var wg sync.WaitGroup
+
+	for idx, user := range users {
+		wg.Add(1)
+		go func(idx int, user *model.User) {
+			defer wg.Done()
+			uwr, err := i.buildUserWithRelations(ctx, user)
+			if err != nil {
+				errCh <- err
+				return
+			}
+			result[idx] = uwr
+		}(idx, user)
+	}
+
+	wg.Wait()
+	close(errCh)
+
+	if err := <-errCh; err != nil {
+		return nil, err
 	}
 
 	return &GetUsersOutput{Users: result}, nil
 }
 
-func (i *GetUsersInteractor) buildUserWithRelations(ctx context.Context, user *model.User) (*UserWithRelations, error) {
-	return buildUserWithRelations(ctx, i.UserRepository, i.CourseRepository, i.DateSpotReviewRepository, user)
-}
+func (i *GetUsersInteractor) buildUserWithRelations(ctx context.Context, user *model.User) (*model.UserWithRelations, error) {
+	var (
+		followerIDs  []int
+		followingIDs []int
+		courses      []*model.Course
+		reviews      []*model.DateSpotReview
+	)
 
-// buildUserWithRelations はユーザーと関連データをまとめた UserWithRelations を構築する共有ヘルパーです。
-func buildUserWithRelations(
-	ctx context.Context,
-	userRepo repository.UserRepository,
-	courseRepo repository.CourseRepository,
-	reviewRepo repository.DateSpotReviewRepository,
-	user *model.User,
-) (*UserWithRelations, error) {
-	followerIDs, err := userRepo.FindFollowerIDsByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
+	errCh := make(chan error, 4)
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		var err error
+		followerIDs, err = i.UserRepository.FindFollowerIDsByUserID(ctx, user.ID)
+		if err != nil {
+			errCh <- apperror.InternalServerError(err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		var err error
+		followingIDs, err = i.UserRepository.FindFollowingIDsByUserID(ctx, user.ID)
+		if err != nil {
+			errCh <- apperror.InternalServerError(err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		var err error
+		courses, err = i.CourseRepository.FindByUserID(ctx, user.ID)
+		if err != nil {
+			errCh <- apperror.InternalServerError(err)
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		var err error
+		reviews, err = i.DateSpotReviewRepository.FindByUserID(ctx, user.ID)
+		if err != nil {
+			errCh <- apperror.InternalServerError(err)
+		}
+	}()
+
+	wg.Wait()
+	close(errCh)
+
+	if err := <-errCh; err != nil {
+		return nil, err
 	}
 
-	followingIDs, err := userRepo.FindFollowingIDsByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	courses, err := courseRepo.FindByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	reviews, err := reviewRepo.FindByUserID(ctx, user.ID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
-	return &UserWithRelations{
+	return &model.UserWithRelations{
 		User:         user,
 		FollowerIDs:  followerIDs,
 		FollowingIDs: followingIDs,
