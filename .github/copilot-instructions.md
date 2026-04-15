@@ -63,6 +63,12 @@ tools/
 
 ## コーディングルール
 
+### domain/model
+
+- GORM タグ付きの struct（エンティティ）はここに定義する
+- 複数のモデルをまとめた集約型（例: `XxxWithRelations`）もここに定義する
+- usecase や openapi など他のパッケージの型には依存しない
+
 ### handler
 
 - `openapi` パッケージの型（`openapi.XxxParams`, `openapi.XxxJSONRequestBody` など）を受け取り、usecase の `Input` 型に変換して渡す
@@ -77,7 +83,11 @@ func (h *XxxHandler) Xxx(ctx echo.Context, params openapi.XxxParams) error {
     if err != nil {
         return err
     }
-    return ctx.JSON(http.StatusOK, toResponse(output))
+    response, err := openapi.NewXxxResponse(output)
+    if err != nil {
+        return apperror.InternalServerError(err)
+    }
+    return ctx.JSON(http.StatusOK, response)
 }
 ```
 
