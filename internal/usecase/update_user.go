@@ -6,7 +6,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
 )
 
 // UpdateUserInputPort はユーザー更新ユースケースの入力ポートです。
@@ -25,24 +25,21 @@ type UpdateUserInput struct {
 }
 
 type UpdateUserOutput struct {
-	UserWithRelations *UserWithRelations
+	UserWithRelations *model.UserWithRelations
 }
 
 type UpdateUserInteractor struct {
-	UserRepository           repository.UserRepository
-	CourseRepository         repository.CourseRepository
-	DateSpotReviewRepository repository.DateSpotReviewRepository
+	UserRepository repository.UserRepository
+	UserService    service.UserService
 }
 
 func NewUpdateUserUsecase(
 	userRepository repository.UserRepository,
-	courseRepository repository.CourseRepository,
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
+	userService service.UserService,
 ) UpdateUserInputPort {
 	return &UpdateUserInteractor{
-		UserRepository:           userRepository,
-		CourseRepository:         courseRepository,
-		DateSpotReviewRepository: dateSpotReviewRepository,
+		UserRepository: userRepository,
+		UserService:    userService,
 	}
 }
 
@@ -52,27 +49,16 @@ func (i *UpdateUserInteractor) Execute(ctx context.Context, input UpdateUserInpu
 		return nil, apperror.NotFound()
 	}
 
-	user.Name = input.Name
-	user.Email = input.Email
-	user.Gender = input.Gender
-	if input.Image != nil {
-		user.Image = input.Image
-	}
-
 	// パスワードが指定されている場合のみ更新（Rails の allow_nil: true に対応）
-	if input.Password != "" {
-		hashed, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
-		if err != nil {
-			return nil, apperror.InternalServerError(err)
-		}
-		user.PasswordDigest = string(hashed)
+	if err := user.ApplyUpdate(input.Name, input.Email, input.Gender, input.Image, input.Password); err != nil {
+		return nil, apperror.InternalServerError(err)
 	}
 
 	if err := i.UserRepository.Update(ctx, user); err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
 
-	uwr, err := buildUserWithRelations(ctx, i.UserRepository, i.CourseRepository, i.DateSpotReviewRepository, user)
+	uwr, err := i.UserService.BuildUserWithRelations(ctx, user)
 	if err != nil {
 		return nil, err
 	}

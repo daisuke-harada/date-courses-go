@@ -14,14 +14,14 @@ func NewHandler(container *di.Container) *Handler {
 		DeleteApiV1UsersIdHandler: DeleteApiV1UsersIdHandler{
 			InputPort: di.MustInvoke[usecase.DeleteUserInputPort](container),
 		},
-		GetHandler:                                              GetHandler{},
-		GetApiV1CoursesHandler:                                  GetApiV1CoursesHandler{},
-		GetApiV1CoursesIdHandler:                                GetApiV1CoursesIdHandler{},
+		GetHandler:               GetHandler{},
+		GetApiV1CoursesHandler:   GetApiV1CoursesHandler{},
+		GetApiV1CoursesIdHandler: GetApiV1CoursesIdHandler{},
 		GetApiV1DateSpotsHandler: GetApiV1DateSpotsHandler{
 			InputPort: di.MustInvoke[usecase.GetDateSpotsInputPort](container),
 		},
-		GetApiV1DateSpotsIdHandler: GetApiV1DateSpotsIdHandler{},
-		GetApiV1GenresIdHandler:    GetApiV1GenresIdHandler{},
+		GetApiV1DateSpotsIdHandler:   GetApiV1DateSpotsIdHandler{},
+		GetApiV1GenresIdHandler:      GetApiV1GenresIdHandler{},
 		GetApiV1PrefecturesIdHandler: GetApiV1PrefecturesIdHandler{},
 		GetApiV1TopHandler:           GetApiV1TopHandler{},
 		GetApiV1UsersHandler: GetApiV1UsersHandler{
@@ -36,9 +36,9 @@ func NewHandler(container *di.Container) *Handler {
 		GetApiV1UsersUserIdFollowingsHandler: GetApiV1UsersUserIdFollowingsHandler{
 			InputPort: di.MustInvoke[usecase.GetUserFollowingsInputPort](container),
 		},
-		PostApiV1CoursesHandler:              PostApiV1CoursesHandler{},
-		PostApiV1DateSpotReviewsHandler:      PostApiV1DateSpotReviewsHandler{},
-		PostApiV1DateSpotsHandler:            PostApiV1DateSpotsHandler{},
+		PostApiV1CoursesHandler:         PostApiV1CoursesHandler{},
+		PostApiV1DateSpotReviewsHandler: PostApiV1DateSpotReviewsHandler{},
+		PostApiV1DateSpotsHandler:       PostApiV1DateSpotsHandler{},
 		PostApiV1LoginHandler: PostApiV1LoginHandler{
 			InputPort: di.MustInvoke[usecase.LoginInputPort](container),
 		},

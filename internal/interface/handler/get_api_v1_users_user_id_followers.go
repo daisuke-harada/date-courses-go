@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -21,20 +20,10 @@ func (h *GetApiV1UsersUserIdFollowersHandler) GetApiV1UsersUserIdFollowers(ctx e
 		return err
 	}
 
-	responses := make([]openapi.UserResponseBody, 0, len(output.Users))
-	for _, uwr := range output.Users {
-		resp, err := openapi.BuildUserResponseBody(
-			uwr.User,
-			uwr.FollowerIDs,
-			uwr.FollowingIDs,
-			uwr.Courses,
-			uwr.Reviews,
-		)
-		if err != nil {
-			return apperror.InternalServerError(err)
-		}
-		responses = append(responses, resp)
+	response, err := openapi.NewGetUsersResponse(output.Users)
+	if err != nil {
+		return err
 	}
 
-	return ctx.JSON(http.StatusOK, responses)
+	return ctx.JSON(http.StatusOK, response)
 }

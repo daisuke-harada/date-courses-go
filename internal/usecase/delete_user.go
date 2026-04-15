@@ -27,12 +27,12 @@ func NewDeleteUserUsecase(userRepository repository.UserRepository) DeleteUserIn
 }
 
 func (i *DeleteUserInteractor) Execute(ctx context.Context, input DeleteUserInput) error {
-	_, err := i.UserRepository.FindByID(ctx, input.ID)
+	user, err := i.UserRepository.FindByID(ctx, input.ID)
 	if err != nil {
 		return apperror.NotFound()
 	}
 
-	if err := i.UserRepository.Delete(ctx, input.ID); err != nil {
+	if err := i.UserRepository.Delete(ctx, user.ID); err != nil {
 		return apperror.InternalServerError(err)
 	}
 
