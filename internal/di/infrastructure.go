@@ -36,6 +36,7 @@ func ProvideServices(ct *Container) {
 func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 	ct.MustProvide(usecase.NewCreateDateSpotUsecase)
+	ct.MustProvide(usecase.NewUpdateDateSpotUsecase)
 	ct.MustProvide(usecase.NewSignupUsecase)
 	ct.MustProvide(usecase.NewLoginUsecase)
 	ct.MustProvide(usecase.NewGetUsersUsecase)
