@@ -18,9 +18,29 @@ apply-schema:
 openapi-generate:
 	bash scripts/openapi-generator-cli.sh
 
-go-generate:
-	# ensure modules are tidy before generating code
+go-generate: mock-generate
 	go generate ./internal/interface/openapi
+
+mock-generate: mock-repository mock-service mock-usecase
+
+mock-repository:
+	mkdir -p internal/domain/repository/mock
+	for f in internal/domain/repository/*.go; do \
+		mockgen -source=$$f -destination=internal/domain/repository/mock/$$(basename $$f) -package=repositorymock; \
+	done
+
+mock-service:
+	mkdir -p internal/domain/service/mock
+	for f in internal/domain/service/*.go; do \
+		mockgen -source=$$f -destination=internal/domain/service/mock/$$(basename $$f) -package=servicemock; \
+	done
+
+mock-usecase:
+	mkdir -p internal/usecase/mock
+	for f in internal/usecase/*.go; do \
+		case $$f in *_test.go) continue;; esac; \
+		mockgen -source=$$f -destination=internal/usecase/mock/$$(basename $$f) -package=usecasemock; \
+	done
 
 run:
 	go run ./cmd/api/main.go

@@ -42,8 +42,12 @@ internal/
 │   └── infrastructure.go            # persistence の provide
 ├── domain/
 │   ├── model/                       # ドメインモデル（GORM タグ付き struct）
-│   └── repository/                  # repository インターフェース定義
+│   ├── repository/                  # repository インターフェース定義
+│   │   └── mock/                   # repository mock（package repomock）自動生成
+│   └── service/                     # ドメインサービス インターフェース定義
+│       └── mock/                   # service mock（package servicemock）自動生成
 ├── usecase/                         # ビジネスロジック（Input/Output 型定義）
+│   └── mock/                       # usecase InputPort mock（package usecasemock）自動生成
 ├── infrastructure/
 │   ├── db/
 │   │   ├── db.go                    # GORM 接続
@@ -60,6 +64,55 @@ pkg/
 tools/
 └── seed/main.go                     # シードデータ投入
 ```
+
+## ディレクトリごとの実装方針
+
+### `internal/domain/model/`
+- GORM タグ付きの struct を定義する
+- ビジネスロジックは持たない（値オブジェクトは型エイリアスで表現）
+- 例: `type Gender string` + `const GenderMale Gender = "male"`
+
+### ドメインモデルと列挙型（enum）に関する注意
+- ドメインモデルに列挙型（enum）を追加する可能性があります。追加する場合は以下を守ってください。
+    - 型は基本的に型エイリアスで定義する（例: `type Gender string`）。
+    - 値は `const` で列挙する（例: `const ( GenderMale Gender = "male" ... )`）。
+    - JSON エンコード/デコードや DB マイグレーションで特別な処理が必要な場合は、`MarshalJSON`/`UnmarshalJSON` を実装するか、変換ヘルパーを用意する。
+    - OpenAPI 側に別の enum 型がある場合は、`internal/interface/openapi` 側に変換関数（`NewXxx` / `ToModelXxx`）を実装して一元管理すること。
+    - 型の追加・変更を行ったら、該当するテストと `make gen`（openapi/types 再生成や mock 再生成）が必要になる点に注意する。
+
+
+### `internal/domain/repository/`
+- interface のみ定義。実装は `infrastructure/persistence/` に置く
+- メソッドは実際に使うものだけ定義する（YAGNI）
+- 検索条件は `XxxSearchParams` 型にまとめる
+- `mock/` サブディレクトリに `package repomock` としてモックを自動生成する（`make gen`）
+
+### `internal/domain/service/`
+- 複数の repository をまたぐドメインロジックをインターフェースで定義
+- `mock/` サブディレクトリに `package servicemock` としてモックを自動生成する（`make gen`）
+
+### `internal/usecase/`
+- `XxxInputPort` interface・`XxxInput`・`XxxOutput`・`XxxInteractor` を 1 ファイルにまとめる
+- `openapi` パッケージへの依存禁止。handler 層で変換する
+- `Output` はポインタ返し（`*XxxOutput`）
+- エラーは必ず `apperror` パッケージ経由で返す
+- `mock/` サブディレクトリに `package usecasemock` としてモックを自動生成する（`make gen`）
+
+### `internal/infrastructure/persistence/`
+- repository インターフェースの GORM 実装のみ
+- GORM の WHERE 句はここだけに閉じ込める
+- エラーは `apperror.InternalServerError(err)` か `apperror.NotFound()` に変換して返す
+
+### `internal/interface/handler/`
+- `XxxHandler` struct に `InputPort` フィールドを持つ
+- フォームや JSON のパースはここで行い、usecase の `Input` 型に変換して渡す
+- エラーは `return err` のみ（`ctx.JSON` でエラーを直接返さない）
+- テストは同パッケージに `handler_test` パッケージで記述する
+
+### `internal/interface/openapi/`
+- `api_server.gen.go`, `api_types.gen.go` は **編集禁止**（`make gen` で再生成）
+- レスポンス変換用の手書きファイル（`signup.go`, `login.go` など）はここに置く
+- `Gender` 型など openapi 型への変換は `NewXxx()` 関数を定義する
 
 ## コーディングルール
 
@@ -166,6 +219,71 @@ make run            # サーバー起動
 - handler から `return apperror.NotFound()` のように `error` 型で返す
 - `internal/interface/middleware/error_handler.go` の `CustomHTTPErrorHandler` が受け取り JSON レスポンスを返す
 - レスポンス形式: `{ "errorMessages": ["メッセージ"] }`
+
+## テスト規約
+
+### パッケージ
+- usecase テスト: `package usecase_test`（`internal/usecase/` 直下に配置）
+- handler テスト: `package handler_test`（`internal/interface/handler/` 直下に配置）
+
+### テスト形式
+- **必ずサブテスト形式**（`t.Run`）を使う
+- テスト関数名・サブテスト名は **英語スネークケース**（日本語・日本語混じり禁止）
+- 命名規則: `TestXxx_<subtest_name>`
+
+```go
+// ✅ Good
+func TestCreateRelationshipInteractor_Execute(t *testing.T) {
+    t.Run("success", func(t *testing.T) { ... })
+    t.Run("error_follow_self", func(t *testing.T) { ... })
+    t.Run("error_current_user_not_found", func(t *testing.T) { ... })
+}
+
+// ❌ Bad
+func TestCreateRelationshipInteractor_Execute_正常系_フォロー成功(t *testing.T) { ... }
+```
+
+### モックの使い方
+モックは `mockery` で自動生成する（`make gen`）。手書き禁止。
+
+| 対象 | 配置場所 | パッケージ名 | import alias |
+|---|---|---|---|
+| repository interface | `internal/domain/repository/mock/` | `repomock` | `repomock` |
+| service interface | `internal/domain/service/mock/` | `servicemock` | `servicemock` |
+| usecase InputPort | `internal/usecase/mock/` | `usecasemock` | `usecasemock` |
+
+```go
+// usecase テストでの repository mock 使用例
+import repomock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
+
+userRepo := &repomock.MockUserRepository{}
+userRepo.On("FindByID", ctx, uint(1)).Return(user, nil)
+defer userRepo.AssertExpectations(t)
+```
+
+```go
+// handler テストでの usecase mock 使用例
+// handler テストでは usecase/mock を使わず、テストファイル内にインライン mock を定義する
+type mockXxxInputPort struct { mock.Mock }
+func (m *mockXxxInputPort) Execute(...) { ... }
+```
+
+### handler テストのセットアップ
+```go
+func setupFormRequest(method, path string, form url.Values) (echo.Context, *httptest.ResponseRecorder) {
+    e := echo.New()
+    req := httptest.NewRequest(method, path, strings.NewReader(form.Encode()))
+    req.Header.Set(echo.HeaderContentType, "application/x-www-form-urlencoded")
+    rec := httptest.NewRecorder()
+    return e.NewContext(req, rec), rec
+}
+```
+
+### アサーション
+- `require.NoError` / `require.Error` → 以降の処理が前提条件に依存する場合
+- `assert.Equal` / `assert.Contains` → 個別の値検証
+- `mockPort.AssertExpectations(t)` → 各テストの末尾で必ず呼ぶ
+- `mockPort.AssertNotCalled(t, "MethodName")` → 呼ばれないことの検証
 
 ## 環境変数
 
