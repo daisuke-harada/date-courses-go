@@ -35,6 +35,7 @@ func ProvideServices(ct *Container) {
 // ProvideUsecases は全ユースケースのコンストラクタを Container に登録します。
 func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
+	ct.MustProvide(usecase.NewCreateDateSpotUsecase)
 	ct.MustProvide(usecase.NewSignupUsecase)
 	ct.MustProvide(usecase.NewLoginUsecase)
 	ct.MustProvide(usecase.NewGetUsersUsecase)
