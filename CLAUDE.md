@@ -231,6 +231,43 @@ make run            # サーバー起動
 2. **Green**: テストが通る最小限の実装を行う
 3. **Refactor**: 動作を維持しながらコードを整理・改善する
 
+### 複数 API を同時実装する場合（Branch Chaining 方式）
+
+複数の API を同時に実装する際は、**branch chaining** パターンを採用してください。これにより、各機能の PR が独立しつつ、依存関係を管理できます。
+
+#### Branch Chaining の手順
+
+1. **最初の branch を作成**: `feature/issue-N1-summary` を `main` から作成
+2. **最初の PR を作成**: 完了後、PR を作成（まだマージしない）
+3. **次の branch を作成**: `feature/issue-N2-summary` を `feature/issue-N1-summary` から作成
+4. **次の PR を作成**: 完了後、PR を作成（ベースブランチは `feature/issue-N1-summary`）
+5. **以降繰り返し**: N3, N4, ... と続ける
+
+#### Branch Chaining の例
+
+```
+main
+ ├─ feature/issue-51-delete-date-spot (PR #64) ← 最初のブランチ
+ │   ├─ feature/issue-52-update-date-spot (PR #65, base: issue-51) ← 2番目
+ │   │   ├─ feature/issue-53-create-review (base: issue-52)
+ │   │   └─ ...
+```
+
+#### マージ順序
+
+上流から順にマージする：
+1. issue-51 をマージ
+2. issue-52 の base を `main` に変更してマージ
+3. issue-53 の base を `main` に変更してマージ
+4. 以降同様
+
+#### メリット
+
+- 複数 API の実装を並列化できる
+- PR 単位で独立した変更を管理できる
+- マージ時の競合を最小化できる
+- 各 PR のレビューが小さく、容易
+
 ### 実装順序
 
 新しい API を実装する際は、必ず以下の順序で進める：
