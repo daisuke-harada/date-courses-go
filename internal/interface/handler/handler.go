@@ -9,7 +9,9 @@ func NewHandler(container *di.Container) *Handler {
 	return &Handler{
 		DeleteApiV1CoursesIdHandler:                             DeleteApiV1CoursesIdHandler{},
 		DeleteApiV1DateSpotReviewsIdHandler:                     DeleteApiV1DateSpotReviewsIdHandler{},
-		DeleteApiV1DateSpotsIdHandler:                           DeleteApiV1DateSpotsIdHandler{},
+		DeleteApiV1DateSpotsIdHandler: DeleteApiV1DateSpotsIdHandler{
+			InputPort: di.MustInvoke[usecase.DeleteDateSpotInputPort](container),
+		},
 		DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler: DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler{},
 		DeleteApiV1UsersIdHandler: DeleteApiV1UsersIdHandler{
 			InputPort: di.MustInvoke[usecase.DeleteUserInputPort](container),
