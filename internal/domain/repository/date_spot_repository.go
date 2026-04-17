@@ -17,4 +17,6 @@ type DateSpotSearchParams struct {
 type DateSpotRepository interface {
 	Create(ctx context.Context, dateSpot *model.DateSpot) error
 	Search(ctx context.Context, params DateSpotSearchParams) ([]*model.DateSpot, error)
+	Update(ctx context.Context, id uint, dateSpot *model.DateSpot) error
+	Delete(ctx context.Context, id uint) error
 }

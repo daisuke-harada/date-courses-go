@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	repositorymock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/stretchr/testify/assert"

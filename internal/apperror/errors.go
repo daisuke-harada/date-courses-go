@@ -38,85 +38,109 @@ func HTTPStatus(err error) (statusCode int, messages []string, cause error, ok b
 	return e.statusCode, e.messages, e.cause, true
 }
 
-// NotFound は 404 エラーを返します。
-// msg を省略した場合は "リソースが見つかりません" がデフォルトメッセージになります。
-func NotFound(msg ...string) error {
-	message := "リソースが見つかりません"
+// newAppError は appError を生成する内部ヘルパーです。
+// msg が指定されなければ defaultMsg を使います。cause は slog 用に保持されます。
+func newAppError(statusCode int, defaultMsg string, cause error, msg []string) *appError {
+	message := defaultMsg
 	if len(msg) > 0 {
 		message = msg[0]
 	}
 	return &appError{
-		statusCode: http.StatusNotFound,
-		messages:   []string{message},
-	}
-}
-
-// BadRequest は 400 エラーを返します。複数メッセージを渡せます（バリデーションエラー等）。
-// msg を省略した場合は "リクエストが不正です" がデフォルトメッセージになります。
-func BadRequest(msg ...string) error {
-	messages := []string{"リクエストが不正です"}
-	if len(msg) > 0 {
-		messages = msg
-	}
-	return &appError{
-		statusCode: http.StatusBadRequest,
-		messages:   messages,
-	}
-}
-
-// InternalServerError は 500 エラーを返します。
-// cause に原因エラーを渡すと slog でログに記録されます（クライアントには返しません）。
-// msg を省略した場合は "サーバーエラーが発生しました" がデフォルトメッセージになります。
-func InternalServerError(cause error, msg ...string) error {
-	message := "サーバーエラーが発生しました"
-	if len(msg) > 0 {
-		message = msg[0]
-	}
-	return &appError{
-		statusCode: http.StatusInternalServerError,
+		statusCode: statusCode,
 		messages:   []string{message},
 		cause:      cause,
 	}
 }
 
-// Unauthorized は 401 エラーを返します。複数メッセージを渡せます。
-// msg を省略した場合は "認証が必要です" がデフォルトメッセージになります。
-func Unauthorized(msg ...string) error {
-	messages := []string{"認証が必要です"}
-	if len(msg) > 0 {
-		messages = msg
+// newAppErrors は複数メッセージを扱う内部ヘルパーです。
+func newAppErrors(statusCode int, defaultMsgs []string, cause error, msgs []string) *appError {
+	messages := defaultMsgs
+	if len(msgs) > 0 {
+		messages = msgs
 	}
 	return &appError{
-		statusCode: http.StatusUnauthorized,
+		statusCode: statusCode,
 		messages:   messages,
+		cause:      cause,
 	}
 }
+
+// ---------- 404 Not Found ----------
+
+// NotFound は 404 エラーを返します。
+// msg を省略した場合は "リソースが見つかりません" がデフォルトメッセージになります。
+func NotFound(msg ...string) error {
+	return newAppError(http.StatusNotFound, "リソースが見つかりません", nil, msg)
+}
+
+// NotFoundWithCause は cause を slog 用にラップした 404 エラーを返します。
+// msg を省略した場合はデフォルトメッセージが使われます。
+func NotFoundWithCause(cause error, msg ...string) error {
+	return newAppError(http.StatusNotFound, "リソースが見つかりません", cause, msg)
+}
+
+// ---------- 400 Bad Request ----------
+
+// BadRequest は 400 エラーを返します。
+// msg を省略した場合は "リクエストが不正です" がデフォルトメッセージになります。
+func BadRequest(msg ...string) error {
+	return newAppErrors(http.StatusBadRequest, []string{"リクエストが不正です"}, nil, msg)
+}
+
+// BadRequestWithCause は cause を slog 用にラップした 400 エラーを返します。
+func BadRequestWithCause(cause error, msg ...string) error {
+	return newAppErrors(http.StatusBadRequest, []string{"リクエストが不正です"}, cause, msg)
+}
+
+// ---------- 401 Unauthorized ----------
+
+// Unauthorized は 401 エラーを返します。
+// msg を省略した場合は "認証が必要です" がデフォルトメッセージになります。
+func Unauthorized(msg ...string) error {
+	return newAppErrors(http.StatusUnauthorized, []string{"認証が必要です"}, nil, msg)
+}
+
+// UnauthorizedWithCause は cause を slog 用にラップした 401 エラーを返します。
+func UnauthorizedWithCause(cause error, msg ...string) error {
+	return newAppErrors(http.StatusUnauthorized, []string{"認証が必要です"}, cause, msg)
+}
+
+// ---------- 403 Forbidden ----------
 
 // Forbidden は 403 エラーを返します。
 // msg を省略した場合は "アクセスが禁止されています" がデフォルトメッセージになります。
 func Forbidden(msg ...string) error {
-	message := "アクセスが禁止されています"
-	if len(msg) > 0 {
-		message = msg[0]
-	}
-	return &appError{
-		statusCode: http.StatusForbidden,
-		messages:   []string{message},
-	}
+	return newAppError(http.StatusForbidden, "アクセスが禁止されています", nil, msg)
 }
 
-// UnprocessableEntity は 422 エラーを返します。バリデーションエラー等で使用します。
-// 複数メッセージを渡せます。
-func UnprocessableEntity(msg ...string) error {
-	messages := []string{"入力内容に誤りがあります"}
-	if len(msg) > 0 {
-		messages = msg
-	}
-	return &appError{
-		statusCode: http.StatusUnprocessableEntity,
-		messages:   messages,
-	}
+// ForbiddenWithCause は cause を slog 用にラップした 403 エラーを返します。
+func ForbiddenWithCause(cause error, msg ...string) error {
+	return newAppError(http.StatusForbidden, "アクセスが禁止されています", cause, msg)
 }
+
+// ---------- 422 Unprocessable Entity ----------
+
+// UnprocessableEntity は 422 エラーを返します。
+// msg を省略した場合は "入力内容に誤りがあります" がデフォルトメッセージになります。
+func UnprocessableEntity(msg ...string) error {
+	return newAppErrors(http.StatusUnprocessableEntity, []string{"入力内容に誤りがあります"}, nil, msg)
+}
+
+// UnprocessableEntityWithCause は cause を slog 用にラップした 422 エラーを返します。
+func UnprocessableEntityWithCause(cause error, msg ...string) error {
+	return newAppErrors(http.StatusUnprocessableEntity, []string{"入力内容に誤りがあります"}, cause, msg)
+}
+
+// ---------- 500 Internal Server Error ----------
+
+// InternalServerError は 500 エラーを返します。
+// cause に原因エラーを渡すと slog でログに記録されます（クライアントには返しません）。
+// msg を省略した場合は "サーバーエラーが発生しました" がデフォルトメッセージになります。
+func InternalServerError(cause error, msg ...string) error {
+	return newAppError(http.StatusInternalServerError, "サーバーエラーが発生しました", cause, msg)
+}
+
+// ---------- 汎用ラッパー ----------
 
 // Wrap は任意のステータスコードで既存の error をラップします。
 func Wrap(cause error, statusCode int, msg string) error {

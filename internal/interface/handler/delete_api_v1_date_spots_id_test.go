@@ -17,7 +17,7 @@ import (
 )
 
 func TestDeleteApiV1DateSpotsIdHandler(t *testing.T) {
-	t.Run("success_returns_204\", func(t *testing.T) {
+	t.Run("success_returns_204", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
