@@ -52,3 +52,16 @@ func (r *courseRepository) FindAll(ctx context.Context) ([]*model.Course, error)
 	}
 	return courses, nil
 }
+
+// FindByID は指定IDのコースを返します。
+func (r *courseRepository) FindByID(ctx context.Context, id uint) (*model.Course, error) {
+	var course model.Course
+	if err := r.db.WithContext(ctx).
+		Preload("User").
+		Preload("DuringSpots.DateSpot").
+		First(&course, id).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.FindByID failed", "err", err)
+		return nil, err
+	}
+	return &course, nil
+}
