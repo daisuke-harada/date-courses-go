@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -20,6 +21,24 @@ type LoginInputPort interface {
 type LoginInput struct {
 	Name     string
 	Password string
+}
+
+// Validate はログインの入力データをバリデーションします。
+func (i *LoginInput) Validate() error {
+	var errs []string
+
+	if strings.TrimSpace(i.Name) == "" {
+		errs = append(errs, "名前を入力してください")
+	}
+	if i.Password == "" {
+		errs = append(errs, "パスワードを入力してください")
+	}
+
+	if len(errs) > 0 {
+		return apperror.UnprocessableEntity(errs...)
+	}
+
+	return nil
 }
 
 // LoginOutput はログインの出力データです。
@@ -43,6 +62,11 @@ func NewLoginUsecase(
 }
 
 func (i *LoginInteractor) Execute(ctx context.Context, input LoginInput) (*LoginOutput, error) {
+	// バリデーション
+	if err := input.Validate(); err != nil {
+		return nil, err
+	}
+
 	// name でユーザーを検索
 	user, err := i.UserRepository.FindByName(ctx, input.Name)
 	if err != nil {

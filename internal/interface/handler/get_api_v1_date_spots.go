@@ -22,7 +22,7 @@ func (h *GetApiV1DateSpotsHandler) GetApiV1DateSpots(ctx echo.Context, params op
 	}
 	output, err := h.InputPort.Execute(ctx.Request().Context(), input)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, map[string]string{"message": "error"})
+		return err
 	}
 
 	return ctx.JSON(http.StatusOK, openapi.NewDateSpotsResponse(output.DateSpots))

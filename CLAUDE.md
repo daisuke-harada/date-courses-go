@@ -146,6 +146,96 @@ func (h *XxxHandler) Xxx(ctx echo.Context, params openapi.XxxParams) error {
 }
 ```
 
+### handler での型変換
+
+- handler はフォーム値の**型変換のみ**を行う。ビジネスルールのバリデーションは行わない
+- `strconv.Atoi` などの型変換に失敗した場合は `apperror.BadRequest(...)` を返す（これはパース失敗であり、バリデーションではない）
+- `ctx.Bind(&req)` を使って struct にバインドする場合、型変換エラーは `return err` で返す
+
+```go
+// ✅ Good: 数値パース失敗は handler で BadRequest
+id, err := strconv.Atoi(ctx.FormValue("user_id"))
+if err != nil {
+    return apperror.BadRequest("user_id は数値で指定してください")
+}
+
+// ✅ Good: ctx.Bind で型変換（バリデーションは usecase.Input.Validate() が担う）
+if err := ctx.Bind(&req); err != nil {
+    return err
+}
+input := usecase.XxxInput{Name: req.Name, ...}
+output, err := h.InputPort.Execute(ctx.Request().Context(), input)
+```
+
+### バリデーション（usecase Input の責務）
+
+- **バリデーションは `XxxInput.Validate()` メソッドに実装する**
+- `XxxInteractor.Execute` の冒頭で `input.Validate()` を呼ぶ
+- 複数フィールドをまとめて検証し、エラーを `[]string` に収集してから `apperror.UnprocessableEntity(errs...)` で一括返却する
+- handler 層にはバリデーションロジックを持たせない
+
+```go
+// usecase/xxx.go
+type XxxInput struct {
+    Name  string
+    Email string
+}
+
+func (i *XxxInput) Validate() error {
+    var errs []string
+
+    if strings.TrimSpace(i.Name) == "" {
+        errs = append(errs, "名前を入力してください")
+    } else if len(i.Name) > 50 {
+        errs = append(errs, "名前は50文字以内で入力してください")
+    }
+
+    if len(errs) > 0 {
+        return apperror.UnprocessableEntity(errs...)
+    }
+    return nil
+}
+
+func (i *XxxInteractor) Execute(ctx context.Context, input XxxInput) (*XxxOutput, error) {
+    // バリデーションは Input の責務
+    if err := input.Validate(); err != nil {
+        return nil, err
+    }
+    // 以降はビジネスロジック
+    ...
+}
+```
+
+### レスポンス整形（openapi 層）
+
+- usecase の `Output` → openapi の型への変換は **`internal/interface/openapi/` に手書きの変換関数を定義する**
+- 関数名は`NewXxxResponse` に統一する
+- handler 側では変換関数を呼び出すだけにし、整形ロジックを持たせない
+- 変換中にエラーが起きた場合は `apperror.InternalServerError(err)` で返す
+
+```go
+// internal/interface/openapi/date_spot.go
+func BuildDateSpotResponse(ds *model.DateSpot) (DateSpotResponseBody, error) {
+    // openapi 型への詰め替え
+    return DateSpotResponseBody{
+        Id:   int(ds.ID),
+        Name: ds.Name,
+        ...
+    }, nil
+}
+
+// handler 側
+output, err := h.InputPort.Execute(ctx.Request().Context(), input)
+if err != nil {
+    return err
+}
+resp, err := openapi.BuildDateSpotResponse(output.DateSpot)
+if err != nil {
+    return apperror.InternalServerError(err)
+}
+return ctx.JSON(http.StatusOK, resp)
+```
+
 ### usecase
 
 - `openapi` パッケージに依存しない。専用の `Input`/`Output` 型を定義する

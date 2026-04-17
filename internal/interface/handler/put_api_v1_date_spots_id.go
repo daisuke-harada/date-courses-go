@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -15,22 +14,18 @@ type PutApiV1DateSpotsIdHandler struct {
 
 func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id int) error {
 	var req struct {
-		Name         string     `form:"name" validate:"required"`
-		GenreID      int        `form:"genre_id" validate:"required"`
-		PrefectureID int        `form:"prefecture_id" validate:"required"`
-		CityName     string     `form:"city_name" validate:"required"`
+		Name         string     `form:"name"`
+		GenreID      int        `form:"genre_id"`
+		PrefectureID int        `form:"prefecture_id"`
+		CityName     string     `form:"city_name"`
 		OpeningTime  *time.Time `form:"opening_time"`
 		ClosingTime  *time.Time `form:"closing_time"`
 		Image        *string    `form:"image"`
 	}
 
 	if err := ctx.Bind(&req); err != nil {
-		return apperror.UnprocessableEntityWithCause(err)
-	}
-
-	if err := ctx.Validate(&req); err != nil {
-		// バリデーションエラーはデフォルトメッセージを返しつつ、errをslogに渡す
-		return apperror.UnprocessableEntityWithCause(err)
+		// 型変換エラーはバインド失敗として処理
+		return err
 	}
 
 	input := usecase.UpdateDateSpotInput{

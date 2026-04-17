@@ -182,3 +182,8 @@ func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseBody, 
 	}
 	return responses, nil
 }
+
+// NewUserWithRelationsResponse は *model.UserWithRelations から UserResponseBody を構築します。
+func NewUserWithRelationsResponse(uwr *model.UserWithRelations) (UserResponseBody, error) {
+	return BuildUserResponseBody(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
+}

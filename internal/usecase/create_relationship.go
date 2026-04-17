@@ -19,6 +19,16 @@ type CreateRelationshipInput struct {
 	FollowedUserID uint
 }
 
+// Validate はフォロー関係作成の入力データをバリデーションします。
+func (i *CreateRelationshipInput) Validate() error {
+	// 自己フォロー禁止チェック
+	if i.CurrentUserID == i.FollowedUserID {
+		return apperror.UnprocessableEntity("自分自身をフォローすることはできません")
+	}
+
+	return nil
+}
+
 type CreateRelationshipOutput struct {
 	Users        []*model.UserWithRelations
 	CurrentUser  *model.UserWithRelations
@@ -44,9 +54,9 @@ func NewCreateRelationshipUsecase(
 }
 
 func (i *CreateRelationshipInteractor) Execute(ctx context.Context, input CreateRelationshipInput) (*CreateRelationshipOutput, error) {
-	// 自己フォロー禁止チェック（DBアクセス前に判定）
-	if input.CurrentUserID == input.FollowedUserID {
-		return nil, apperror.UnprocessableEntity("自分自身をフォローすることはできません")
+	// バリデーション（DBアクセス前に判定）
+	if err := input.Validate(); err != nil {
+		return nil, err
 	}
 
 	// currentUser の存在確認

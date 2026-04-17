@@ -21,14 +21,7 @@ func (h *GetApiV1UsersIdHandler) GetApiV1UsersId(ctx echo.Context, id int) error
 		return err
 	}
 
-	uwr := output.UserWithRelations
-	resp, err := openapi.BuildUserResponseBody(
-		uwr.User,
-		uwr.FollowerIDs,
-		uwr.FollowingIDs,
-		uwr.Courses,
-		uwr.Reviews,
-	)
+	resp, err := openapi.NewUserWithRelationsResponse(output.UserWithRelations)
 	if err != nil {
 		return apperror.InternalServerError(err)
 	}

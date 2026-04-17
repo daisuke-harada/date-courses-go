@@ -33,28 +33,10 @@ func (h *PostApiV1RelationshipsHandler) PostApiV1Relationships(ctx echo.Context)
 		return err
 	}
 
-	users := make([]openapi.UserResponseBody, 0, len(output.Users))
-	for _, uwr := range output.Users {
-		resp, err := openapi.BuildUserResponseBody(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
-		if err != nil {
-			return err
-		}
-		users = append(users, resp)
-	}
-
-	currentUser, err := openapi.BuildUserResponseBody(output.CurrentUser.User, output.CurrentUser.FollowerIDs, output.CurrentUser.FollowingIDs, output.CurrentUser.Courses, output.CurrentUser.Reviews)
+	resp, err := openapi.BuildCreateRelationshipResponse(output)
 	if err != nil {
-		return err
+		return apperror.InternalServerError(err)
 	}
 
-	followedUser, err := openapi.BuildUserResponseBody(output.FollowedUser.User, output.FollowedUser.FollowerIDs, output.FollowedUser.FollowingIDs, output.FollowedUser.Courses, output.FollowedUser.Reviews)
-	if err != nil {
-		return err
-	}
-
-	return ctx.JSON(http.StatusCreated, map[string]interface{}{
-		"users":         users,
-		"current_user":  currentUser,
-		"followed_user": followedUser,
-	})
+	return ctx.JSON(http.StatusCreated, resp)
 }

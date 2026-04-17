@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strings"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -24,6 +25,48 @@ type UpdateUserInput struct {
 	PasswordConfirmation string
 }
 
+// Validate はユーザー更新の入力データをバリデーションします。
+func (i *UpdateUserInput) Validate() error {
+	var errs []string
+
+	// gender: enum check
+	if i.Gender != model.GenderMale && i.Gender != model.GenderFemale {
+		errs = append(errs, "性別は「男性」または「女性」で入力してください")
+	}
+
+	// name: presence, length(max:50)
+	if strings.TrimSpace(i.Name) == "" {
+		errs = append(errs, "名前を入力してください")
+	} else if len(i.Name) > 50 {
+		errs = append(errs, "名前は50文字以内で入力してください")
+	}
+
+	// email: presence, length(max:250), format
+	if strings.TrimSpace(i.Email) == "" {
+		errs = append(errs, "メールアドレスを入力してください")
+	} else if len(i.Email) > 250 {
+		errs = append(errs, "メールアドレスは250文字以内で入力してください")
+	} else if !emailRegex.MatchString(i.Email) {
+		errs = append(errs, "メールアドレスは正しい形式で入力してください")
+	}
+
+	// password: allow_nil（空なら検証スキップ）、指定時は6文字以上かつ確認一致
+	if i.Password != "" {
+		if len(i.Password) < 6 {
+			errs = append(errs, "パスワードは6文字以上で入力してください")
+		}
+		if i.Password != i.PasswordConfirmation {
+			errs = append(errs, "パスワード（確認）が一致しません")
+		}
+	}
+
+	if len(errs) > 0 {
+		return apperror.UnprocessableEntity(errs...)
+	}
+
+	return nil
+}
+
 type UpdateUserOutput struct {
 	UserWithRelations *model.UserWithRelations
 }
@@ -44,6 +87,11 @@ func NewUpdateUserUsecase(
 }
 
 func (i *UpdateUserInteractor) Execute(ctx context.Context, input UpdateUserInput) (*UpdateUserOutput, error) {
+	// バリデーション
+	if err := input.Validate(); err != nil {
+		return nil, err
+	}
+
 	user, err := i.UserRepository.FindByID(ctx, input.ID)
 	if err != nil {
 		return nil, apperror.NotFound()
