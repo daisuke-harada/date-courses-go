@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
@@ -25,6 +26,47 @@ type CreateDateSpotInput struct {
 	Image        *string
 }
 
+// Validate はデートスポット作成の入力データをバリデーションします。
+func (i *CreateDateSpotInput) Validate() error {
+	var errs []string
+
+	// name: presence
+	if strings.TrimSpace(i.Name) == "" {
+		errs = append(errs, "スポット名を入力してください")
+	}
+
+	// genre_id: presence, positive
+	if i.GenreID <= 0 {
+		errs = append(errs, "ジャンルを選択してください")
+	}
+
+	// prefecture_id: presence, positive
+	if i.PrefectureID <= 0 {
+		errs = append(errs, "都道府県を選択してください")
+	}
+
+	// city_name: presence
+	if strings.TrimSpace(i.CityName) == "" {
+		errs = append(errs, "市区町村を入力してください")
+	}
+
+	// opening_time: presence
+	if i.OpeningTime == nil {
+		errs = append(errs, "営業開始時刻を入力してください")
+	}
+
+	// closing_time: presence
+	if i.ClosingTime == nil {
+		errs = append(errs, "営業終了時刻を入力してください")
+	}
+
+	if len(errs) > 0 {
+		return apperror.UnprocessableEntity(errs...)
+	}
+
+	return nil
+}
+
 // CreateDateSpotOutput はデートスポット作成の出力データです。
 type CreateDateSpotOutput struct {
 	DateSpotID uint
@@ -43,6 +85,11 @@ func NewCreateDateSpotUsecase(
 }
 
 func (i *CreateDateSpotInteractor) Execute(ctx context.Context, input CreateDateSpotInput) (*CreateDateSpotOutput, error) {
+	// バリデーション
+	if err := input.Validate(); err != nil {
+		return nil, err
+	}
+
 	dateSpot := &model.DateSpot{
 		Name:         input.Name,
 		GenreID:      &input.GenreID,
