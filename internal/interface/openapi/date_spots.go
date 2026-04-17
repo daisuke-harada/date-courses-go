@@ -35,6 +35,13 @@ type AddressAndDateSpotsDataResponse struct {
 	ReviewTotalNumber int                  `json:"review_total_number"`
 }
 
+// NewCreateDateSpotResponse は DateSpotID から DateSpotFormResponseData を構築します。
+func NewCreateDateSpotResponse(dateSpotID uint) DateSpotFormResponseData {
+	return DateSpotFormResponseData{
+		DateSpotId: int(dateSpotID),
+	}
+}
+
 func NewDateSpotsResponse(dateSpots []*model.DateSpot) []AddressAndDateSpotsDataResponse {
 	response := make([]AddressAndDateSpotsDataResponse, 0, len(dateSpots))
 	for _, ds := range dateSpots {

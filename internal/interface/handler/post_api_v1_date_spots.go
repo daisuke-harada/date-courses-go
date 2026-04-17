@@ -74,8 +74,5 @@ func (h *PostApiV1DateSpotsHandler) PostApiV1DateSpots(ctx echo.Context) error {
 		return err
 	}
 
-	response := openapi.DateSpotFormResponseData{
-		DateSpotId: int(output.DateSpotID),
-	}
-	return ctx.JSON(http.StatusCreated, response)
+	return ctx.JSON(http.StatusCreated, openapi.NewCreateDateSpotResponse(output.DateSpotID))
 }
