@@ -15,21 +15,22 @@ type PutApiV1DateSpotsIdHandler struct {
 
 func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id int) error {
 	var req struct {
-		Name         string `form:"name" validate:"required"`
-		GenreID      int    `form:"genre_id" validate:"required"`
-		PrefectureID int    `form:"prefecture_id" validate:"required"`
-		CityName     string `form:"city_name" validate:"required"`
+		Name         string     `form:"name" validate:"required"`
+		GenreID      int        `form:"genre_id" validate:"required"`
+		PrefectureID int        `form:"prefecture_id" validate:"required"`
+		CityName     string     `form:"city_name" validate:"required"`
 		OpeningTime  *time.Time `form:"opening_time"`
 		ClosingTime  *time.Time `form:"closing_time"`
 		Image        *string    `form:"image"`
 	}
 
 	if err := ctx.Bind(&req); err != nil {
-		return apperror.UnprocessableEntity(err)
+		return apperror.UnprocessableEntityWithCause(err)
 	}
 
 	if err := ctx.Validate(&req); err != nil {
-		return apperror.UnprocessableEntity(err)
+		// バリデーションエラーはデフォルトメッセージを返しつつ、errをslogに渡す
+		return apperror.UnprocessableEntityWithCause(err)
 	}
 
 	input := usecase.UpdateDateSpotInput{

@@ -56,3 +56,23 @@ func (r *dateSpotRepository) Search(ctx context.Context, params repository.DateS
 	}
 	return dateSpots, nil
 }
+
+func (r *dateSpotRepository) Update(ctx context.Context, id uint, dateSpot *model.DateSpot) error {
+	// Ensure the ID is set on the struct so GORM treats this as an update
+	dateSpot.ID = id
+	if err := r.db.WithContext(ctx).Model(&model.DateSpot{}).Where("id = ?", id).Updates(dateSpot).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotRepository.Update failed", "err", err, "id", id)
+		return err
+	}
+	slog.InfoContext(ctx, "dateSpotRepository.Update succeeded", "id", id)
+	return nil
+}
+
+func (r *dateSpotRepository) Delete(ctx context.Context, id uint) error {
+	if err := r.db.WithContext(ctx).Delete(&model.DateSpot{}, id).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotRepository.Delete failed", "err", err, "id", id)
+		return err
+	}
+	slog.InfoContext(ctx, "dateSpotRepository.Delete succeeded", "id", id)
+	return nil
+}
