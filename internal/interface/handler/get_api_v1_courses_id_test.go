@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
@@ -11,6 +12,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -33,7 +35,10 @@ func TestGetApiV1CoursesIdHandler(t *testing.T) {
 				},
 			}, nil)
 
-		ctx, rec := setupGetRequest("/api/v1/courses/1")
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/courses/1", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
 
 		h := handler.GetApiV1CoursesIdHandler{InputPort: mockPort}
 		err := h.GetApiV1CoursesId(ctx, 1)
@@ -58,7 +63,10 @@ func TestGetApiV1CoursesIdHandler(t *testing.T) {
 			Execute(gomock.Any(), usecase.GetCourseInput{CourseID: 999}).
 			Return(nil, apperror.NotFound())
 
-		ctx, _ := setupGetRequest("/api/v1/courses/999")
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/courses/999", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
 
 		h := handler.GetApiV1CoursesIdHandler{InputPort: mockPort}
 		err := h.GetApiV1CoursesId(ctx, 999)
@@ -78,7 +86,10 @@ func TestGetApiV1CoursesIdHandler(t *testing.T) {
 			Execute(gomock.Any(), usecase.GetCourseInput{CourseID: 1}).
 			Return(nil, apperror.InternalServerError(errors.New("db error")))
 
-		ctx, _ := setupGetRequest("/api/v1/courses/1")
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/courses/1", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
 
 		h := handler.GetApiV1CoursesIdHandler{InputPort: mockPort}
 		err := h.GetApiV1CoursesId(ctx, 1)
