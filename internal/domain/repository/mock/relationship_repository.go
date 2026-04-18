@@ -55,6 +55,20 @@ func (mr *MockRelationshipRepositoryMockRecorder) Create(ctx, relationship any) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockRelationshipRepository)(nil).Create), ctx, relationship)
 }
 
+// DeleteByUserIDs mocks base method.
+func (m *MockRelationshipRepository) DeleteByUserIDs(ctx context.Context, userID uint, followID uint) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteByUserIDs", ctx, userID, followID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteByUserIDs indicates an expected call of DeleteByUserIDs.
+func (mr *MockRelationshipRepositoryMockRecorder) DeleteByUserIDs(ctx, userID, followID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByUserIDs", reflect.TypeOf((*MockRelationshipRepository)(nil).DeleteByUserIDs), ctx, userID, followID)
+}
+
 // FindFollowersByUserID mocks base method.
 func (m *MockRelationshipRepository) FindFollowersByUserID(ctx context.Context, userID uint) ([]*model.User, error) {
 	m.ctrl.T.Helper()

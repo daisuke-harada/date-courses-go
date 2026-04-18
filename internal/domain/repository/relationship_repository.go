@@ -10,4 +10,5 @@ type RelationshipRepository interface {
 	Create(ctx context.Context, relationship *model.Relationship) error
 	FindFollowingsByUserID(ctx context.Context, userID uint) ([]*model.User, error)
 	FindFollowersByUserID(ctx context.Context, userID uint) ([]*model.User, error)
+	DeleteByUserIDs(ctx context.Context, userID uint, followID uint) error
 }
