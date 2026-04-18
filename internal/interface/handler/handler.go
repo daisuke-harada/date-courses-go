@@ -62,7 +62,9 @@ func NewHandler(container *di.Container) *Handler {
 		PostApiV1SignupHandler: PostApiV1SignupHandler{
 			InputPort: di.MustInvoke[usecase.SignupInputPort](container),
 		},
-		PutApiV1DateSpotReviewsIdHandler: PutApiV1DateSpotReviewsIdHandler{},
+		PutApiV1DateSpotReviewsIdHandler: PutApiV1DateSpotReviewsIdHandler{
+			InputPort: di.MustInvoke[usecase.UpdateDateSpotReviewInputPort](container),
+		},
 		PutApiV1DateSpotsIdHandler: PutApiV1DateSpotsIdHandler{
 			InputPort: di.MustInvoke[usecase.UpdateDateSpotInputPort](container),
 		},

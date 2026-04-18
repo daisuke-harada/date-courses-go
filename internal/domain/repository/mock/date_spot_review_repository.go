@@ -83,3 +83,17 @@ func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByUserID(ctx, userID any
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByUserID), ctx, userID)
 }
+
+// UpdateByID mocks base method.
+func (m *MockDateSpotReviewRepository) UpdateByID(ctx context.Context, id uint, review *model.DateSpotReview) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateByID", ctx, id, review)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateByID indicates an expected call of UpdateByID.
+func (mr *MockDateSpotReviewRepositoryMockRecorder) UpdateByID(ctx, id, review any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).UpdateByID), ctx, id, review)
+}
