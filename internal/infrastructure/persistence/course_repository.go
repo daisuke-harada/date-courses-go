@@ -39,3 +39,16 @@ func (r *courseRepository) FindByUserID(ctx context.Context, userID uint) ([]*mo
 	}
 	return courses, nil
 }
+
+// FindAll はすべてのコース一覧を返します。
+func (r *courseRepository) FindAll(ctx context.Context) ([]*model.Course, error) {
+	var courses []*model.Course
+	if err := r.db.WithContext(ctx).
+		Preload("User").
+		Preload("DuringSpots.DateSpot").
+		Find(&courses).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.FindAll failed", "err", err)
+		return nil, err
+	}
+	return courses, nil
+}

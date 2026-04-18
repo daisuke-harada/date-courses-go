@@ -1,0 +1,79 @@
+package handler_test
+
+import (
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"time"
+
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/usecase"
+	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
+)
+
+func TestGetApiV1CoursesHandler(t *testing.T) {
+	t.Run("success_returns_200_with_courses", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		now := time.Now()
+		courses := []*model.Course{
+			{ID: 1, UserID: 1, TravelMode: "car", Authority: "public", CreatedAt: now, UpdatedAt: now},
+			{ID: 2, UserID: 2, TravelMode: "walk", Authority: "public", CreatedAt: now, UpdatedAt: now},
+		}
+
+		mockPort := usecasemock.NewMockGetCoursesInputPort(ctrl)
+		mockPort.EXPECT().
+			Execute(gomock.Any(), usecase.GetCoursesInput{}).
+			Return(&usecase.GetCoursesOutput{Courses: courses}, nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/courses", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+
+		h := handler.GetApiV1CoursesHandler{InputPort: mockPort}
+		err := h.GetApiV1Courses(ctx)
+
+		require.NoError(t, err)
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		var resp map[string]interface{}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
+		assert.Contains(t, resp, "courses")
+		coursesList := resp["courses"].([]interface{})
+		assert.Equal(t, 2, len(coursesList))
+	})
+
+	t.Run("success_returns_empty_list", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockPort := usecasemock.NewMockGetCoursesInputPort(ctrl)
+		mockPort.EXPECT().
+			Execute(gomock.Any(), usecase.GetCoursesInput{}).
+			Return(&usecase.GetCoursesOutput{Courses: []*model.Course{}}, nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/courses", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+
+		h := handler.GetApiV1CoursesHandler{InputPort: mockPort}
+		err := h.GetApiV1Courses(ctx)
+
+		require.NoError(t, err)
+		assert.Equal(t, http.StatusOK, rec.Code)
+
+		var resp map[string]interface{}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
+		coursesList := resp["courses"].([]interface{})
+		assert.Equal(t, 0, len(coursesList))
+	})
+}

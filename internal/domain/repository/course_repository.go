@@ -9,4 +9,5 @@ import (
 type CourseRepository interface {
 	Create(ctx context.Context, course *model.Course) error
 	FindByUserID(ctx context.Context, userID uint) ([]*model.Course, error)
+	FindAll(ctx context.Context) ([]*model.Course, error)
 }

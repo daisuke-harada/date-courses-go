@@ -16,8 +16,10 @@ func NewHandler(container *di.Container) *Handler {
 		DeleteApiV1UsersIdHandler: DeleteApiV1UsersIdHandler{
 			InputPort: di.MustInvoke[usecase.DeleteUserInputPort](container),
 		},
-		GetHandler:               GetHandler{},
-		GetApiV1CoursesHandler:   GetApiV1CoursesHandler{},
+		GetHandler: GetHandler{},
+		GetApiV1CoursesHandler: GetApiV1CoursesHandler{
+			InputPort: di.MustInvoke[usecase.GetCoursesInputPort](container),
+		},
 		GetApiV1CoursesIdHandler: GetApiV1CoursesIdHandler{},
 		GetApiV1DateSpotsHandler: GetApiV1DateSpotsHandler{
 			InputPort: di.MustInvoke[usecase.GetDateSpotsInputPort](container),
