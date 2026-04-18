@@ -69,6 +69,21 @@ func (mr *MockDateSpotReviewRepositoryMockRecorder) DeleteByID(ctx, id any) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).DeleteByID), ctx, id)
 }
 
+// FindByID mocks base method.
+func (m *MockDateSpotReviewRepository) FindByID(ctx context.Context, id uint) (*model.DateSpotReview, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByID", ctx, id)
+	ret0, _ := ret[0].(*model.DateSpotReview)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByID indicates an expected call of FindByID.
+func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByID(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByID), ctx, id)
+}
+
 // FindByUserID mocks base method.
 func (m *MockDateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
 	m.ctrl.T.Helper()
@@ -82,4 +97,18 @@ func (m *MockDateSpotReviewRepository) FindByUserID(ctx context.Context, userID 
 func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByUserID(ctx, userID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByUserID), ctx, userID)
+}
+
+// Update mocks base method.
+func (m *MockDateSpotReviewRepository) Update(ctx context.Context, review *model.DateSpotReview) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", ctx, review)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockDateSpotReviewRepositoryMockRecorder) Update(ctx, review any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).Update), ctx, review)
 }
