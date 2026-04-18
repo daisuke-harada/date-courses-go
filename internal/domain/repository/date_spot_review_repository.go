@@ -9,4 +9,5 @@ import (
 type DateSpotReviewRepository interface {
 	Create(ctx context.Context, review *model.DateSpotReview) error
 	FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error)
+	DeleteByID(ctx context.Context, id uint) error
 }
