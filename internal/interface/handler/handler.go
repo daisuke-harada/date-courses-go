@@ -20,7 +20,9 @@ func NewHandler(container *di.Container) *Handler {
 		GetApiV1CoursesHandler: GetApiV1CoursesHandler{
 			InputPort: di.MustInvoke[usecase.GetCoursesInputPort](container),
 		},
-		GetApiV1CoursesIdHandler: GetApiV1CoursesIdHandler{},
+		GetApiV1CoursesIdHandler: GetApiV1CoursesIdHandler{
+			InputPort: di.MustInvoke[usecase.GetCourseInputPort](container),
+		},
 		GetApiV1DateSpotsHandler: GetApiV1DateSpotsHandler{
 			InputPort: di.MustInvoke[usecase.GetDateSpotsInputPort](container),
 		},
