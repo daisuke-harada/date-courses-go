@@ -65,3 +65,12 @@ func (r *courseRepository) FindByID(ctx context.Context, id uint) (*model.Course
 	}
 	return &course, nil
 }
+
+// DeleteByID は指定IDのコースを削除します。
+func (r *courseRepository) DeleteByID(ctx context.Context, id uint) error {
+	if err := r.db.WithContext(ctx).Delete(&model.Course{}, id).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.DeleteByID failed", "err", err)
+		return err
+	}
+	return nil
+}

@@ -11,4 +11,5 @@ type CourseRepository interface {
 	FindByUserID(ctx context.Context, userID uint) ([]*model.Course, error)
 	FindAll(ctx context.Context) ([]*model.Course, error)
 	FindByID(ctx context.Context, id uint) (*model.Course, error)
+	DeleteByID(ctx context.Context, id uint) error
 }
