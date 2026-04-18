@@ -26,6 +26,15 @@ func (r *dateSpotReviewRepository) Create(ctx context.Context, review *model.Dat
 	return nil
 }
 
+// DeleteByID は指定 ID のレビューを削除します。
+func (r *dateSpotReviewRepository) DeleteByID(ctx context.Context, id uint) error {
+	if err := r.db.WithContext(ctx).Delete(&model.DateSpotReview{}, id).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotReviewRepository.DeleteByID failed", "err", err)
+		return err
+	}
+	return nil
+}
+
 // FindByUserID は指定ユーザーのレビュー一覧を DateSpot 込みで返します。
 func (r *dateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
 	var reviews []*model.DateSpotReview

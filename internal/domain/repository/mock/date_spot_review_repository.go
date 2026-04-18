@@ -55,6 +55,20 @@ func (mr *MockDateSpotReviewRepositoryMockRecorder) Create(ctx, review any) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).Create), ctx, review)
 }
 
+// DeleteByID mocks base method.
+func (m *MockDateSpotReviewRepository) DeleteByID(ctx context.Context, id uint) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteByID", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteByID indicates an expected call of DeleteByID.
+func (mr *MockDateSpotReviewRepositoryMockRecorder) DeleteByID(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).DeleteByID), ctx, id)
+}
+
 // FindByUserID mocks base method.
 func (m *MockDateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
 	m.ctrl.T.Helper()

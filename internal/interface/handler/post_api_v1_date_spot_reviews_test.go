@@ -48,14 +48,16 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 		assert.Equal(t, float64(10), resp["review_id"])
 	})
 
-	t.Run("error_missing_user_id", func(t *testing.T) {
+	// user_id が空文字（フォーム未送信）は型変換失敗 → handler が BadRequest を返す
+	t.Run("error_bad_request_invalid_user_id", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockPort := usecasemock.NewMockCreateDateSpotReviewInputPort(ctrl)
+		// usecase は呼ばれない
 
 		form := validDateSpotReviewForm()
-		form.Del("user_id")
+		form.Set("user_id", "abc") // 非数値
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
 
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
@@ -64,17 +66,43 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 		assert.Error(t, err)
 		statusCode, _, _, ok := apperror.HTTPStatus(err)
 		assert.True(t, ok)
-		assert.Equal(t, http.StatusUnprocessableEntity, statusCode)
+		assert.Equal(t, http.StatusBadRequest, statusCode)
 	})
 
-	t.Run("error_missing_date_spot_id", func(t *testing.T) {
+	// date_spot_id が非数値は型変換失敗 → handler が BadRequest を返す
+	t.Run("error_bad_request_invalid_date_spot_id", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockPort := usecasemock.NewMockCreateDateSpotReviewInputPort(ctrl)
+		// usecase は呼ばれない
 
 		form := validDateSpotReviewForm()
-		form.Del("date_spot_id")
+		form.Set("date_spot_id", "xyz") // 非数値
+		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
+
+		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
+		err := h.PostApiV1DateSpotReviews(ctx)
+
+		assert.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusBadRequest, statusCode)
+	})
+
+	// usecase が UnprocessableEntity を返すケース（Validate() 失敗など）
+	t.Run("error_usecase_returns_unprocessable_entity", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockPort := usecasemock.NewMockCreateDateSpotReviewInputPort(ctrl)
+		mockPort.EXPECT().
+			Execute(gomock.Any(), gomock.Any()).
+			Return(nil, apperror.UnprocessableEntity("ユーザーIDを入力してください"))
+
+		// user_id=0 → 型変換は成功 → usecase が Validate() で失敗
+		form := validDateSpotReviewForm()
+		form.Set("user_id", "0")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
 
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}

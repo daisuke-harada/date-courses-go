@@ -19,6 +19,20 @@ type CreateDateSpotReviewInput struct {
 	Content    *string
 }
 
+func (i *CreateDateSpotReviewInput) Validate() error {
+	var errs []string
+	if i.UserID == 0 {
+		errs = append(errs, "ユーザーIDを入力してください")
+	}
+	if i.DateSpotID == 0 {
+		errs = append(errs, "デートスポットIDを入力してください")
+	}
+	if len(errs) > 0 {
+		return apperror.UnprocessableEntity(errs...)
+	}
+	return nil
+}
+
 type CreateDateSpotReviewOutput struct {
 	ReviewID uint
 }
@@ -32,6 +46,9 @@ func NewCreateDateSpotReviewUsecase(dateSpotReviewRepository repository.DateSpot
 }
 
 func (i *CreateDateSpotReviewInteractor) Execute(ctx context.Context, input CreateDateSpotReviewInput) (*CreateDateSpotReviewOutput, error) {
+	if err := input.Validate(); err != nil {
+		return nil, err
+	}
 	review := &model.DateSpotReview{
 		UserID:     input.UserID,
 		DateSpotID: input.DateSpotID,
