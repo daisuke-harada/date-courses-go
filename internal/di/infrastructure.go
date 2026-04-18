@@ -53,4 +53,5 @@ func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewCreateDateSpotReviewUsecase)
 	ct.MustProvide(usecase.NewDeleteDateSpotReviewUsecase)
 	ct.MustProvide(usecase.NewUpdateDateSpotReviewUsecase)
+	ct.MustProvide(usecase.NewCreateCourseUsecase)
 }
