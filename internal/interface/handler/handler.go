@@ -7,7 +7,9 @@ import (
 
 func NewHandler(container *di.Container) *Handler {
 	return &Handler{
-		DeleteApiV1CoursesIdHandler: DeleteApiV1CoursesIdHandler{},
+		DeleteApiV1CoursesIdHandler: DeleteApiV1CoursesIdHandler{
+			InputPort: di.MustInvoke[usecase.DeleteCourseInputPort](container),
+		},
 		DeleteApiV1DateSpotReviewsIdHandler: DeleteApiV1DateSpotReviewsIdHandler{
 			InputPort: di.MustInvoke[usecase.DeleteDateSpotReviewInputPort](container),
 		},
