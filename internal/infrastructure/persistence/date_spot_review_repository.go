@@ -47,3 +47,19 @@ func (r *dateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint
 	}
 	return reviews, nil
 }
+
+// UpdateByID は指定 ID のレビューを更新します。nil フィールドは更新しません。
+func (r *dateSpotReviewRepository) UpdateByID(ctx context.Context, id uint, review *model.DateSpotReview) error {
+	updates := map[string]interface{}{}
+	if review.Rate != nil {
+		updates["rate"] = review.Rate
+	}
+	if review.Content != nil {
+		updates["content"] = review.Content
+	}
+	if err := r.db.WithContext(ctx).Model(&model.DateSpotReview{}).Where("id = ?", id).Updates(updates).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotReviewRepository.UpdateByID failed", "err", err)
+		return err
+	}
+	return nil
+}
