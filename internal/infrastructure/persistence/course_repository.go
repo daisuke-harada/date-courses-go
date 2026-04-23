@@ -6,6 +6,7 @@ import (
 
 	model "github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
+	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"gorm.io/gorm"
 )
 
@@ -40,15 +41,23 @@ func (r *courseRepository) FindByUserID(ctx context.Context, userID uint) ([]*mo
 	return courses, nil
 }
 
-// FindAll はすべてのコース一覧を返します。
-func (r *courseRepository) FindAll(ctx context.Context) ([]*model.Course, error) {
+// Search はフィルタ条件に基づいてコース一覧を返します。
+func (r *courseRepository) Search(ctx context.Context, params repository.CourseSearchParams) ([]*model.Course, error) {
 	var courses []*model.Course
-	if err := r.db.WithContext(ctx).
+	db := r.db.WithContext(ctx).
 		Preload("User").
-		Preload("DuringSpots.DateSpot").
-		Find(&courses).Error; err != nil {
-		slog.ErrorContext(ctx, "courseRepository.FindAll failed", "err", err)
-		return nil, err
+		Preload("DuringSpots.DateSpot")
+
+	if params.PrefectureID != nil {
+		db = db.Joins("JOIN during_spots ON during_spots.course_id = courses.id").
+			Joins("JOIN date_spots ON date_spots.id = during_spots.date_spot_id").
+			Where("date_spots.prefecture_id = ?", *params.PrefectureID).
+			Distinct("courses.*")
+	}
+
+	if err := db.Find(&courses).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.Search failed", "err", err)
+		return nil, apperror.InternalServerError(err)
 	}
 	return courses, nil
 }
