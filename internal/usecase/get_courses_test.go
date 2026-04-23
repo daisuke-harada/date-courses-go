@@ -6,7 +6,7 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
-	"github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
+	repositorymock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,7 +18,7 @@ func TestGetCoursesInteractor_Execute(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		mockRepo := mock.NewMockCourseRepository(ctrl)
+		mockRepo := repositorymock.NewMockCourseRepository(ctrl)
 		courses := []*model.Course{
 			{ID: 1, UserID: 1, TravelMode: "car", Authority: "public"},
 			{ID: 2, UserID: 2, TravelMode: "walk", Authority: "public"},
@@ -40,7 +40,7 @@ func TestGetCoursesInteractor_Execute(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		mockRepo := mock.NewMockCourseRepository(ctrl)
+		mockRepo := repositorymock.NewMockCourseRepository(ctrl)
 		mockRepo.EXPECT().
 			FindAll(gomock.Any()).
 			Return([]*model.Course{}, nil)
@@ -56,7 +56,7 @@ func TestGetCoursesInteractor_Execute(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		mockRepo := mock.NewMockCourseRepository(ctrl)
+		mockRepo := repositorymock.NewMockCourseRepository(ctrl)
 		mockRepo.EXPECT().
 			FindAll(gomock.Any()).
 			Return(nil, apperror.InternalServerError(nil))

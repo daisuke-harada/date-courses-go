@@ -13,7 +13,8 @@ type GetApiV1CoursesHandler struct {
 	InputPort usecase.GetCoursesInputPort
 }
 
-func (h *GetApiV1CoursesHandler) GetApiV1Courses(ctx echo.Context) error {
+func (h *GetApiV1CoursesHandler) GetApiV1Courses(ctx echo.Context, params openapi.GetApiV1CoursesParams) error {
+	// params currently unused by usecase; map if needed in future
 	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.GetCoursesInput{})
 	if err != nil {
 		return err
