@@ -6,6 +6,7 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	repositorymock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +25,7 @@ func TestGetCoursesInteractor_Execute(t *testing.T) {
 			{ID: 2, UserID: 2, TravelMode: "walk", Authority: "public"},
 		}
 		mockRepo.EXPECT().
-			FindAll(gomock.Any()).
+			Search(gomock.Any(), repository.CourseSearchParams{}).
 			Return(courses, nil)
 
 		interactor := usecase.NewGetCoursesUsecase(mockRepo)
@@ -36,13 +37,33 @@ func TestGetCoursesInteractor_Execute(t *testing.T) {
 		assert.Equal(t, uint(2), output.Courses[1].ID)
 	})
 
+	t.Run("success_with_prefecture_id_filter", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockRepo := repositorymock.NewMockCourseRepository(ctrl)
+		prefectureID := 13
+		courses := []*model.Course{
+			{ID: 1, UserID: 1, TravelMode: "car", Authority: "public"},
+		}
+		mockRepo.EXPECT().
+			Search(gomock.Any(), repository.CourseSearchParams{PrefectureID: &prefectureID}).
+			Return(courses, nil)
+
+		interactor := usecase.NewGetCoursesUsecase(mockRepo)
+		output, err := interactor.Execute(context.Background(), usecase.GetCoursesInput{PrefectureID: &prefectureID})
+
+		require.NoError(t, err)
+		assert.Equal(t, 1, len(output.Courses))
+	})
+
 	t.Run("success_returns_empty_list", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockRepo := repositorymock.NewMockCourseRepository(ctrl)
 		mockRepo.EXPECT().
-			FindAll(gomock.Any()).
+			Search(gomock.Any(), repository.CourseSearchParams{}).
 			Return([]*model.Course{}, nil)
 
 		interactor := usecase.NewGetCoursesUsecase(mockRepo)
@@ -58,7 +79,7 @@ func TestGetCoursesInteractor_Execute(t *testing.T) {
 
 		mockRepo := repositorymock.NewMockCourseRepository(ctrl)
 		mockRepo.EXPECT().
-			FindAll(gomock.Any()).
+			Search(gomock.Any(), repository.CourseSearchParams{}).
 			Return(nil, apperror.InternalServerError(nil))
 
 		interactor := usecase.NewGetCoursesUsecase(mockRepo)
