@@ -11,7 +11,9 @@ type GetCoursesInputPort interface {
 	Execute(context.Context, GetCoursesInput) (*GetCoursesOutput, error)
 }
 
-type GetCoursesInput struct{}
+type GetCoursesInput struct {
+	PrefectureID *int
+}
 
 type GetCoursesOutput struct {
 	Courses []*model.Course
@@ -30,7 +32,9 @@ func NewGetCoursesUsecase(
 }
 
 func (i *GetCoursesInteractor) Execute(ctx context.Context, input GetCoursesInput) (*GetCoursesOutput, error) {
-	courses, err := i.CourseRepository.FindAll(ctx)
+	courses, err := i.CourseRepository.Search(ctx, repository.CourseSearchParams{
+		PrefectureID: input.PrefectureID,
+	})
 	if err != nil {
 		return nil, err
 	}
