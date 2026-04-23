@@ -14,6 +14,7 @@ import (
 	reflect "reflect"
 
 	model "github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	repository "github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -69,19 +70,19 @@ func (mr *MockCourseRepositoryMockRecorder) DeleteByID(ctx, id any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockCourseRepository)(nil).DeleteByID), ctx, id)
 }
 
-// FindAll mocks base method.
-func (m *MockCourseRepository) FindAll(ctx context.Context) ([]*model.Course, error) {
+// Search mocks base method.
+func (m *MockCourseRepository) Search(ctx context.Context, params repository.CourseSearchParams) ([]*model.Course, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindAll", ctx)
+	ret := m.ctrl.Call(m, "Search", ctx, params)
 	ret0, _ := ret[0].([]*model.Course)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindAll indicates an expected call of FindAll.
-func (mr *MockCourseRepositoryMockRecorder) FindAll(ctx any) *gomock.Call {
+// Search indicates an expected call of Search.
+func (mr *MockCourseRepositoryMockRecorder) Search(ctx, params any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockCourseRepository)(nil).FindAll), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockCourseRepository)(nil).Search), ctx, params)
 }
 
 // FindByID mocks base method.
