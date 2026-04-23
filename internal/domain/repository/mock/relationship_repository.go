@@ -56,7 +56,7 @@ func (mr *MockRelationshipRepositoryMockRecorder) Create(ctx, relationship any) 
 }
 
 // DeleteByUserIDs mocks base method.
-func (m *MockRelationshipRepository) DeleteByUserIDs(ctx context.Context, userID uint, followID uint) error {
+func (m *MockRelationshipRepository) DeleteByUserIDs(ctx context.Context, userID, followID uint) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteByUserIDs", ctx, userID, followID)
 	ret0, _ := ret[0].(error)
