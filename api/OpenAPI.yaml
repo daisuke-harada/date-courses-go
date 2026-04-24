@@ -61,4 +61,10 @@ paths:
     $ref: "./paths/courses.yaml"
   /api/v1/courses/{id}:
     $ref: "./paths/courses_id.yaml"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 

@@ -1,5 +1,7 @@
 put:
   tags: ["date_spot_review"]
+  security:
+    - bearerAuth: []
   parameters:
     - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
   requestBody:
@@ -23,6 +25,8 @@ put:
             $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 delete:
   tags: ["date_spot_review"]
+  security:
+    - bearerAuth: []
   parameters:
     - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
   responses:

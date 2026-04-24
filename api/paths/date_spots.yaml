@@ -38,6 +38,8 @@ get:
             $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 post:
   tags: ["date_spot"]
+  security:
+    - bearerAuth: []
   requestBody:
     required: true
     content:

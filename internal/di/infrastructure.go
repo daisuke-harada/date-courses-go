@@ -32,8 +32,14 @@ func ProvideServices(ct *Container) {
 	ct.MustProvide(service.NewUserService)
 }
 
+// ProvideJWTSecretKey は設定から JWT シークレットキーを提供します。
+func ProvideJWTSecretKey(cfg *config.Config) usecase.JWTSecretKey {
+	return usecase.JWTSecretKey(cfg.JWT.SecretKey)
+}
+
 // ProvideUsecases は全ユースケースのコンストラクタを Container に登録します。
 func ProvideUsecases(ct *Container) {
+	ct.MustProvide(ProvideJWTSecretKey)
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 	ct.MustProvide(usecase.NewCreateDateSpotUsecase)
 	ct.MustProvide(usecase.NewUpdateDateSpotUsecase)

@@ -16,10 +16,15 @@ var (
 type Config struct {
 	DB         DBConfig
 	GoogleMaps GoogleMapsConfig
+	JWT        JWTConfig
 }
 
 type GoogleMapsConfig struct {
 	APIKey string `envconfig:"GOOGLE_MAPS_API_KEY" required:"true"`
+}
+
+type JWTConfig struct {
+	SecretKey string `envconfig:"JWT_SECRET_KEY" required:"true"`
 }
 
 type DBConfig struct {
@@ -45,6 +50,9 @@ func Get() *Config {
 		}
 		if e := envconfig.Process("", &cfg.GoogleMaps); e != nil {
 			slog.Error("failed to process environment google maps", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.JWT); e != nil {
+			slog.Error("failed to process environment jwt", "err", e)
 		}
 	})
 

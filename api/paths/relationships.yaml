@@ -1,5 +1,7 @@
 post:
   tags: ["user"]
+  security:
+    - bearerAuth: []
   requestBody:
     required: true
     content:

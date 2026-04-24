@@ -9,21 +9,19 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
+	jwtpkg "github.com/daisuke-harada/date-courses-go/internal/pkg/jwt"
 	"gorm.io/gorm"
 )
 
-// LoginInputPort はログインユースケースの入力ポートです。
 type LoginInputPort interface {
 	Execute(context.Context, LoginInput) (*LoginOutput, error)
 }
 
-// LoginInput はログインの入力データです。
 type LoginInput struct {
 	Name     string
 	Password string
 }
 
-// Validate はログインの入力データをバリデーションします。
 func (i *LoginInput) Validate() error {
 	var errs []string
 
@@ -41,37 +39,39 @@ func (i *LoginInput) Validate() error {
 	return nil
 }
 
-// LoginOutput はログインの出力データです。
 type LoginOutput struct {
-	User *model.User
+	User  *model.User
+	Token string
 }
+
+type JWTSecretKey string
 
 type LoginInteractor struct {
 	UserRepository repository.UserRepository
 	AuthService    service.AuthService
+	JWTSecretKey   JWTSecretKey
 }
 
 func NewLoginUsecase(
 	userRepository repository.UserRepository,
 	authService service.AuthService,
+	jwtSecretKey JWTSecretKey,
 ) LoginInputPort {
 	return &LoginInteractor{
 		UserRepository: userRepository,
 		AuthService:    authService,
+		JWTSecretKey:   jwtSecretKey,
 	}
 }
 
 func (i *LoginInteractor) Execute(ctx context.Context, input LoginInput) (*LoginOutput, error) {
-	// バリデーション
 	if err := input.Validate(); err != nil {
 		return nil, err
 	}
 
-	// name でユーザーを検索
 	user, err := i.UserRepository.FindByName(ctx, input.Name)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			// Rails と同じメッセージで 401 を返す
 			return nil, apperror.Unauthorized(
 				"認証に失敗しました。",
 				"正しい名前・パスワードを入力し直すか、新規登録を行ってください。",
@@ -80,7 +80,6 @@ func (i *LoginInteractor) Execute(ctx context.Context, input LoginInput) (*Login
 		return nil, apperror.InternalServerError(err)
 	}
 
-	// bcrypt でパスワードを検証（Rails の user.authenticate(password) 相当）
 	if !i.AuthService.CheckPassword(user.PasswordDigest, input.Password) {
 		return nil, apperror.Unauthorized(
 			"認証に失敗しました。",
@@ -88,5 +87,10 @@ func (i *LoginInteractor) Execute(ctx context.Context, input LoginInput) (*Login
 		)
 	}
 
-	return &LoginOutput{User: user}, nil
+	token, err := jwtpkg.Encode(user.ID, string(i.JWTSecretKey))
+	if err != nil {
+		return nil, apperror.InternalServerError(err)
+	}
+
+	return &LoginOutput{User: user, Token: token}, nil
 }

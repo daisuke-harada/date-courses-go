@@ -22,7 +22,7 @@ func (h *PostApiV1LoginHandler) PostApiV1Login(ctx echo.Context) error {
 		return err
 	}
 
-	resp, err := openapi.NewLoginResponse(output.User)
+	resp, err := openapi.NewLoginResponse(output.User, output.Token)
 	if err != nil {
 		return err
 	}

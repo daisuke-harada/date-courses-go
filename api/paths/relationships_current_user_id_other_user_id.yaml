@@ -1,5 +1,7 @@
 delete:
   tags: ["user"]
+  security:
+    - bearerAuth: []
   parameters:
     - $ref: "../components/schemas/parameter.yaml#/components/parameters/CurrentUserIdParam"
     - $ref: "../components/schemas/parameter.yaml#/components/parameters/OtherUserIdParam"
