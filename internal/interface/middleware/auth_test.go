@@ -36,6 +36,7 @@ func newEchoWithAuth(t *testing.T, userRepo *repositorymock.MockUserRepository) 
 	e.GET("/api/v1/users", dummyHandler)
 	e.GET("/api/v1/users/:id", dummyHandler)
 	e.GET("/api/v1/users/:userId/followings", dummyHandler)
+	e.GET("/api/v1/users/:userId/followers", dummyHandler)
 	return e
 }
 
@@ -178,6 +179,40 @@ func TestJWTAuthMiddleware(t *testing.T) {
 
 		e := newEchoWithAuth(t, userRepo)
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/users/1/followings", nil)
+		req.Header.Set("Authorization", "Bearer "+token)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+	})
+
+	t.Run("error_get_followers_without_token", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+
+		e := newEchoWithAuth(t, userRepo)
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/users/1/followers", nil)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnauthorized, rec.Code)
+	})
+
+	t.Run("success_get_followers_with_valid_token", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		user := &model.User{ID: 1, Name: "alice"}
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		userRepo.EXPECT().FindByID(gomock.Any(), uint(1)).Return(user, nil)
+
+		token, err := jwtpkg.Encode(1, testSecret)
+		require.NoError(t, err)
+
+		e := newEchoWithAuth(t, userRepo)
+		req := httptest.NewRequest(http.MethodGet, "/api/v1/users/1/followers", nil)
 		req.Header.Set("Authorization", "Bearer "+token)
 		rec := httptest.NewRecorder()
 		e.ServeHTTP(rec, req)
