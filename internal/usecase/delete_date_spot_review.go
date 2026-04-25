@@ -8,14 +8,12 @@ import (
 )
 
 type DeleteDateSpotReviewInputPort interface {
-	Execute(context.Context, DeleteDateSpotReviewInput) (*DeleteDateSpotReviewOutput, error)
+	Execute(context.Context, DeleteDateSpotReviewInput) error
 }
 
 type DeleteDateSpotReviewInput struct {
 	ReviewID uint
 }
-
-type DeleteDateSpotReviewOutput struct{}
 
 type DeleteDateSpotReviewInteractor struct {
 	DateSpotReviewRepository repository.DateSpotReviewRepository
@@ -25,9 +23,9 @@ func NewDeleteDateSpotReviewUsecase(dateSpotReviewRepository repository.DateSpot
 	return &DeleteDateSpotReviewInteractor{DateSpotReviewRepository: dateSpotReviewRepository}
 }
 
-func (i *DeleteDateSpotReviewInteractor) Execute(ctx context.Context, input DeleteDateSpotReviewInput) (*DeleteDateSpotReviewOutput, error) {
+func (i *DeleteDateSpotReviewInteractor) Execute(ctx context.Context, input DeleteDateSpotReviewInput) error {
 	if err := i.DateSpotReviewRepository.DeleteByID(ctx, input.ReviewID); err != nil {
-		return nil, apperror.InternalServerError(err)
+		return apperror.InternalServerError(err)
 	}
-	return &DeleteDateSpotReviewOutput{}, nil
+	return nil
 }
