@@ -42,6 +42,10 @@ func NewCreateDateSpotResponse(dateSpotID uint) DateSpotFormResponseData {
 	}
 }
 
+func NewDateSpotResponse(dateSpot *model.DateSpot) AddressAndDateSpotsDataResponse {
+	return newAddressAndDateSpotsData(dateSpot)
+}
+
 func NewDateSpotsResponse(dateSpots []*model.DateSpot) []AddressAndDateSpotsDataResponse {
 	response := make([]AddressAndDateSpotsDataResponse, 0, len(dateSpots))
 	for _, ds := range dateSpots {
