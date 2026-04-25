@@ -145,6 +145,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - user
     get:
@@ -195,6 +197,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - user
   /api/v1/users/{user_id}/followings:
@@ -218,6 +222,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - user
   /api/v1/users/{user_id}/followers:
@@ -241,6 +247,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - user
   /api/v1/relationships:
@@ -264,6 +272,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - user
   /api/v1/relationships/{current_user_id}/{other_user_id}:
@@ -292,6 +302,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - user
   /api/v1/date_spots:
@@ -354,6 +366,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - date_spot
   /api/v1/date_spots/{id}:
@@ -373,6 +387,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - date_spot
     get:
@@ -423,6 +439,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - date_spot
   /api/v1/date_spot_reviews:
@@ -446,6 +464,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - date_spot_review
   /api/v1/date_spot_reviews/{id}:
@@ -463,6 +483,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/DateSpotReviewResponseData"
           description: Successful response
+      security:
+      - bearerAuth: []
       tags:
       - date_spot_review
     put:
@@ -491,6 +513,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Error response
+      security:
+      - bearerAuth: []
       tags:
       - date_spot_review
   /api/v1/prefectures/{id}:
@@ -574,6 +598,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/CourseFormResponseData"
           description: Successful response
+      security:
+      - bearerAuth: []
       tags:
       - course
   /api/v1/courses/{id}:
@@ -587,6 +613,8 @@ paths:
       responses:
         "204":
           description: Successful response
+      security:
+      - bearerAuth: []
       tags:
       - course
     get:
@@ -779,11 +807,15 @@ components:
     LoginResponseData:
       example:
         login_status: true
+        token: token
       properties:
         login_status:
           type: boolean
+        token:
+          type: string
       required:
       - login_status
+      - token
       type: object
     UserResponseData:
       example:
@@ -2369,3 +2401,8 @@ components:
       - user_image
       - user_name
       type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http

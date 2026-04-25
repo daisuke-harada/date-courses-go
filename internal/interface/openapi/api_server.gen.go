@@ -129,6 +129,8 @@ func (w *ServerInterfaceWrapper) GetApiV1Courses(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostApiV1Courses(ctx echo.Context) error {
 	var err error
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostApiV1Courses(ctx)
 	return err
@@ -144,6 +146,8 @@ func (w *ServerInterfaceWrapper) DeleteApiV1CoursesId(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
+
+	ctx.Set(BearerAuthScopes, []string{})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteApiV1CoursesId(ctx, id)
@@ -170,6 +174,8 @@ func (w *ServerInterfaceWrapper) GetApiV1CoursesId(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostApiV1DateSpotReviews(ctx echo.Context) error {
 	var err error
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostApiV1DateSpotReviews(ctx)
 	return err
@@ -186,6 +192,8 @@ func (w *ServerInterfaceWrapper) DeleteApiV1DateSpotReviewsId(ctx echo.Context) 
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteApiV1DateSpotReviewsId(ctx, id)
 	return err
@@ -201,6 +209,8 @@ func (w *ServerInterfaceWrapper) PutApiV1DateSpotReviewsId(ctx echo.Context) err
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
+
+	ctx.Set(BearerAuthScopes, []string{})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutApiV1DateSpotReviewsId(ctx, id)
@@ -250,6 +260,8 @@ func (w *ServerInterfaceWrapper) GetApiV1DateSpots(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostApiV1DateSpots(ctx echo.Context) error {
 	var err error
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostApiV1DateSpots(ctx)
 	return err
@@ -265,6 +277,8 @@ func (w *ServerInterfaceWrapper) DeleteApiV1DateSpotsId(ctx echo.Context) error 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
+
+	ctx.Set(BearerAuthScopes, []string{})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteApiV1DateSpotsId(ctx, id)
@@ -297,6 +311,8 @@ func (w *ServerInterfaceWrapper) PutApiV1DateSpotsId(ctx echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
+
+	ctx.Set(BearerAuthScopes, []string{})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutApiV1DateSpotsId(ctx, id)
@@ -348,6 +364,8 @@ func (w *ServerInterfaceWrapper) GetApiV1PrefecturesId(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostApiV1Relationships(ctx echo.Context) error {
 	var err error
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostApiV1Relationships(ctx)
 	return err
@@ -371,6 +389,8 @@ func (w *ServerInterfaceWrapper) DeleteApiV1RelationshipsCurrentUserIdOtherUserI
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter other_user_id: %s", err))
 	}
+
+	ctx.Set(BearerAuthScopes, []string{})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteApiV1RelationshipsCurrentUserIdOtherUserId(ctx, currentUserId, otherUserId)
@@ -424,6 +444,8 @@ func (w *ServerInterfaceWrapper) DeleteApiV1UsersId(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.DeleteApiV1UsersId(ctx, id)
 	return err
@@ -456,6 +478,8 @@ func (w *ServerInterfaceWrapper) PutApiV1UsersId(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PutApiV1UsersId(ctx, id)
 	return err
@@ -472,6 +496,8 @@ func (w *ServerInterfaceWrapper) GetApiV1UsersUserIdFollowers(ctx echo.Context) 
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
 	}
 
+	ctx.Set(BearerAuthScopes, []string{})
+
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetApiV1UsersUserIdFollowers(ctx, userId)
 	return err
@@ -487,6 +513,8 @@ func (w *ServerInterfaceWrapper) GetApiV1UsersUserIdFollowings(ctx echo.Context)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter user_id: %s", err))
 	}
+
+	ctx.Set(BearerAuthScopes, []string{})
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetApiV1UsersUserIdFollowings(ctx, userId)

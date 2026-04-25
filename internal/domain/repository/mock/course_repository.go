@@ -70,21 +70,6 @@ func (mr *MockCourseRepositoryMockRecorder) DeleteByID(ctx, id any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockCourseRepository)(nil).DeleteByID), ctx, id)
 }
 
-// Search mocks base method.
-func (m *MockCourseRepository) Search(ctx context.Context, params repository.CourseSearchParams) ([]*model.Course, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Search", ctx, params)
-	ret0, _ := ret[0].([]*model.Course)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Search indicates an expected call of Search.
-func (mr *MockCourseRepositoryMockRecorder) Search(ctx, params any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockCourseRepository)(nil).Search), ctx, params)
-}
-
 // FindByID mocks base method.
 func (m *MockCourseRepository) FindByID(ctx context.Context, id uint) (*model.Course, error) {
 	m.ctrl.T.Helper()
@@ -113,4 +98,19 @@ func (m *MockCourseRepository) FindByUserID(ctx context.Context, userID uint) ([
 func (mr *MockCourseRepositoryMockRecorder) FindByUserID(ctx, userID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockCourseRepository)(nil).FindByUserID), ctx, userID)
+}
+
+// Search mocks base method.
+func (m *MockCourseRepository) Search(ctx context.Context, params repository.CourseSearchParams) ([]*model.Course, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Search", ctx, params)
+	ret0, _ := ret[0].([]*model.Course)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Search indicates an expected call of Search.
+func (mr *MockCourseRepositoryMockRecorder) Search(ctx, params any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockCourseRepository)(nil).Search), ctx, params)
 }

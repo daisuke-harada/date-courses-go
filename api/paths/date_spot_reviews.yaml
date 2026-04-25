@@ -1,5 +1,7 @@
 post:
   tags: ["date_spot_review"]
+  security:
+    - bearerAuth: []
   requestBody:
     required: true
     content:

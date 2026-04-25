@@ -17,6 +17,8 @@ get:
             $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 put:
   tags: ["user"]
+  security:
+    - bearerAuth: []
   parameters:
     - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
   requestBody:
@@ -40,6 +42,8 @@ put:
             $ref: "../components/schemas/response/error.yaml#/components/schemas/ErrorResponse"
 delete:
   tags: ["user"]
+  security:
+    - bearerAuth: []
   parameters:
     - $ref: "../components/schemas/parameter.yaml#/components/parameters/IdParam"
   responses:

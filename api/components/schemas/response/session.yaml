@@ -4,6 +4,9 @@ components:
       type: object
       required:
         - login_status
+        - token
       properties:
         login_status:
           type: boolean
+        token:
+          type: string

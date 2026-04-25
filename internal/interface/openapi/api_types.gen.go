@@ -9,6 +9,10 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+const (
+	BearerAuthScopes = "bearerAuth.Scopes"
+)
+
 // Defines values for CourseFormRequestDataAuthority.
 const (
 	CourseFormRequestDataAuthorityEmpty CourseFormRequestDataAuthority = "公開"
@@ -166,7 +170,8 @@ type ImageData1 struct {
 
 // LoginResponseData defines model for LoginResponseData.
 type LoginResponseData struct {
-	LoginStatus bool `json:"login_status"`
+	LoginStatus bool   `json:"login_status"`
+	Token       string `json:"token"`
 }
 
 // RelationShipResponsData defines model for RelationShipResponsData.

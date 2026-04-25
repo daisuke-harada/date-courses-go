@@ -12,6 +12,7 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/di"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
@@ -76,7 +77,7 @@ func Run(ctx context.Context) error {
 	})
 }
 
-func NewEcho() *echo.Echo {
+func NewEcho(cfg *config.Config, userRepo repository.UserRepository) *echo.Echo {
 	e := echo.New()
 	e.HTTPErrorHandler = middleware.CustomHTTPErrorHandler
 	e.Use(echoMiddleware.Recover())
@@ -84,5 +85,6 @@ func NewEcho() *echo.Echo {
 	e.Use(middleware.CORSMiddleware())
 	e.Use(middleware.RequestIDMiddleware)
 	e.Use(middleware.AccessLogMiddleware)
+	e.Use(middleware.JWTAuthMiddleware(cfg.JWT.SecretKey, userRepo))
 	return e
 }
