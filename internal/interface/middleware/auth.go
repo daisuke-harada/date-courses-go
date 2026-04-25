@@ -29,6 +29,12 @@ var publicPOSTPaths = []string{
 	"/api/v1/signup",
 }
 
+// protectedGETSuffixes は GET であっても認証が必要なパスのサフィックスです。
+var protectedGETSuffixes = []string{
+	"/followings",
+	"/followers",
+}
+
 func isPublic(method, path string) bool {
 	if method == http.MethodPost {
 		for _, p := range publicPOSTPaths {
@@ -39,6 +45,11 @@ func isPublic(method, path string) bool {
 		return false
 	}
 	if method == http.MethodGet {
+		for _, suffix := range protectedGETSuffixes {
+			if strings.HasSuffix(path, suffix) {
+				return false
+			}
+		}
 		for _, prefix := range publicGETPrefixes {
 			if path == prefix || strings.HasPrefix(path, prefix+"/") || strings.HasPrefix(path, prefix+"?") {
 				return true
