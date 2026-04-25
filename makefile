@@ -42,6 +42,9 @@ mock-usecase:
 		mockgen -source=$$f -destination=internal/usecase/mock/$$(basename $$f) -package=usecasemock; \
 	done
 
+test:
+	go test ./...
+
 run:
 	go run ./cmd/api/main.go
 
