@@ -47,6 +47,8 @@ func newEchoWithAuth(t *testing.T, userRepo *repositorymock.MockUserRepository) 
 	e.DELETE("/api/v1/date_spots/:id", dummyHandler)
 	e.POST("/api/v1/relationships", dummyHandler)
 	e.DELETE("/api/v1/relationships/:currentUserId/:otherUserId", dummyHandler)
+	e.PUT("/api/v1/users/:id", dummyHandler)
+	e.DELETE("/api/v1/users/:id", dummyHandler)
 	return e
 }
 
@@ -561,6 +563,74 @@ func TestRelationshipsAuthMiddleware(t *testing.T) {
 
 		e := newEchoWithAuth(t, userRepo)
 		req := httptest.NewRequest(http.MethodDelete, "/api/v1/relationships/1/2", nil)
+		req.Header.Set("Authorization", "Bearer "+token)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+	})
+}
+
+func TestUsersIdAuthMiddleware(t *testing.T) {
+	t.Run("error_put_users_id_without_token", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		e := newEchoWithAuth(t, userRepo)
+		req := httptest.NewRequest(http.MethodPut, "/api/v1/users/1", nil)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnauthorized, rec.Code)
+	})
+
+	t.Run("success_put_users_id_with_valid_token", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		user := &model.User{ID: 1, Name: "alice"}
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		userRepo.EXPECT().FindByID(gomock.Any(), uint(1)).Return(user, nil)
+
+		token, err := jwtpkg.Encode(1, testSecret)
+		require.NoError(t, err)
+
+		e := newEchoWithAuth(t, userRepo)
+		req := httptest.NewRequest(http.MethodPut, "/api/v1/users/1", nil)
+		req.Header.Set("Authorization", "Bearer "+token)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusOK, rec.Code)
+	})
+
+	t.Run("error_delete_users_id_without_token", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		e := newEchoWithAuth(t, userRepo)
+		req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/1", nil)
+		rec := httptest.NewRecorder()
+		e.ServeHTTP(rec, req)
+
+		assert.Equal(t, http.StatusUnauthorized, rec.Code)
+	})
+
+	t.Run("success_delete_users_id_with_valid_token", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		user := &model.User{ID: 1, Name: "alice"}
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		userRepo.EXPECT().FindByID(gomock.Any(), uint(1)).Return(user, nil)
+
+		token, err := jwtpkg.Encode(1, testSecret)
+		require.NoError(t, err)
+
+		e := newEchoWithAuth(t, userRepo)
+		req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/1", nil)
 		req.Header.Set("Authorization", "Bearer "+token)
 		rec := httptest.NewRecorder()
 		e.ServeHTTP(rec, req)
