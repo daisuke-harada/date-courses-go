@@ -40,6 +40,7 @@ func ProvideJWTSecretKey(cfg *config.Config) usecase.JWTSecretKey {
 // ProvideUsecases は全ユースケースのコンストラクタを Container に登録します。
 func ProvideUsecases(ct *Container) {
 	ct.MustProvide(ProvideJWTSecretKey)
+	ct.MustProvide(usecase.NewGetDateSpotUsecase)
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 	ct.MustProvide(usecase.NewCreateDateSpotUsecase)
 	ct.MustProvide(usecase.NewUpdateDateSpotUsecase)

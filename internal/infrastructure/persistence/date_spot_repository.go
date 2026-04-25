@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 
+	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	"gorm.io/gorm"
@@ -24,6 +25,26 @@ func (r *dateSpotRepository) Create(ctx context.Context, dateSpot *model.DateSpo
 	}
 	slog.InfoContext(ctx, "dateSpotRepository.Create succeeded", "date_spot_id", dateSpot.ID)
 	return nil
+}
+
+func (r *dateSpotRepository) FindByID(ctx context.Context, id uint) (*model.DateSpot, error) {
+	db := r.db.WithContext(ctx).
+		Model(&model.DateSpot{}).
+		Select(`date_spots.*,
+			COALESCE(AVG(date_spot_reviews.rate), 0)  AS average_rate,
+			COUNT(date_spot_reviews.id)               AS review_total_number`).
+		Joins("LEFT JOIN date_spot_reviews ON date_spot_reviews.date_spot_id = date_spots.id").
+		Group("date_spots.id")
+
+	var dateSpot model.DateSpot
+	if err := db.Where("date_spots.id = ?", id).First(&dateSpot).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, apperror.NotFound()
+		}
+		slog.ErrorContext(ctx, "dateSpotRepository.FindByID failed", "err", err, "id", id)
+		return nil, apperror.InternalServerError(err)
+	}
+	return &dateSpot, nil
 }
 
 func (r *dateSpotRepository) Search(ctx context.Context, params repository.DateSpotSearchParams) ([]*model.DateSpot, error) {

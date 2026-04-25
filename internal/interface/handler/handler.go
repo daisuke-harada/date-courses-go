@@ -32,7 +32,9 @@ func NewHandler(container *di.Container) *Handler {
 		GetApiV1DateSpotsHandler: GetApiV1DateSpotsHandler{
 			InputPort: di.MustInvoke[usecase.GetDateSpotsInputPort](container),
 		},
-		GetApiV1DateSpotsIdHandler: GetApiV1DateSpotsIdHandler{},
+		GetApiV1DateSpotsIdHandler: GetApiV1DateSpotsIdHandler{
+			InputPort: di.MustInvoke[usecase.GetDateSpotInputPort](container),
+		},
 		GetApiV1GenresIdHandler: GetApiV1GenresIdHandler{
 			InputPort: di.MustInvoke[usecase.GetDateSpotsInputPort](container),
 		},
