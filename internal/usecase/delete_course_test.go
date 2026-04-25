@@ -25,9 +25,7 @@ func TestDeleteCourseUsecase(t *testing.T) {
 			Return(nil)
 
 		uc := usecase.NewDeleteCourseUsecase(mockCourseRepo)
-		_, err := uc.Execute(context.Background(), usecase.DeleteCourseInput{CourseID: 1})
-
-		require.NoError(t, err)
+		require.NoError(t, uc.Execute(context.Background(), usecase.DeleteCourseInput{CourseID: 1}))
 	})
 
 	t.Run("error_repository_delete_failed", func(t *testing.T) {
@@ -40,7 +38,7 @@ func TestDeleteCourseUsecase(t *testing.T) {
 			Return(errors.New("db error"))
 
 		uc := usecase.NewDeleteCourseUsecase(mockCourseRepo)
-		_, err := uc.Execute(context.Background(), usecase.DeleteCourseInput{CourseID: 1})
+		err := uc.Execute(context.Background(), usecase.DeleteCourseInput{CourseID: 1})
 
 		require.Error(t, err)
 		statusCode, _, _, ok := apperror.HTTPStatus(err)

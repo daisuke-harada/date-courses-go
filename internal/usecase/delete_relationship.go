@@ -8,15 +8,13 @@ import (
 )
 
 type DeleteRelationshipInputPort interface {
-	Execute(context.Context, DeleteRelationshipInput) (*DeleteRelationshipOutput, error)
+	Execute(context.Context, DeleteRelationshipInput) error
 }
 
 type DeleteRelationshipInput struct {
 	UserID   uint
 	FollowID uint
 }
-
-type DeleteRelationshipOutput struct{}
 
 type DeleteRelationshipInteractor struct {
 	RelationshipRepository repository.RelationshipRepository
@@ -26,9 +24,9 @@ func NewDeleteRelationshipUsecase(relationshipRepository repository.Relationship
 	return &DeleteRelationshipInteractor{RelationshipRepository: relationshipRepository}
 }
 
-func (i *DeleteRelationshipInteractor) Execute(ctx context.Context, input DeleteRelationshipInput) (*DeleteRelationshipOutput, error) {
+func (i *DeleteRelationshipInteractor) Execute(ctx context.Context, input DeleteRelationshipInput) error {
 	if err := i.RelationshipRepository.DeleteByUserIDs(ctx, input.UserID, input.FollowID); err != nil {
-		return nil, apperror.InternalServerError(err)
+		return apperror.InternalServerError(err)
 	}
-	return &DeleteRelationshipOutput{}, nil
+	return nil
 }

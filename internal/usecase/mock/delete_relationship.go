@@ -42,12 +42,11 @@ func (m *MockDeleteRelationshipInputPort) EXPECT() *MockDeleteRelationshipInputP
 }
 
 // Execute mocks base method.
-func (m *MockDeleteRelationshipInputPort) Execute(arg0 context.Context, arg1 usecase.DeleteRelationshipInput) (*usecase.DeleteRelationshipOutput, error) {
+func (m *MockDeleteRelationshipInputPort) Execute(arg0 context.Context, arg1 usecase.DeleteRelationshipInput) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Execute", arg0, arg1)
-	ret0, _ := ret[0].(*usecase.DeleteRelationshipOutput)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // Execute indicates an expected call of Execute.

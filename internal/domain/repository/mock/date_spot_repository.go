@@ -56,6 +56,20 @@ func (mr *MockDateSpotRepositoryMockRecorder) Create(ctx, dateSpot any) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockDateSpotRepository)(nil).Create), ctx, dateSpot)
 }
 
+// Delete mocks base method.
+func (m *MockDateSpotRepository) Delete(ctx context.Context, id uint) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockDateSpotRepositoryMockRecorder) Delete(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockDateSpotRepository)(nil).Delete), ctx, id)
+}
+
 // FindByID mocks base method.
 func (m *MockDateSpotRepository) FindByID(ctx context.Context, id uint) (*model.DateSpot, error) {
 	m.ctrl.T.Helper()
@@ -69,20 +83,6 @@ func (m *MockDateSpotRepository) FindByID(ctx context.Context, id uint) (*model.
 func (mr *MockDateSpotRepositoryMockRecorder) FindByID(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockDateSpotRepository)(nil).FindByID), ctx, id)
-}
-
-// Delete mocks base method.
-func (m *MockDateSpotRepository) Delete(ctx context.Context, id uint) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", ctx, id)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Delete indicates an expected call of Delete.
-func (mr *MockDateSpotRepositoryMockRecorder) Delete(ctx, id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockDateSpotRepository)(nil).Delete), ctx, id)
 }
 
 // Search mocks base method.

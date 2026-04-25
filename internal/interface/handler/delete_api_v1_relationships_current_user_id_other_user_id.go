@@ -12,7 +12,7 @@ type DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler struct {
 }
 
 func (h *DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler) DeleteApiV1RelationshipsCurrentUserIdOtherUserId(ctx echo.Context, arg1 int, arg2 int) error {
-	_, err := h.InputPort.Execute(ctx.Request().Context(), usecase.DeleteRelationshipInput{
+	err := h.InputPort.Execute(ctx.Request().Context(), usecase.DeleteRelationshipInput{
 		UserID:   uint(arg1),
 		FollowID: uint(arg2),
 	})

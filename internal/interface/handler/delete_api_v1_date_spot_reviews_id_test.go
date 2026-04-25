@@ -23,7 +23,7 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteDateSpotReviewInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.DeleteDateSpotReviewInput{ReviewID: 10}).
-			Return(&usecase.DeleteDateSpotReviewOutput{}, nil)
+			Return(nil)
 
 		ctx, rec := setupFormRequest(http.MethodDelete, "/api/v1/date_spot_reviews/10", url.Values{})
 
@@ -41,7 +41,7 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteDateSpotReviewInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), gomock.Any()).
-			Return(nil, apperror.InternalServerError(errors.New("db error")))
+			Return(apperror.InternalServerError(errors.New("db error")))
 
 		ctx, _ := setupFormRequest(http.MethodDelete, "/api/v1/date_spot_reviews/10", url.Values{})
 

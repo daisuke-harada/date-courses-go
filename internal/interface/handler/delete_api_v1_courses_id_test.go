@@ -23,7 +23,7 @@ func TestDeleteApiV1CoursesIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteCourseInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.DeleteCourseInput{CourseID: 1}).
-			Return(&usecase.DeleteCourseOutput{}, nil)
+			Return(nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/api/v1/courses/1", nil)
@@ -44,7 +44,7 @@ func TestDeleteApiV1CoursesIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteCourseInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.DeleteCourseInput{CourseID: 1}).
-			Return(nil, apperror.InternalServerError(nil))
+			Return(apperror.InternalServerError(nil))
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/api/v1/courses/1", nil)

@@ -23,7 +23,7 @@ func TestDeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteRelationshipInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.DeleteRelationshipInput{UserID: 1, FollowID: 2}).
-			Return(&usecase.DeleteRelationshipOutput{}, nil)
+			Return(nil)
 
 		ctx, rec := setupFormRequest(http.MethodDelete, "/api/v1/relationships/1/2", url.Values{})
 
@@ -41,7 +41,7 @@ func TestDeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteRelationshipInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), gomock.Any()).
-			Return(nil, apperror.InternalServerError(errors.New("db error")))
+			Return(apperror.InternalServerError(errors.New("db error")))
 
 		ctx, _ := setupFormRequest(http.MethodDelete, "/api/v1/relationships/1/2", url.Values{})
 

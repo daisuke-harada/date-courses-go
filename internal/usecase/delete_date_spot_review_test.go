@@ -25,10 +25,9 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			Return(nil)
 
 		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
+		err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
 
 		require.NoError(t, err)
-		assert.NotNil(t, output)
 	})
 
 	t.Run("error_repository_delete_failed", func(t *testing.T) {
@@ -41,9 +40,8 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			Return(errors.New("db error"))
 
 		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
+		err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
 
 		assert.Error(t, err)
-		assert.Nil(t, output)
 	})
 }

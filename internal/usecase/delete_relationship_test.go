@@ -25,13 +25,12 @@ func TestDeleteRelationshipInteractor_Execute(t *testing.T) {
 			Return(nil)
 
 		interactor := usecase.NewDeleteRelationshipUsecase(relationshipRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteRelationshipInput{
+		err := interactor.Execute(ctx, usecase.DeleteRelationshipInput{
 			UserID:   1,
 			FollowID: 2,
 		})
 
 		require.NoError(t, err)
-		assert.NotNil(t, output)
 	})
 
 	t.Run("error_repository_delete_failed", func(t *testing.T) {
@@ -44,12 +43,11 @@ func TestDeleteRelationshipInteractor_Execute(t *testing.T) {
 			Return(errors.New("db error"))
 
 		interactor := usecase.NewDeleteRelationshipUsecase(relationshipRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteRelationshipInput{
+		err := interactor.Execute(ctx, usecase.DeleteRelationshipInput{
 			UserID:   1,
 			FollowID: 2,
 		})
 
 		assert.Error(t, err)
-		assert.Nil(t, output)
 	})
 }
