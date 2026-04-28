@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
@@ -18,15 +19,30 @@ import (
 )
 
 func TestGetApiV1DateSpotsIdHandler(t *testing.T) {
-	t.Run("success_returns_200_with_date_spot", func(t *testing.T) {
+	t.Run("success_returns_200_with_date_spot_reviews_and_average_rate", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		dateSpot := dummyDateSpot(1, "東京タワー")
+		rate := 4.0
+		content := "良かった"
+		userName := "田中"
+		gender := model.GenderMale
+		reviews := []*model.DateSpotReview{
+			{
+				ID:         1,
+				DateSpotID: 1,
+				UserID:     1,
+				Rate:       &rate,
+				Content:    &content,
+				User:       &model.User{ID: 1, Name: userName, Gender: gender},
+			},
+		}
+
 		mockPort := usecasemock.NewMockGetDateSpotInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.GetDateSpotInput{ID: 1}).
-			Return(&usecase.GetDateSpotOutput{DateSpot: dateSpot}, nil)
+			Return(&usecase.GetDateSpotOutput{DateSpot: dateSpot, DateSpotReviews: reviews}, nil)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodGet, "/api/v1/date_spots/1", nil)
@@ -41,7 +57,13 @@ func TestGetApiV1DateSpotsIdHandler(t *testing.T) {
 
 		var resp map[string]interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		assert.Equal(t, float64(1), resp["id"])
+		assert.Contains(t, resp, "date_spot")
+		assert.Contains(t, resp, "review_average_rate")
+		assert.Contains(t, resp, "date_spot_reviews")
+
+		reviewsList, ok := resp["date_spot_reviews"].([]interface{})
+		require.True(t, ok)
+		assert.Len(t, reviewsList, 1)
 	})
 
 	t.Run("error_not_found", func(t *testing.T) {

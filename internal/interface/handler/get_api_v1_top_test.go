@@ -44,7 +44,7 @@ func TestGetApiV1TopHandler(t *testing.T) {
 		assert.Contains(t, resp, "areas")
 		assert.Contains(t, resp, "genres")
 		assert.Contains(t, resp, "main_genres")
-		assert.Contains(t, resp, "main_prefecture")
+		assert.Contains(t, resp, "main_prefectures")
 	})
 
 	t.Run("error_usecase_returns_internal_server_error", func(t *testing.T) {
