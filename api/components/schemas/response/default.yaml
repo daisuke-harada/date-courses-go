@@ -15,17 +15,25 @@ components:
         - areas
         - genres
         - main_genres
-        - main_prefecture
+        - main_prefectures
       properties:
         address_and_date_spots:
           type: array
           items:
            $ref: "./address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
         areas:
-          type: string
+          type: array
+          items:
+            $ref: "./area.yaml#/components/schemas/AreaData"
         genres:
-          type: string
+          type: array
+          items:
+            $ref: "./genre.yaml#/components/schemas/GenreData"
         main_genres:
-          type: string
-        main_prefecture:
-          type: string
+          type: array
+          items:
+            $ref: "./genre.yaml#/components/schemas/GenreData"
+        main_prefectures:
+          type: array
+          items:
+            $ref: "./prefecture.yaml#/components/schemas/PrefectureData"

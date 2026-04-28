@@ -17,11 +17,5 @@ func (h *GetApiV1TopHandler) GetApiV1Top(ctx echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return ctx.JSON(http.StatusOK, map[string]interface{}{
-		"address_and_date_spots": openapi.NewDateSpotsResponse(output.DateSpots),
-		"areas":                  []interface{}{},
-		"genres":                 []interface{}{},
-		"main_genres":            []interface{}{},
-		"main_prefecture":        []interface{}{},
-	})
+	return ctx.JSON(http.StatusOK, openapi.NewTopResponse(output.DateSpots))
 }

@@ -44,6 +44,12 @@ type AddressAndDateSpotsData struct {
 	ReviewTotalNumber int          `json:"review_total_number"`
 }
 
+// AreaData defines model for AreaData.
+type AreaData struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 // CourseFormRequestData defines model for CourseFormRequestData.
 type CourseFormRequestData struct {
 	Authority  CourseFormRequestDataAuthority  `json:"authority"`
@@ -158,6 +164,12 @@ type FollowResponseData struct {
 // Gender defines model for Gender.
 type Gender string
 
+// GenreData defines model for GenreData.
+type GenreData struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 // ImageData defines model for ImageData.
 type ImageData struct {
 	Url *string `json:"url"`
@@ -172,6 +184,13 @@ type ImageData1 struct {
 type LoginResponseData struct {
 	LoginStatus bool   `json:"login_status"`
 	Token       string `json:"token"`
+}
+
+// PrefectureData defines model for PrefectureData.
+type PrefectureData struct {
+	AreaId int    `json:"area_id"`
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
 }
 
 // RelationShipResponsData defines model for RelationShipResponsData.
@@ -205,10 +224,10 @@ type SignupFormRequestData struct {
 // TopResponseData defines model for TopResponseData.
 type TopResponseData struct {
 	AddressAndDateSpots []AddressAndDateSpotsData `json:"address_and_date_spots"`
-	Areas               string                    `json:"areas"`
-	Genres              string                    `json:"genres"`
-	MainGenres          string                    `json:"main_genres"`
-	MainPrefecture      string                    `json:"main_prefecture"`
+	Areas               []AreaData                `json:"areas"`
+	Genres              []GenreData               `json:"genres"`
+	MainGenres          []GenreData               `json:"main_genres"`
+	MainPrefectures     []PrefectureData          `json:"main_prefectures"`
 }
 
 // UserData defines model for UserData.
