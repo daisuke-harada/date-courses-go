@@ -719,7 +719,7 @@ components:
           id: 2
         - name: name
           id: 2
-        address_and_date_spots:
+        date_spots:
         - city_name: city_name
           prefecture_name: prefecture_name
           latitude: 6.0274563
@@ -759,7 +759,7 @@ components:
           genre_name: genre_name
           longitude: 1.4658129
       properties:
-        address_and_date_spots:
+        date_spots:
           items:
             $ref: "#/components/schemas/AddressAndDateSpotsData"
           type: array
@@ -780,7 +780,7 @@ components:
             $ref: "#/components/schemas/PrefectureData"
           type: array
       required:
-      - address_and_date_spots
+      - date_spots
       - areas
       - genres
       - main_genres
