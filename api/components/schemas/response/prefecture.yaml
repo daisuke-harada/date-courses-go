@@ -1,0 +1,15 @@
+components:
+  schemas:
+    PrefectureData:
+      type: object
+      required:
+        - id
+        - name
+        - area_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        area_id:
+          type: integer

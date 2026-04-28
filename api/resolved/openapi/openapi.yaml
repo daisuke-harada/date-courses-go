@@ -697,10 +697,28 @@ components:
       type: object
     TopResponseData:
       example:
-        genres: genres
-        areas: areas
-        main_genres: main_genres
-        main_prefecture: main_prefecture
+        main_prefectures:
+        - name: name
+          id: 4
+          area_id: 7
+        - name: name
+          id: 4
+          area_id: 7
+        genres:
+        - name: name
+          id: 2
+        - name: name
+          id: 2
+        areas:
+        - name: name
+          id: 3
+        - name: name
+          id: 3
+        main_genres:
+        - name: name
+          id: 2
+        - name: name
+          id: 2
         address_and_date_spots:
         - city_name: city_name
           prefecture_name: prefecture_name
@@ -746,19 +764,27 @@ components:
             $ref: "#/components/schemas/AddressAndDateSpotsData"
           type: array
         areas:
-          type: string
+          items:
+            $ref: "#/components/schemas/AreaData"
+          type: array
         genres:
-          type: string
+          items:
+            $ref: "#/components/schemas/GenreData"
+          type: array
         main_genres:
-          type: string
-        main_prefecture:
-          type: string
+          items:
+            $ref: "#/components/schemas/GenreData"
+          type: array
+        main_prefectures:
+          items:
+            $ref: "#/components/schemas/PrefectureData"
+          type: array
       required:
       - address_and_date_spots
       - areas
       - genres
       - main_genres
-      - main_prefecture
+      - main_prefectures
       type: object
     SignupFormRequestData:
       properties:
@@ -2226,6 +2252,49 @@ components:
           type: integer
       required:
       - course_id
+      type: object
+    AreaData:
+      example:
+        name: name
+        id: 3
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    GenreData:
+      example:
+        name: name
+        id: 2
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    PrefectureData:
+      example:
+        name: name
+        id: 4
+        area_id: 7
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        area_id:
+          type: integer
+      required:
+      - area_id
+      - id
+      - name
       type: object
     Gender:
       enum:

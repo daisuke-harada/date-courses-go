@@ -54,6 +54,70 @@ func NewDateSpotsResponse(dateSpots []*model.DateSpot) []AddressAndDateSpotsData
 	return response
 }
 
+// NewAddressAndDateSpots は生成型の []AddressAndDateSpotsData を返すヘルパーです。
+// Top のレスポンス（generated types）と互換にするために使います。
+func NewAddressAndDateSpots(dateSpots []*model.DateSpot) []AddressAndDateSpotsData {
+	response := make([]AddressAndDateSpotsData, 0, len(dateSpots))
+	for _, ds := range dateSpots {
+		var (
+			latitude       float32
+			longitude      float32
+			genreName      string
+			prefectureName string
+		)
+		if ds.Latitude != nil {
+			latitude = float32(*ds.Latitude)
+		}
+		if ds.Longitude != nil {
+			longitude = float32(*ds.Longitude)
+		}
+		if ds.GenreID != nil {
+			genreName = master.GenreNameByID(*ds.GenreID)
+		}
+		if ds.PrefectureID != nil {
+			prefectureName = master.PrefectureNameByID(*ds.PrefectureID)
+		}
+
+		var genreId int
+		if ds.GenreID != nil {
+			genreId = *ds.GenreID
+		}
+
+		var openingTime, closingTime time.Time
+		if ds.OpeningTime != nil {
+			openingTime = *ds.OpeningTime
+		}
+		if ds.ClosingTime != nil {
+			closingTime = *ds.ClosingTime
+		}
+
+		dateSpot := DateSpotData{
+			Id:          int(ds.ID),
+			Name:        ds.Name,
+			Image:       ImageData{Url: ds.Image},
+			GenreId:     genreId,
+			AverageRate: float32(ds.AverageRate),
+			CreatedAt:   ds.CreatedAt,
+			UpdatedAt:   ds.UpdatedAt,
+			OpeningTime: openingTime,
+			ClosingTime: closingTime,
+		}
+
+		response = append(response, AddressAndDateSpotsData{
+			AverageRate:       float32(ds.AverageRate),
+			CityName:          ds.CityName,
+			DateSpot:          dateSpot,
+			GenreName:         genreName,
+			Id:                int(ds.ID),
+			Latitude:          latitude,
+			Longitude:         longitude,
+			PrefectureName:    prefectureName,
+			ReviewTotalNumber: ds.ReviewTotalNumber,
+		})
+	}
+	return response
+}
+
 func newAddressAndDateSpotsData(ds *model.DateSpot) AddressAndDateSpotsDataResponse {
 	var (
 		latitude       float32
