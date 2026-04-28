@@ -223,7 +223,7 @@ type SignupFormRequestData struct {
 
 // TopResponseData defines model for TopResponseData.
 type TopResponseData struct {
-	AddressAndDateSpots []AddressAndDateSpotsData `json:"address_and_date_spots"`
+	DateSpots []AddressAndDateSpotsData `json:"date_spots"`
 	Areas               []AreaData                `json:"areas"`
 	Genres              []GenreData               `json:"genres"`
 	MainGenres          []GenreData               `json:"main_genres"`
