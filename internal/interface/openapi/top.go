@@ -9,7 +9,7 @@ import (
 // NewTopResponse は master データと date spots から generated TopResponseData を組み立てます。
 func NewTopResponse(dateSpots []*model.DateSpot) TopResponseData {
 	return TopResponseData{
-		AddressAndDateSpots: NewAddressAndDateSpots(dateSpots),
+		DateSpots: NewAddressAndDateSpots(dateSpots),
 		Areas:               newAreasResponse(),
 		Genres:              newGenresResponse(),
 		MainGenres:          newMainGenresResponse(),
