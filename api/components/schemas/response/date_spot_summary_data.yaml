@@ -1,6 +1,6 @@
 components:
   schemas:
-    AddressAndDateSpotsData:
+    DateSpotSummaryData:
       type: object
       required:
         - id

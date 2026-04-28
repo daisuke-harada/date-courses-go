@@ -21,9 +21,9 @@ type DateSpotDataResponse struct {
 	UpdatedAt   time.Time  `json:"updated_at"`
 }
 
-// AddressAndDateSpotsDataResponse は生成型 AddressAndDateSpotsData の代替で、
+// DateSpotSummaryDataResponse は生成型 DateSpotSummaryData の代替で、
 // DateSpot フィールドに DateSpotDataResponse を使います。
-type AddressAndDateSpotsDataResponse struct {
+type DateSpotSummaryDataResponse struct {
 	AverageRate       float32              `json:"average_rate"`
 	CityName          string               `json:"city_name"`
 	DateSpot          DateSpotDataResponse `json:"date_spot"`
@@ -42,22 +42,22 @@ func NewCreateDateSpotResponse(dateSpotID uint) DateSpotFormResponseData {
 	}
 }
 
-func NewDateSpotResponse(dateSpot *model.DateSpot) AddressAndDateSpotsDataResponse {
-	return newAddressAndDateSpotsData(dateSpot)
+func NewDateSpotResponse(dateSpot *model.DateSpot) DateSpotSummaryDataResponse {
+	return newDateSpotSummaryData(dateSpot)
 }
 
-func NewDateSpotsResponse(dateSpots []*model.DateSpot) []AddressAndDateSpotsDataResponse {
-	response := make([]AddressAndDateSpotsDataResponse, 0, len(dateSpots))
+func NewDateSpotsResponse(dateSpots []*model.DateSpot) []DateSpotSummaryDataResponse {
+	response := make([]DateSpotSummaryDataResponse, 0, len(dateSpots))
 	for _, ds := range dateSpots {
-		response = append(response, newAddressAndDateSpotsData(ds))
+		response = append(response, newDateSpotSummaryData(ds))
 	}
 	return response
 }
 
-// NewAddressAndDateSpots は生成型の []AddressAndDateSpotsData を返すヘルパーです。
+// NewDateSpotSummaries は生成型の []DateSpotSummaryData を返すヘルパーです。
 // Top のレスポンス（generated types）と互換にするために使います。
-func NewAddressAndDateSpots(dateSpots []*model.DateSpot) []AddressAndDateSpotsData {
-	response := make([]AddressAndDateSpotsData, 0, len(dateSpots))
+func NewDateSpotSummaries(dateSpots []*model.DateSpot) []DateSpotSummaryData {
+	response := make([]DateSpotSummaryData, 0, len(dateSpots))
 	for _, ds := range dateSpots {
 		var (
 			latitude       float32
@@ -103,7 +103,7 @@ func NewAddressAndDateSpots(dateSpots []*model.DateSpot) []AddressAndDateSpotsDa
 			ClosingTime: closingTime,
 		}
 
-		response = append(response, AddressAndDateSpotsData{
+		response = append(response, DateSpotSummaryData{
 			AverageRate:       float32(ds.AverageRate),
 			CityName:          ds.CityName,
 			DateSpot:          dateSpot,
@@ -118,7 +118,7 @@ func NewAddressAndDateSpots(dateSpots []*model.DateSpot) []AddressAndDateSpotsDa
 	return response
 }
 
-func newAddressAndDateSpotsData(ds *model.DateSpot) AddressAndDateSpotsDataResponse {
+func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryDataResponse {
 	var (
 		latitude       float32
 		longitude      float32
@@ -138,7 +138,7 @@ func newAddressAndDateSpotsData(ds *model.DateSpot) AddressAndDateSpotsDataRespo
 		prefectureName = master.PrefectureNameByID(*ds.PrefectureID)
 	}
 
-	return AddressAndDateSpotsDataResponse{
+	return DateSpotSummaryDataResponse{
 		Id:                int(ds.ID),
 		CityName:          ds.CityName,
 		Latitude:          latitude,

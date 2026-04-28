@@ -11,16 +11,16 @@ components:
     TopResponseData:
       type: object
       required:
-        - address_and_date_spots
+        - date_spots
         - areas
         - genres
         - main_genres
         - main_prefectures
       properties:
-        address_and_date_spots:
+        date_spots:
           type: array
           items:
-           $ref: "./address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+           $ref: "./date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData"
         areas:
           type: array
           items:

@@ -25,7 +25,7 @@ components:
         date_spots:
           type: array
           items:
-            $ref: './address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData'
+            $ref: './date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData'
     CourseSortResponseData:
       type: object
       required:
