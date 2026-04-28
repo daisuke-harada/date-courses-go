@@ -40,7 +40,7 @@ func TestGetApiV1TopHandler(t *testing.T) {
 
 		var resp map[string]interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		assert.Contains(t, resp, "address_and_date_spots")
+		assert.Contains(t, resp, "date_spots")
 		assert.Contains(t, resp, "areas")
 		assert.Contains(t, resp, "genres")
 		assert.Contains(t, resp, "main_genres")
