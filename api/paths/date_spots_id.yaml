@@ -8,7 +8,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/response/address_and_date_spots.yaml#/components/schemas/AddressAndDateSpotsData"
+            $ref: "../components/schemas/response/date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData"
     default:
       description: "Error response"
       content:

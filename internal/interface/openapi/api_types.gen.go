@@ -31,19 +31,6 @@ const (
 	GenderN1    Gender = "女性"
 )
 
-// AddressAndDateSpotsData defines model for AddressAndDateSpotsData.
-type AddressAndDateSpotsData struct {
-	AverageRate       float32      `json:"average_rate"`
-	CityName          string       `json:"city_name"`
-	DateSpot          DateSpotData `json:"date_spot"`
-	GenreName         string       `json:"genre_name"`
-	Id                int          `json:"id"`
-	Latitude          float32      `json:"latitude"`
-	Longitude         float32      `json:"longitude"`
-	PrefectureName    string       `json:"prefecture_name"`
-	ReviewTotalNumber int          `json:"review_total_number"`
-}
-
 // AreaData defines model for AreaData.
 type AreaData struct {
 	Id   int    `json:"id"`
@@ -71,12 +58,12 @@ type CourseFormResponseData struct {
 
 // CourseResponseData defines model for CourseResponseData.
 type CourseResponseData struct {
-	Authority                  string                    `json:"authority"`
-	DateSpots                  []AddressAndDateSpotsData `json:"date_spots"`
-	Id                         int                       `json:"id"`
-	NoDuplicatePrefectureNames []string                  `json:"no_duplicate_prefecture_names"`
-	TravelMode                 string                    `json:"travel_mode"`
-	User                       UserData                  `json:"user"`
+	Authority                  string                `json:"authority"`
+	DateSpots                  []DateSpotSummaryData `json:"date_spots"`
+	Id                         int                   `json:"id"`
+	NoDuplicatePrefectureNames []string              `json:"no_duplicate_prefecture_names"`
+	TravelMode                 string                `json:"travel_mode"`
+	User                       UserData              `json:"user"`
 }
 
 // DateSpotData defines model for DateSpotData.
@@ -140,6 +127,19 @@ type DateSpotReviewResponseDataDateSpotReviewsInner struct {
 	UserId     int       `json:"user_id"`
 	UserImage  ImageData `json:"user_image"`
 	UserName   string    `json:"user_name"`
+}
+
+// DateSpotSummaryData defines model for DateSpotSummaryData.
+type DateSpotSummaryData struct {
+	AverageRate       float32      `json:"average_rate"`
+	CityName          string       `json:"city_name"`
+	DateSpot          DateSpotData `json:"date_spot"`
+	GenreName         string       `json:"genre_name"`
+	Id                int          `json:"id"`
+	Latitude          float32      `json:"latitude"`
+	Longitude         float32      `json:"longitude"`
+	PrefectureName    string       `json:"prefecture_name"`
+	ReviewTotalNumber int          `json:"review_total_number"`
 }
 
 // ErrorResponse defines model for ErrorResponse.
@@ -223,11 +223,11 @@ type SignupFormRequestData struct {
 
 // TopResponseData defines model for TopResponseData.
 type TopResponseData struct {
-	DateSpots []AddressAndDateSpotsData `json:"date_spots"`
-	Areas               []AreaData                `json:"areas"`
-	Genres              []GenreData               `json:"genres"`
-	MainGenres          []GenreData               `json:"main_genres"`
-	MainPrefectures     []PrefectureData          `json:"main_prefectures"`
+	Areas           []AreaData            `json:"areas"`
+	DateSpots       []DateSpotSummaryData `json:"date_spots"`
+	Genres          []GenreData           `json:"genres"`
+	MainGenres      []GenreData           `json:"main_genres"`
+	MainPrefectures []PrefectureData      `json:"main_prefectures"`
 }
 
 // UserData defines model for UserData.

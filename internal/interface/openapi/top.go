@@ -9,11 +9,11 @@ import (
 // NewTopResponse は master データと date spots から generated TopResponseData を組み立てます。
 func NewTopResponse(dateSpots []*model.DateSpot) TopResponseData {
 	return TopResponseData{
-		DateSpots: NewAddressAndDateSpots(dateSpots),
-		Areas:               newAreasResponse(),
-		Genres:              newGenresResponse(),
-		MainGenres:          newMainGenresResponse(),
-		MainPrefectures:     newMainPrefecturesResponse(),
+		DateSpots:       NewDateSpotSummaries(dateSpots),
+		Areas:           newAreasResponse(),
+		Genres:          newGenresResponse(),
+		MainGenres:      newMainGenresResponse(),
+		MainPrefectures: newMainPrefecturesResponse(),
 	}
 }
 

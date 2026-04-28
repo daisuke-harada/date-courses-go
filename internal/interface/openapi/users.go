@@ -23,14 +23,14 @@ type UserResponseBody struct {
 }
 
 // CourseResponseDataBody は CourseResponseData の代替型です。
-// DateSpots フィールドに AddressAndDateSpotsDataResponse を使います。
+// DateSpots フィールドに DateSpotSummaryDataResponse を使います。
 type CourseResponseDataBody struct {
-	Authority                  string                            `json:"authority"`
-	DateSpots                  []AddressAndDateSpotsDataResponse `json:"date_spots"`
-	Id                         int                               `json:"id"`
-	NoDuplicatePrefectureNames []string                          `json:"no_duplicate_prefecture_names"`
-	TravelMode                 string                            `json:"travel_mode"`
-	User                       UserData                          `json:"user"`
+	Authority                  string                        `json:"authority"`
+	DateSpots                  []DateSpotSummaryDataResponse `json:"date_spots"`
+	Id                         int                           `json:"id"`
+	NoDuplicatePrefectureNames []string                      `json:"no_duplicate_prefecture_names"`
+	TravelMode                 string                        `json:"travel_mode"`
+	User                       UserData                      `json:"user"`
 }
 
 // DateSpotReviewDataBody は DateSpotReviewData の代替型です。
@@ -92,14 +92,14 @@ func BuildUserResponseBody(
 // buildCourseResponseBody は Course モデルから CourseResponseDataBody を構築します。
 // Course.User と Course.DuringSpots.DateSpot が Preload 済みであることを前提とします。
 func buildCourseResponseBody(course *model.Course) (CourseResponseDataBody, error) {
-	dateSpots := make([]AddressAndDateSpotsDataResponse, 0, len(course.DuringSpots))
+	dateSpots := make([]DateSpotSummaryDataResponse, 0, len(course.DuringSpots))
 	prefectureIDSet := make(map[int]struct{})
 
 	for _, ds := range course.DuringSpots {
 		if ds.DateSpot == nil {
 			continue
 		}
-		dateSpots = append(dateSpots, newAddressAndDateSpotsData(ds.DateSpot))
+		dateSpots = append(dateSpots, newDateSpotSummaryData(ds.DateSpot))
 		if ds.DateSpot.PrefectureID != nil {
 			prefectureIDSet[*ds.DateSpot.PrefectureID] = struct{}{}
 		}
