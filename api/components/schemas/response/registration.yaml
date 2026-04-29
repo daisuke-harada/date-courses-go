@@ -7,6 +7,6 @@ components:
         - login_status
       properties:
         user:
-          $reg: "./user.yaml#/components/schemas/UserResponseData"
+          $ref: "./user.yaml#/components/schemas/UserResponseData"
         login_status:
           type: boolean

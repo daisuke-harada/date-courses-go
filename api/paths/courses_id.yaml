@@ -8,9 +8,7 @@ get:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
+            $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
     default:
       description: "Error response"
       content:

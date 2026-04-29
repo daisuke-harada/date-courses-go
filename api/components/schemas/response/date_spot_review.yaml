@@ -1,5 +1,48 @@
 components:
   schemas:
+    DateSpotShowResponseData:
+      type: object
+      required:
+        - date_spot
+        - review_average_rate
+        - date_spot_reviews
+      properties:
+        date_spot:
+          $ref: "./date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData"
+        review_average_rate:
+          type: number
+          format: float
+        date_spot_reviews:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - user_id
+              - date_spot_id
+              - user_name
+              - user_gender
+              - user_image
+            properties:
+              id:
+                type: integer
+              rate:
+                type: number
+                format: float
+                nullable: true
+              content:
+                type: string
+                nullable: true
+              user_id:
+                type: integer
+              date_spot_id:
+                type: integer
+              user_name:
+                type: string
+              user_gender:
+                type: string
+              user_image:
+                $ref: "./image.yaml#/components/schemas/ImageData"
     DateSpotReviewData:
       type: object
       required:
