@@ -113,16 +113,17 @@ type DateSpotReviewFormRequestData struct {
 
 // DateSpotReviewResponseData defines model for DateSpotReviewResponseData.
 type DateSpotReviewResponseData struct {
+	DateSpot          DateSpotSummaryData                              `json:"date_spot"`
 	DateSpotReviews   []DateSpotReviewResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
-	ReviewAverageRate int                                              `json:"review_average_rate"`
+	ReviewAverageRate float32                                          `json:"review_average_rate"`
 }
 
 // DateSpotReviewResponseDataDateSpotReviewsInner defines model for DateSpotReviewResponseData_date_spot_reviews_inner.
 type DateSpotReviewResponseDataDateSpotReviewsInner struct {
-	Content    string    `json:"content"`
+	Content    *string   `json:"content"`
 	DateSpotId int       `json:"date_spot_id"`
 	Id         int       `json:"id"`
-	Rate       float32   `json:"rate"`
+	Rate       *float32  `json:"rate"`
 	UserGender string    `json:"user_gender"`
 	UserId     int       `json:"user_id"`
 	UserImage  ImageData `json:"user_image"`

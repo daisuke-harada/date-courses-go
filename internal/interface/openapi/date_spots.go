@@ -35,6 +35,54 @@ type DateSpotSummaryDataResponse struct {
 	ReviewTotalNumber int                  `json:"review_total_number"`
 }
 
+// DateSpotShowResponse は GET /api/v1/date_spots/:id のレスポンス型です。
+type DateSpotShowResponse struct {
+	DateSpot          DateSpotSummaryDataResponse `json:"date_spot"`
+	ReviewAverageRate float64                     `json:"review_average_rate"`
+	DateSpotReviews   []DateSpotReviewItem        `json:"date_spot_reviews"`
+}
+
+// DateSpotReviewItem はレビュー一覧の各要素です。
+type DateSpotReviewItem struct {
+	Id         int       `json:"id"`
+	Rate       *float64  `json:"rate"`
+	Content    *string   `json:"content"`
+	UserId     int       `json:"user_id"`
+	DateSpotId int       `json:"date_spot_id"`
+	UserName   string    `json:"user_name"`
+	UserGender string    `json:"user_gender"`
+	UserImage  ImageData `json:"user_image"`
+}
+
+// NewDateSpotShowResponse は DateSpot とレビュー一覧から DateSpotShowResponse を構築します。
+func NewDateSpotShowResponse(dateSpot *model.DateSpot, reviews []*model.DateSpotReview) DateSpotShowResponse {
+	return DateSpotShowResponse{
+		DateSpot:          newDateSpotSummaryData(dateSpot),
+		ReviewAverageRate: dateSpot.AverageRate,
+		DateSpotReviews:   newDateSpotReviewItems(reviews),
+	}
+}
+
+func newDateSpotReviewItems(reviews []*model.DateSpotReview) []DateSpotReviewItem {
+	items := make([]DateSpotReviewItem, 0, len(reviews))
+	for _, r := range reviews {
+		item := DateSpotReviewItem{
+			Id:         int(r.ID),
+			Rate:       r.Rate,
+			Content:    r.Content,
+			UserId:     int(r.UserID),
+			DateSpotId: int(r.DateSpotID),
+		}
+		if r.User != nil {
+			item.UserName = r.User.Name
+			item.UserGender = string(r.User.Gender)
+			item.UserImage = ImageData{Url: r.User.Image}
+		}
+		items = append(items, item)
+	}
+	return items
+}
+
 // NewCreateDateSpotResponse は DateSpotID から DateSpotFormResponseData を構築します。
 func NewCreateDateSpotResponse(dateSpotID uint) DateSpotFormResponseData {
 	return DateSpotFormResponseData{

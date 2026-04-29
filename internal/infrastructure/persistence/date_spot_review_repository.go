@@ -35,6 +35,19 @@ func (r *dateSpotReviewRepository) DeleteByID(ctx context.Context, id uint) erro
 	return nil
 }
 
+// FindByDateSpotID は指定 DateSpot のレビュー一覧を User 込みで返します。
+func (r *dateSpotReviewRepository) FindByDateSpotID(ctx context.Context, dateSpotID uint) ([]*model.DateSpotReview, error) {
+	var reviews []*model.DateSpotReview
+	if err := r.db.WithContext(ctx).
+		Where("date_spot_id = ?", dateSpotID).
+		Preload("User").
+		Find(&reviews).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotReviewRepository.FindByDateSpotID failed", "err", err)
+		return nil, err
+	}
+	return reviews, nil
+}
+
 // FindByUserID は指定ユーザーのレビュー一覧を DateSpot 込みで返します。
 func (r *dateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
 	var reviews []*model.DateSpotReview

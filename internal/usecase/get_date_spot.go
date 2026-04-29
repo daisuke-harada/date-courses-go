@@ -16,16 +16,22 @@ type GetDateSpotInput struct {
 }
 
 type GetDateSpotOutput struct {
-	DateSpot *model.DateSpot
+	DateSpot        *model.DateSpot
+	DateSpotReviews []*model.DateSpotReview
 }
 
 type GetDateSpotInteractor struct {
-	DateSpotRepository repository.DateSpotRepository
+	DateSpotRepository       repository.DateSpotRepository
+	DateSpotReviewRepository repository.DateSpotReviewRepository
 }
 
-func NewGetDateSpotUsecase(dateSpotRepository repository.DateSpotRepository) GetDateSpotInputPort {
+func NewGetDateSpotUsecase(
+	dateSpotRepository repository.DateSpotRepository,
+	dateSpotReviewRepository repository.DateSpotReviewRepository,
+) GetDateSpotInputPort {
 	return &GetDateSpotInteractor{
-		DateSpotRepository: dateSpotRepository,
+		DateSpotRepository:       dateSpotRepository,
+		DateSpotReviewRepository: dateSpotReviewRepository,
 	}
 }
 
@@ -34,5 +40,11 @@ func (i *GetDateSpotInteractor) Execute(ctx context.Context, input GetDateSpotIn
 	if err != nil {
 		return nil, err
 	}
-	return &GetDateSpotOutput{DateSpot: dateSpot}, nil
+
+	reviews, err := i.DateSpotReviewRepository.FindByDateSpotID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetDateSpotOutput{DateSpot: dateSpot, DateSpotReviews: reviews}, nil
 }

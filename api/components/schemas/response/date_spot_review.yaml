@@ -20,17 +20,18 @@ components:
     DateSpotReviewResponseData:
       type: object
       required:
+        - date_spot
         - date_spot_reviews
         - review_average_rate
       properties:
+        date_spot:
+          $ref: "./date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData"
         date_spot_reviews:
           type: array
           items:
             type: object
             required:
               - id
-              - rate
-              - content
               - user_id
               - date_spot_id
               - user_name
@@ -42,8 +43,10 @@ components:
               rate:
                 type: number
                 format: float
+                nullable: true
               content:
                 type: string
+                nullable: true
               user_id:
                 type: integer
               date_spot_id:
@@ -55,5 +58,5 @@ components:
               user_image:
                 $ref: "./image.yaml#/components/schemas/ImageData"
         review_average_rate:
-          type: integer
+          type: number
           format: float
