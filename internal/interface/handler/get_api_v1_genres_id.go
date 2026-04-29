@@ -21,6 +21,6 @@ func (h *GetApiV1GenresIdHandler) GetApiV1GenresId(ctx echo.Context, arg1 int) e
 		return err
 	}
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
-		"address_and_date_spots": openapi.NewDateSpotsResponse(output.DateSpots),
+		"date_spots": openapi.NewDateSpotsResponse(output.DateSpots),
 	})
 }
