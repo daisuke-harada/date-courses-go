@@ -84,7 +84,7 @@ paths:
     post:
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: "#/components/schemas/SigninFormRequestData"
         required: true
@@ -965,16 +965,23 @@ components:
               genre_id: 9
             id: 2
             content: content
+        token: token
       properties:
         user:
           $ref: "#/components/schemas/UserResponseData"
         login_status:
           type: boolean
+        token:
+          type: string
       required:
       - login_status
+      - token
       - user
       type: object
     SigninFormRequestData:
+      example:
+        password: password
+        name: name
       properties:
         name:
           type: string
@@ -2945,35 +2952,58 @@ components:
       type: object
     DateSpotReviewResponseData:
       example:
-        review_average_rate: 5
+        review_average_rate: 0.8008282
+        date_spot:
+          city_name: city_name
+          prefecture_name: prefecture_name
+          latitude: 6.0274563
+          review_total_number: 5
+          average_rate: 5.637377
+          date_spot:
+            image:
+              url: https://openapi-generator.tech
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            closing_time: 2000-01-23T04:56:07.000+00:00
+            opening_time: 2000-01-23T04:56:07.000+00:00
+            name: name
+            average_rate: 7.0614014
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: 2
+            genre_id: 9
+          id: 0
+          genre_name: genre_name
+          longitude: 1.4658129
         date_spot_reviews:
-        - rate: 6.0274563
-          user_id: 1
+        - rate: 1.4658129
+          user_id: 5
           user_image:
             url: https://openapi-generator.tech
           user_name: user_name
           date_spot_id: 5
           user_gender: user_gender
-          id: 0
+          id: 6
           content: content
-        - rate: 6.0274563
-          user_id: 1
+        - rate: 1.4658129
+          user_id: 5
           user_image:
             url: https://openapi-generator.tech
           user_name: user_name
           date_spot_id: 5
           user_gender: user_gender
-          id: 0
+          id: 6
           content: content
       properties:
+        date_spot:
+          $ref: "#/components/schemas/DateSpotSummaryData"
         date_spot_reviews:
           items:
-            $ref: "#/components/schemas/DateSpotReviewResponseData_date_spot_reviews_inner"
+            $ref: "#/components/schemas/DateSpotShowResponseData_date_spot_reviews_inner"
           type: array
         review_average_rate:
           format: float
-          type: integer
+          type: number
       required:
+      - date_spot
       - date_spot_reviews
       - review_average_rate
       type: object
@@ -3351,45 +3381,6 @@ components:
       required:
       - date_spot_id
       - id
-      - user_gender
-      - user_id
-      - user_image
-      - user_name
-      type: object
-    DateSpotReviewResponseData_date_spot_reviews_inner:
-      example:
-        rate: 6.0274563
-        user_id: 1
-        user_image:
-          url: https://openapi-generator.tech
-        user_name: user_name
-        date_spot_id: 5
-        user_gender: user_gender
-        id: 0
-        content: content
-      properties:
-        id:
-          type: integer
-        rate:
-          format: float
-          type: number
-        content:
-          type: string
-        user_id:
-          type: integer
-        date_spot_id:
-          type: integer
-        user_name:
-          type: string
-        user_gender:
-          type: string
-        user_image:
-          $ref: "#/components/schemas/ImageData"
-      required:
-      - content
-      - date_spot_id
-      - id
-      - rate
       - user_gender
       - user_id
       - user_image

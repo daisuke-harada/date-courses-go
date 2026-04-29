@@ -113,20 +113,9 @@ type DateSpotReviewFormRequestData struct {
 
 // DateSpotReviewResponseData defines model for DateSpotReviewResponseData.
 type DateSpotReviewResponseData struct {
-	DateSpotReviews   []DateSpotReviewResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
-	ReviewAverageRate int                                              `json:"review_average_rate"`
-}
-
-// DateSpotReviewResponseDataDateSpotReviewsInner defines model for DateSpotReviewResponseData_date_spot_reviews_inner.
-type DateSpotReviewResponseDataDateSpotReviewsInner struct {
-	Content    string    `json:"content"`
-	DateSpotId int       `json:"date_spot_id"`
-	Id         int       `json:"id"`
-	Rate       float32   `json:"rate"`
-	UserGender string    `json:"user_gender"`
-	UserId     int       `json:"user_id"`
-	UserImage  ImageData `json:"user_image"`
-	UserName   string    `json:"user_name"`
+	DateSpot          DateSpotSummaryData                            `json:"date_spot"`
+	DateSpotReviews   []DateSpotShowResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
+	ReviewAverageRate float32                                        `json:"review_average_rate"`
 }
 
 // DateSpotShowResponseData defines model for DateSpotShowResponseData.
@@ -222,6 +211,7 @@ type RelationShipResponsData struct {
 // SignUpResponseData defines model for SignUpResponseData.
 type SignUpResponseData struct {
 	LoginStatus bool             `json:"login_status"`
+	Token       string           `json:"token"`
 	User        UserResponseData `json:"user"`
 }
 
@@ -335,8 +325,8 @@ type PostApiV1DateSpotsMultipartRequestBody = DateSpotFormRequestData
 // PutApiV1DateSpotsIdMultipartRequestBody defines body for PutApiV1DateSpotsId for multipart/form-data ContentType.
 type PutApiV1DateSpotsIdMultipartRequestBody = DateSpotFormRequestData
 
-// PostApiV1LoginFormdataRequestBody defines body for PostApiV1Login for application/x-www-form-urlencoded ContentType.
-type PostApiV1LoginFormdataRequestBody = SigninFormRequestData
+// PostApiV1LoginJSONRequestBody defines body for PostApiV1Login for application/json ContentType.
+type PostApiV1LoginJSONRequestBody = SigninFormRequestData
 
 // PostApiV1RelationshipsFormdataRequestBody defines body for PostApiV1Relationships for application/x-www-form-urlencoded ContentType.
 type PostApiV1RelationshipsFormdataRequestBody = FollowReauestData
