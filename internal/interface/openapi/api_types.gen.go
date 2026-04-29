@@ -203,6 +203,7 @@ type RelationShipResponsData struct {
 // SignUpResponseData defines model for SignUpResponseData.
 type SignUpResponseData struct {
 	LoginStatus bool        `json:"login_status"`
+	Token       string      `json:"token"`
 	User        interface{} `json:"user"`
 }
 
@@ -304,8 +305,8 @@ type PostApiV1DateSpotsMultipartRequestBody = DateSpotFormRequestData
 // PutApiV1DateSpotsIdMultipartRequestBody defines body for PutApiV1DateSpotsId for multipart/form-data ContentType.
 type PutApiV1DateSpotsIdMultipartRequestBody = DateSpotFormRequestData
 
-// PostApiV1LoginFormdataRequestBody defines body for PostApiV1Login for application/x-www-form-urlencoded ContentType.
-type PostApiV1LoginFormdataRequestBody = SigninFormRequestData
+// PostApiV1LoginJSONRequestBody defines body for PostApiV1Login for application/json ContentType.
+type PostApiV1LoginJSONRequestBody = SigninFormRequestData
 
 // PostApiV1RelationshipsFormdataRequestBody defines body for PostApiV1Relationships for application/x-www-form-urlencoded ContentType.
 type PostApiV1RelationshipsFormdataRequestBody = FollowReauestData
