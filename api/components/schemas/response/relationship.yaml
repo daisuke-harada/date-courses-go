@@ -32,7 +32,7 @@ components:
       required:
         - users
         - current_user
-        - followed_user
+        - unfollowed_user
       properties:
         users:
           type: array
@@ -40,5 +40,5 @@ components:
             $ref: "./user.yaml#/components/schemas/UserResponseData"
         current_user:
           $ref: "./user.yaml#/components/schemas/UserResponseData"
-        un_followed_user:
+        unfollowed_user:
           $ref: "./user.yaml#/components/schemas/UserResponseData"

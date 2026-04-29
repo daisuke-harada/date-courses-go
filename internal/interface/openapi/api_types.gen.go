@@ -53,7 +53,7 @@ type CourseFormRequestDataTravelMode string
 
 // CourseFormResponseData defines model for CourseFormResponseData.
 type CourseFormResponseData struct {
-	DateSpotId *int `json:"date_spot_id,omitempty"`
+	CourseId int `json:"course_id"`
 }
 
 // CourseResponseData defines model for CourseResponseData.
@@ -113,13 +113,20 @@ type DateSpotReviewFormRequestData struct {
 
 // DateSpotReviewResponseData defines model for DateSpotReviewResponseData.
 type DateSpotReviewResponseData struct {
-	DateSpot          DateSpotSummaryData                              `json:"date_spot"`
-	DateSpotReviews   []DateSpotReviewResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
-	ReviewAverageRate float32                                          `json:"review_average_rate"`
+	DateSpot          DateSpotSummaryData                            `json:"date_spot"`
+	DateSpotReviews   []DateSpotShowResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
+	ReviewAverageRate float32                                        `json:"review_average_rate"`
 }
 
-// DateSpotReviewResponseDataDateSpotReviewsInner defines model for DateSpotReviewResponseData_date_spot_reviews_inner.
-type DateSpotReviewResponseDataDateSpotReviewsInner struct {
+// DateSpotShowResponseData defines model for DateSpotShowResponseData.
+type DateSpotShowResponseData struct {
+	DateSpot          DateSpotSummaryData                            `json:"date_spot"`
+	DateSpotReviews   []DateSpotShowResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
+	ReviewAverageRate float32                                        `json:"review_average_rate"`
+}
+
+// DateSpotShowResponseDataDateSpotReviewsInner defines model for DateSpotShowResponseData_date_spot_reviews_inner.
+type DateSpotShowResponseDataDateSpotReviewsInner struct {
 	Content    *string   `json:"content"`
 	DateSpotId int       `json:"date_spot_id"`
 	Id         int       `json:"id"`
@@ -183,8 +190,9 @@ type ImageData1 struct {
 
 // LoginResponseData defines model for LoginResponseData.
 type LoginResponseData struct {
-	LoginStatus bool   `json:"login_status"`
-	Token       string `json:"token"`
+	LoginStatus bool     `json:"login_status"`
+	Token       string   `json:"token"`
+	User        UserData `json:"user"`
 }
 
 // PrefectureData defines model for PrefectureData.
@@ -202,9 +210,9 @@ type RelationShipResponsData struct {
 
 // SignUpResponseData defines model for SignUpResponseData.
 type SignUpResponseData struct {
-	LoginStatus bool        `json:"login_status"`
-	Token       string      `json:"token"`
-	User        interface{} `json:"user"`
+	LoginStatus bool             `json:"login_status"`
+	Token       string           `json:"token"`
+	User        UserResponseData `json:"user"`
 }
 
 // SigninFormRequestData defines model for SigninFormRequestData.
@@ -230,6 +238,13 @@ type TopResponseData struct {
 	Genres          []GenreData           `json:"genres"`
 	MainGenres      []GenreData           `json:"main_genres"`
 	MainPrefectures []PrefectureData      `json:"main_prefectures"`
+}
+
+// UnFollowResponseData defines model for UnFollowResponseData.
+type UnFollowResponseData struct {
+	CurrentUser    UserResponseData   `json:"current_user"`
+	UnfollowedUser UserResponseData   `json:"unfollowed_user"`
+	Users          []UserResponseData `json:"users"`
 }
 
 // UserData defines model for UserData.
@@ -270,6 +285,11 @@ type UserResponseData struct {
 // WelcomeResponseData defines model for WelcomeResponseData.
 type WelcomeResponseData struct {
 	Message string `json:"message"`
+}
+
+// ApiV1GenresIdGet200Response defines model for _api_v1_genres__id__get_200_response.
+type ApiV1GenresIdGet200Response struct {
+	AddressAndDateSpots []DateSpotSummaryData `json:"address_and_date_spots"`
 }
 
 // GetApiV1CoursesParams defines parameters for GetApiV1Courses.

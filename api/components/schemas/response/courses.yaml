@@ -43,5 +43,5 @@ components:
       required:
         - course_id
       properties:
-        date_spot_id:
+        course_id:
           type: integer

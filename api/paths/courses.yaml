@@ -12,7 +12,9 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
+            type: array
+            items:
+              $ref: "../components/schemas/response/courses.yaml#/components/schemas/CourseResponseData"
     default:
       description: "Error response"
       content:
