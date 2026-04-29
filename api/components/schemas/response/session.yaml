@@ -3,9 +3,12 @@ components:
     LoginResponseData:
       type: object
       required:
+        - user
         - login_status
         - token
       properties:
+        user:
+          $ref: "./user.yaml#/components/schemas/UserData"
         login_status:
           type: boolean
         token:

@@ -5,6 +5,17 @@ get:
   responses:
     "200":
       description: "Successful response"
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - address_and_date_spots
+            properties:
+              address_and_date_spots:
+                type: array
+                items:
+                  $ref: "../components/schemas/response/date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData"
     default:
       description: "Error response"
       content:

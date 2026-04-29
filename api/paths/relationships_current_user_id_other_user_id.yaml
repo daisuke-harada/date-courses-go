@@ -11,7 +11,7 @@ delete:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/response/relationship.yaml#/components/schemas/FollowResponseData"
+            $ref: "../components/schemas/response/relationship.yaml#/components/schemas/UnFollowResponseData"
     default:
       description: "Error response"
       content:
