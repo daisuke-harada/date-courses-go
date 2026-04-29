@@ -84,7 +84,7 @@ paths:
     post:
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: "#/components/schemas/SigninFormRequestData"
         required: true
@@ -812,15 +812,22 @@ components:
       example:
         login_status: true
         user: ""
+        token: token
       properties:
         user: {}
         login_status:
           type: boolean
+        token:
+          type: string
       required:
       - login_status
+      - token
       - user
       type: object
     SigninFormRequestData:
+      example:
+        password: password
+        name: name
       properties:
         name:
           type: string

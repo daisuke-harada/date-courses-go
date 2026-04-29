@@ -13,9 +13,14 @@ type PostApiV1LoginHandler struct {
 }
 
 func (h *PostApiV1LoginHandler) PostApiV1Login(ctx echo.Context) error {
+	var req openapi.SigninFormRequestData
+	if err := ctx.Bind(&req); err != nil {
+		return err
+	}
+
 	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.LoginInput{
-		Name:     ctx.FormValue("name"),
-		Password: ctx.FormValue("password"),
+		Name:     req.Name,
+		Password: req.Password,
 	})
 	if err != nil {
 		// apperror 型のエラーは CustomHTTPErrorHandler が適切なステータスコードで処理する

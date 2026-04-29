@@ -40,15 +40,13 @@ func (h *PostApiV1SignupHandler) PostApiV1Signup(ctx echo.Context) error {
 		return err
 	}
 
-	response, err := openapi.NewSignupResponse(output.User)
+	response, err := openapi.NewSignupResponse(output.User, output.Token)
 	if err != nil {
 		return err
 	}
 	return ctx.JSON(http.StatusCreated, response)
 }
 
-// toModelGender は FormValue の文字列を model.Gender に変換します。
-// 「男性」「女性」以外の値は error を返します。
 func NewModelGender(s string) (model.Gender, error) {
 	switch model.Gender(s) {
 	case model.GenderMale:
