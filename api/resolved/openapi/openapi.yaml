@@ -3300,7 +3300,7 @@ components:
       type: object
     _api_v1_genres__id__get_200_response:
       example:
-        address_and_date_spots:
+        date_spots:
         - city_name: city_name
           prefecture_name: prefecture_name
           latitude: 6.0274563
@@ -3340,12 +3340,12 @@ components:
           genre_name: genre_name
           longitude: 1.4658129
       properties:
-        address_and_date_spots:
+        date_spots:
           items:
             $ref: "#/components/schemas/DateSpotSummaryData"
           type: array
       required:
-      - address_and_date_spots
+      - date_spots
       type: object
     DateSpotShowResponseData_date_spot_reviews_inner:
       example:
