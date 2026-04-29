@@ -18,7 +18,7 @@ import (
 )
 
 func TestGetApiV1GenresIdHandler(t *testing.T) {
-	t.Run("success_returns_200_with_address_and_date_spots", func(t *testing.T) {
+	t.Run("success_returns_200_with_date_spots", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
@@ -41,7 +41,7 @@ func TestGetApiV1GenresIdHandler(t *testing.T) {
 
 		var resp map[string]interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		assert.Contains(t, resp, "address_and_date_spots")
+		assert.Contains(t, resp, "date_spots")
 	})
 
 	t.Run("error_usecase_returns_internal_server_error", func(t *testing.T) {
