@@ -299,7 +299,7 @@ type WelcomeResponseData struct {
 
 // ApiV1GenresIdGet200Response defines model for _api_v1_genres__id__get_200_response.
 type ApiV1GenresIdGet200Response struct {
-	AddressAndDateSpots []DateSpotSummaryData `json:"address_and_date_spots"`
+	DateSpots []DateSpotSummaryData `json:"date_spots"`
 }
 
 // GetApiV1CoursesParams defines parameters for GetApiV1Courses.
