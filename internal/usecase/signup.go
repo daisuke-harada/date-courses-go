@@ -9,6 +9,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
+	jwtpkg "github.com/daisuke-harada/date-courses-go/internal/pkg/jwt"
 )
 
 // emailRegex は Rails の validates_format_of :email と同等の正規表現です。
@@ -76,21 +77,29 @@ func (i *SignupInput) Validate() error {
 
 // SignupOutput はサインアップの出力データです。
 type SignupOutput struct {
-	User *model.User
+	User  *model.User
+	Token string
 }
 
 type SignupInteractor struct {
 	UserRepository repository.UserRepository
 	AuthService    service.AuthService
+	JWTSecretKey   string
 }
 
 func NewSignupUsecase(
 	userRepository repository.UserRepository,
 	authService service.AuthService,
+	jwtSecret ...string,
 ) SignupInputPort {
+	secret := ""
+	if len(jwtSecret) > 0 {
+		secret = jwtSecret[0]
+	}
 	return &SignupInteractor{
 		UserRepository: userRepository,
 		AuthService:    authService,
+		JWTSecretKey:   secret,
 	}
 }
 
@@ -120,5 +129,15 @@ func (i *SignupInteractor) Execute(ctx context.Context, input SignupInput) (*Sig
 		return nil, apperror.InternalServerError(err)
 	}
 
-	return &SignupOutput{User: user}, nil
+	out := &SignupOutput{User: user}
+	// If a JWT secret is configured, issue a token so the user is logged in after signup
+	if i.JWTSecretKey != "" {
+		token, err := jwtpkg.Encode(user.ID, i.JWTSecretKey)
+		if err != nil {
+			return nil, apperror.InternalServerError(err)
+		}
+		out.Token = token
+	}
+
+	return out, nil
 }

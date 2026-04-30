@@ -20,5 +20,5 @@ func (h *GetApiV1DateSpotsIdHandler) GetApiV1DateSpotsId(ctx echo.Context, id in
 		return err
 	}
 
-	return ctx.JSON(http.StatusOK, openapi.NewDateSpotResponse(output.DateSpot))
+	return ctx.JSON(http.StatusOK, openapi.NewDateSpotShowResponse(output.DateSpot, output.DateSpotReviews))
 }

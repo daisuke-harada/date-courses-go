@@ -26,6 +26,30 @@ func validSignupInput() usecase.SignupInput {
 }
 
 func TestSignupInteractor_Execute(t *testing.T) {
+	t.Run("success_with_jwt", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		ctx := context.Background()
+
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		userRepo.EXPECT().ExistsByEmail(ctx, "newuser@example.com").Return(false, nil)
+		userRepo.EXPECT().Create(ctx, gomock.Any()).DoAndReturn(func(_ context.Context, u *model.User) error {
+			u.ID = 7
+			return nil
+		})
+
+		authService := servicemock.NewMockAuthService(ctrl)
+		authService.EXPECT().HashPassword("password123").Return("hashed_password", nil)
+
+		interactor := usecase.NewSignupUsecase(userRepo, authService, "test_jwt_secret")
+		output, err := interactor.Execute(ctx, validSignupInput())
+
+		require.NoError(t, err)
+		require.NotNil(t, output)
+		assert.Equal(t, uint(7), output.User.ID)
+		assert.NotEmpty(t, output.Token)
+	})
 	t.Run("success", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
