@@ -55,21 +55,6 @@ func (mr *MockDateSpotReviewRepositoryMockRecorder) Create(ctx, review any) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).Create), ctx, review)
 }
 
-// FindByID mocks base method.
-func (m *MockDateSpotReviewRepository) FindByID(ctx context.Context, id uint) (*model.DateSpotReview, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByID", ctx, id)
-	ret0, _ := ret[0].(*model.DateSpotReview)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// FindByID indicates an expected call of FindByID.
-func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByID(ctx, id any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByID), ctx, id)
-}
-
 // DeleteByID mocks base method.
 func (m *MockDateSpotReviewRepository) DeleteByID(ctx context.Context, id uint) error {
 	m.ctrl.T.Helper()
@@ -97,6 +82,21 @@ func (m *MockDateSpotReviewRepository) FindByDateSpotID(ctx context.Context, dat
 func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByDateSpotID(ctx, dateSpotID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByDateSpotID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByDateSpotID), ctx, dateSpotID)
+}
+
+// FindByID mocks base method.
+func (m *MockDateSpotReviewRepository) FindByID(ctx context.Context, id uint) (*model.DateSpotReview, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByID", ctx, id)
+	ret0, _ := ret[0].(*model.DateSpotReview)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByID indicates an expected call of FindByID.
+func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByID(ctx, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByID), ctx, id)
 }
 
 // FindByUserID mocks base method.

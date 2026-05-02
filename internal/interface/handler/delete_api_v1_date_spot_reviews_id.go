@@ -20,5 +20,5 @@ func (h *DeleteApiV1DateSpotReviewsIdHandler) DeleteApiV1DateSpotReviewsId(ctx e
 		return err
 	}
 
-	return ctx.JSON(http.StatusOK, openapi.NewDateSpotShowResponse(output.DateSpot, output.DateSpotReviews))
+	return ctx.JSON(http.StatusOK, openapi.NewDateSpotReviewResponse(output.DateSpotReviews))
 }

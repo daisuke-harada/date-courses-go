@@ -27,7 +27,7 @@ func validDateSpotReviewForm() url.Values {
 }
 
 func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
-	t.Run("success_returns_201_with_date_spot", func(t *testing.T) {
+	t.Run("success_returns_201_with_reviews", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
@@ -36,7 +36,6 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 			Execute(gomock.Any(), gomock.Any()).
 			Return(&usecase.CreateDateSpotReviewOutput{
 				ReviewID:        10,
-				DateSpot:        &model.DateSpot{ID: 2, Name: "テストスポット"},
 				DateSpotReviews: []*model.DateSpotReview{},
 			}, nil)
 
@@ -50,12 +49,10 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 
 		var resp map[string]interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		assert.Contains(t, resp, "date_spot")
 		assert.Contains(t, resp, "date_spot_reviews")
 		assert.Contains(t, resp, "review_average_rate")
 	})
 
-	// user_id が空文字（フォーム未送信）は型変換失敗 → handler が BadRequest を返す
 	t.Run("error_bad_request_invalid_user_id", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()

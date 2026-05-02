@@ -36,12 +36,7 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 			FindByDateSpotID(ctx, uint(2)).
 			Return([]*model.DateSpotReview{}, nil)
 
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
-		dateSpotRepo.EXPECT().
-			FindByID(ctx, uint(2)).
-			Return(&model.DateSpot{ID: 2, Name: "テストスポット"}, nil)
-
-		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{
 			UserID:     1,
 			DateSpotID: 2,
@@ -51,7 +46,6 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, uint(10), output.ReviewID)
-		assert.NotNil(t, output.DateSpot)
 		assert.NotNil(t, output.DateSpotReviews)
 	})
 
@@ -60,9 +54,8 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
 
-		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{
 			UserID:     0,
 			DateSpotID: 2,
@@ -80,9 +73,8 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
 
-		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{
 			UserID:     1,
 			DateSpotID: 0,
@@ -104,9 +96,7 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 			Create(ctx, gomock.Any()).
 			Return(errors.New("db error"))
 
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
-
-		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{
 			UserID:     1,
 			DateSpotID: 2,

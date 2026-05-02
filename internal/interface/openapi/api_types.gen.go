@@ -113,7 +113,6 @@ type DateSpotReviewFormRequestData struct {
 
 // DateSpotReviewResponseData defines model for DateSpotReviewResponseData.
 type DateSpotReviewResponseData struct {
-	DateSpot          DateSpotSummaryData                            `json:"date_spot"`
 	DateSpotReviews   []DateSpotShowResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
 	ReviewAverageRate float32                                        `json:"review_average_rate"`
 }

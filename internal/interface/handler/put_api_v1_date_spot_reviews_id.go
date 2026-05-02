@@ -15,7 +15,11 @@ type PutApiV1DateSpotReviewsIdHandler struct {
 }
 
 func (h *PutApiV1DateSpotReviewsIdHandler) PutApiV1DateSpotReviewsId(ctx echo.Context, reviewID int) error {
-	// rate (optional): 型変換のみ。バリデーションは usecase.UpdateDateSpotReviewInput.Validate() が担う
+	dateSpotID, err := strconv.Atoi(ctx.FormValue("date_spot_id"))
+	if err != nil {
+		return apperror.BadRequest("date_spot_id は整数で指定してください")
+	}
+
 	var rate *float64
 	if rateStr := ctx.FormValue("rate"); rateStr != "" {
 		r, err := strconv.ParseFloat(rateStr, 64)
@@ -25,21 +29,21 @@ func (h *PutApiV1DateSpotReviewsIdHandler) PutApiV1DateSpotReviewsId(ctx echo.Co
 		rate = &r
 	}
 
-	// content (optional)
 	var content *string
 	if c := ctx.FormValue("content"); c != "" {
 		content = &c
 	}
 
 	input := usecase.UpdateDateSpotReviewInput{
-		ReviewID: uint(reviewID),
-		Rate:     rate,
-		Content:  content,
+		ReviewID:   uint(reviewID),
+		DateSpotID: uint(dateSpotID),
+		Rate:       rate,
+		Content:    content,
 	}
 	output, err := h.InputPort.Execute(ctx.Request().Context(), input)
 	if err != nil {
 		return err
 	}
 
-	return ctx.JSON(http.StatusOK, openapi.NewDateSpotShowResponse(output.DateSpot, output.DateSpotReviews))
+	return ctx.JSON(http.StatusOK, openapi.NewDateSpotReviewResponse(output.DateSpotReviews))
 }

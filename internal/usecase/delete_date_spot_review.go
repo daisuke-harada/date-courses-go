@@ -17,23 +17,15 @@ type DeleteDateSpotReviewInput struct {
 }
 
 type DeleteDateSpotReviewOutput struct {
-	DateSpot        *model.DateSpot
 	DateSpotReviews []*model.DateSpotReview
 }
 
 type DeleteDateSpotReviewInteractor struct {
 	DateSpotReviewRepository repository.DateSpotReviewRepository
-	DateSpotRepository       repository.DateSpotRepository
 }
 
-func NewDeleteDateSpotReviewUsecase(
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
-	dateSpotRepository repository.DateSpotRepository,
-) DeleteDateSpotReviewInputPort {
-	return &DeleteDateSpotReviewInteractor{
-		DateSpotReviewRepository: dateSpotReviewRepository,
-		DateSpotRepository:       dateSpotRepository,
-	}
+func NewDeleteDateSpotReviewUsecase(dateSpotReviewRepository repository.DateSpotReviewRepository) DeleteDateSpotReviewInputPort {
+	return &DeleteDateSpotReviewInteractor{DateSpotReviewRepository: dateSpotReviewRepository}
 }
 
 func (i *DeleteDateSpotReviewInteractor) Execute(ctx context.Context, input DeleteDateSpotReviewInput) (*DeleteDateSpotReviewOutput, error) {
@@ -47,18 +39,12 @@ func (i *DeleteDateSpotReviewInteractor) Execute(ctx context.Context, input Dele
 		return nil, apperror.InternalServerError(err)
 	}
 
-	dateSpot, err := i.DateSpotRepository.FindByID(ctx, dateSpotID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
 	reviews, err := i.DateSpotReviewRepository.FindByDateSpotID(ctx, dateSpotID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
 	}
 
 	return &DeleteDateSpotReviewOutput{
-		DateSpot:        dateSpot,
 		DateSpotReviews: reviews,
 	}, nil
 }

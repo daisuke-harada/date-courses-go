@@ -54,5 +54,5 @@ func (h *PostApiV1DateSpotReviewsHandler) PostApiV1DateSpotReviews(ctx echo.Cont
 		return err
 	}
 
-	return ctx.JSON(http.StatusCreated, openapi.NewDateSpotShowResponse(output.DateSpot, output.DateSpotReviews))
+	return ctx.JSON(http.StatusCreated, openapi.NewDateSpotReviewResponse(output.DateSpotReviews))
 }

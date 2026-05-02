@@ -33,17 +33,12 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			FindByDateSpotID(ctx, uint(5)).
 			Return([]*model.DateSpotReview{}, nil)
 
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
-		dateSpotRepo.EXPECT().
-			FindByID(ctx, uint(5)).
-			Return(&model.DateSpot{ID: 5, Name: "テストスポット"}, nil)
-
-		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
 
 		require.NoError(t, err)
 		assert.NotNil(t, output)
-		assert.NotNil(t, output.DateSpot)
+		assert.NotNil(t, output.DateSpotReviews)
 	})
 
 	t.Run("error_review_not_found", func(t *testing.T) {
@@ -55,9 +50,7 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			FindByID(ctx, uint(10)).
 			Return(nil, errors.New("not found"))
 
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
-
-		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
 
 		assert.Error(t, err)
@@ -79,9 +72,7 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			DeleteByID(ctx, uint(10)).
 			Return(errors.New("db error"))
 
-		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
-
-		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
 
 		assert.Error(t, err)

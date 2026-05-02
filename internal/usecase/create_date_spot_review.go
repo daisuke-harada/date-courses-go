@@ -35,23 +35,15 @@ func (i *CreateDateSpotReviewInput) Validate() error {
 
 type CreateDateSpotReviewOutput struct {
 	ReviewID        uint
-	DateSpot        *model.DateSpot
 	DateSpotReviews []*model.DateSpotReview
 }
 
 type CreateDateSpotReviewInteractor struct {
 	DateSpotReviewRepository repository.DateSpotReviewRepository
-	DateSpotRepository       repository.DateSpotRepository
 }
 
-func NewCreateDateSpotReviewUsecase(
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
-	dateSpotRepository repository.DateSpotRepository,
-) CreateDateSpotReviewInputPort {
-	return &CreateDateSpotReviewInteractor{
-		DateSpotReviewRepository: dateSpotReviewRepository,
-		DateSpotRepository:       dateSpotRepository,
-	}
+func NewCreateDateSpotReviewUsecase(dateSpotReviewRepository repository.DateSpotReviewRepository) CreateDateSpotReviewInputPort {
+	return &CreateDateSpotReviewInteractor{DateSpotReviewRepository: dateSpotReviewRepository}
 }
 
 func (i *CreateDateSpotReviewInteractor) Execute(ctx context.Context, input CreateDateSpotReviewInput) (*CreateDateSpotReviewOutput, error) {
@@ -68,11 +60,6 @@ func (i *CreateDateSpotReviewInteractor) Execute(ctx context.Context, input Crea
 		return nil, apperror.InternalServerError(err)
 	}
 
-	dateSpot, err := i.DateSpotRepository.FindByID(ctx, input.DateSpotID)
-	if err != nil {
-		return nil, apperror.InternalServerError(err)
-	}
-
 	reviews, err := i.DateSpotReviewRepository.FindByDateSpotID(ctx, input.DateSpotID)
 	if err != nil {
 		return nil, apperror.InternalServerError(err)
@@ -80,7 +67,6 @@ func (i *CreateDateSpotReviewInteractor) Execute(ctx context.Context, input Crea
 
 	return &CreateDateSpotReviewOutput{
 		ReviewID:        review.ID,
-		DateSpot:        dateSpot,
 		DateSpotReviews: reviews,
 	}, nil
 }

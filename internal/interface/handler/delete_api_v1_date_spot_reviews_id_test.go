@@ -18,7 +18,7 @@ import (
 )
 
 func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
-	t.Run("success_returns_200_with_date_spot", func(t *testing.T) {
+	t.Run("success_returns_200_with_reviews", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
@@ -26,7 +26,6 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.DeleteDateSpotReviewInput{ReviewID: 10}).
 			Return(&usecase.DeleteDateSpotReviewOutput{
-				DateSpot:        &model.DateSpot{ID: 5, Name: "テストスポット"},
 				DateSpotReviews: []*model.DateSpotReview{},
 			}, nil)
 
@@ -40,7 +39,6 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 
 		var resp map[string]interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		assert.Contains(t, resp, "date_spot")
 		assert.Contains(t, resp, "date_spot_reviews")
 		assert.Contains(t, resp, "review_average_rate")
 	})

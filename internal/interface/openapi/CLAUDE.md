@@ -15,8 +15,8 @@
 
 ```go
 // internal/interface/openapi/date_spot.go
-func NewDateSpotResponse(ds *model.DateSpot) (DateSpotResponseBody, error) {
-    return DateSpotResponseBody{
+func NewDateSpotResponse(ds *model.DateSpot) (DateSpotResponseData, error) {
+    return DateSpotResponseData{
         Id:   int(ds.ID),
         Name: ds.Name,
         // ...
