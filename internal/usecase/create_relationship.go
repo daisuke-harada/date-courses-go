@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -27,6 +28,18 @@ func (i *CreateRelationshipInput) Validate() error {
 	}
 
 	return nil
+}
+
+func NewCreateRelationshipInputFromStrings(currentUserIDStr, followedUserIDStr string) (CreateRelationshipInput, error) {
+	cur, err := strconv.Atoi(currentUserIDStr)
+	if err != nil {
+		return CreateRelationshipInput{}, apperror.BadRequest("current_user_id は数値で指定してください")
+	}
+	fol, err := strconv.Atoi(followedUserIDStr)
+	if err != nil {
+		return CreateRelationshipInput{}, apperror.BadRequest("followed_user_id は数値で指定してください")
+	}
+	return CreateRelationshipInput{CurrentUserID: uint(cur), FollowedUserID: uint(fol)}, nil
 }
 
 type CreateRelationshipOutput struct {

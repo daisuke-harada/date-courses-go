@@ -4,69 +4,33 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/oapi-codegen/runtime/types"
+	"github.com/samber/lo"
 )
 
-// UserResponseBody は UserResponseData の代替型です。
-// CourseResponseDataBody / DateSpotReviewDataBody を使うことで
-// OpeningTime / ClosingTime の nullable を正しく扱います。
-type UserResponseBody struct {
-	Admin           bool                     `json:"admin"`
-	Courses         []CourseResponseDataBody `json:"courses"`
-	DateSpotReviews []DateSpotReviewDataBody `json:"date_spot_reviews"`
-	Email           string                   `json:"email"`
-	FollowerIds     []int                    `json:"followerIds"`
-	FollowingIds    []int                    `json:"followingIds"`
-	Gender          Gender                   `json:"gender"`
-	Id              int                      `json:"id"`
-	Image           ImageData                `json:"image"`
-	Name            string                   `json:"name"`
-}
-
-// CourseResponseDataBody は CourseResponseData の代替型です。
-// DateSpots フィールドに DateSpotSummaryDataResponse を使います。
-type CourseResponseDataBody struct {
-	Authority                  string                        `json:"authority"`
-	DateSpots                  []DateSpotSummaryDataResponse `json:"date_spots"`
-	Id                         int                           `json:"id"`
-	NoDuplicatePrefectureNames []string                      `json:"no_duplicate_prefecture_names"`
-	TravelMode                 string                        `json:"travel_mode"`
-	User                       UserData                      `json:"user"`
-}
-
-// DateSpotReviewDataBody は DateSpotReviewData の代替型です。
-// DateSpot フィールドに DateSpotDataResponse を使います。
-type DateSpotReviewDataBody struct {
-	Content  string               `json:"content"`
-	DateSpot DateSpotDataResponse `json:"date_spot"`
-	Id       int                  `json:"id"`
-	Rate     float32              `json:"rate"`
-}
-
-// BuildUserResponseBody は User と関連データから UserResponseBody を構築します。
-func BuildUserResponseBody(
+// NewUserResponseData は User と関連データから UserResponseBody を構築します。
+func NewUserResponseData(
 	user *model.User,
 	followerIDs, followingIDs []int,
 	courses []*model.Course,
 	reviews []*model.DateSpotReview,
-) (UserResponseBody, error) {
+) (UserResponseData, error) {
 	gender, err := NewGender(user.Gender)
 	if err != nil {
-		return UserResponseBody{}, err
+		return UserResponseData{}, err
 	}
 
-	courseResponses := make([]CourseResponseDataBody, 0, len(courses))
+	courseResponses := make([]CourseResponseData, 0, len(courses))
 	for _, c := range courses {
 		cr, err := buildCourseResponseBody(c)
 		if err != nil {
-			return UserResponseBody{}, err
+			return UserResponseData{}, err
 		}
 		courseResponses = append(courseResponses, cr)
 	}
 
-	reviewResponses := make([]DateSpotReviewDataBody, 0, len(reviews))
-	for _, rv := range reviews {
-		reviewResponses = append(reviewResponses, buildDateSpotReviewDataBody(rv))
-	}
+	reviewResponses := lo.Map(reviews, func(rv *model.DateSpotReview, _ int) DateSpotReviewData {
+		return newDateSpotReviewData(rv)
+	})
 
 	if followerIDs == nil {
 		followerIDs = []int{}
@@ -75,7 +39,7 @@ func BuildUserResponseBody(
 		followingIDs = []int{}
 	}
 
-	return UserResponseBody{
+	return UserResponseData{
 		Id:              int(user.ID),
 		Admin:           user.Admin,
 		Email:           user.Email,
@@ -89,10 +53,8 @@ func BuildUserResponseBody(
 	}, nil
 }
 
-// buildCourseResponseBody は Course モデルから CourseResponseDataBody を構築します。
-// Course.User と Course.DuringSpots.DateSpot が Preload 済みであることを前提とします。
-func buildCourseResponseBody(course *model.Course) (CourseResponseDataBody, error) {
-	dateSpots := make([]DateSpotSummaryDataResponse, 0, len(course.DuringSpots))
+func buildCourseResponseBody(course *model.Course) (CourseResponseData, error) {
+	dateSpots := make([]DateSpotSummaryData, 0, len(course.DuringSpots))
 	prefectureIDSet := make(map[int]struct{})
 
 	for _, ds := range course.DuringSpots {
@@ -117,7 +79,7 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseDataBody, erro
 	if course.User != nil {
 		gender, err := NewGender(course.User.Gender)
 		if err != nil {
-			return CourseResponseDataBody{}, err
+			return CourseResponseData{}, err
 		}
 		courseUser = UserData{
 			Id:     int(course.User.ID),
@@ -129,7 +91,7 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseDataBody, erro
 		}
 	}
 
-	return CourseResponseDataBody{
+	return CourseResponseData{
 		Id:                         int(course.ID),
 		Authority:                  course.Authority,
 		TravelMode:                 course.TravelMode,
@@ -139,9 +101,7 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseDataBody, erro
 	}, nil
 }
 
-// buildDateSpotReviewDataBody は DateSpotReview から DateSpotReviewDataBody を構築します。
-// Review.DateSpot が Preload 済みであることを前提とします。
-func buildDateSpotReviewDataBody(review *model.DateSpotReview) DateSpotReviewDataBody {
+func newDateSpotReviewData(review *model.DateSpotReview) DateSpotReviewData {
 	var rate float32
 	if review.Rate != nil {
 		rate = float32(*review.Rate)
@@ -151,12 +111,12 @@ func buildDateSpotReviewDataBody(review *model.DateSpotReview) DateSpotReviewDat
 		content = *review.Content
 	}
 
-	var dateSpot DateSpotDataResponse
+	var dateSpot DateSpotData
 	if review.DateSpot != nil {
 		dateSpot = newDateSpotData(review.DateSpot)
 	}
 
-	return DateSpotReviewDataBody{
+	return DateSpotReviewData{
 		Id:       int(review.ID),
 		Rate:     rate,
 		Content:  content,
@@ -164,11 +124,10 @@ func buildDateSpotReviewDataBody(review *model.DateSpotReview) DateSpotReviewDat
 	}
 }
 
-// NewGetUsersResponse は output.Users から []UserResponseBody を構築します。
-func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseBody, error) {
-	responses := make([]UserResponseBody, 0, len(users))
+func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseData, error) {
+	responses := make([]UserResponseData, 0, len(users))
 	for _, uwr := range users {
-		resp, err := BuildUserResponseBody(
+		resp, err := NewUserResponseData(
 			uwr.User,
 			uwr.FollowerIDs,
 			uwr.FollowingIDs,
@@ -184,6 +143,6 @@ func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseBody, 
 }
 
 // NewUserWithRelationsResponse は *model.UserWithRelations から UserResponseBody を構築します。
-func NewUserWithRelationsResponse(uwr *model.UserWithRelations) (UserResponseBody, error) {
-	return BuildUserResponseBody(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
+func NewUserWithRelationsResponse(uwr *model.UserWithRelations) (UserResponseData, error) {
+	return NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
 }

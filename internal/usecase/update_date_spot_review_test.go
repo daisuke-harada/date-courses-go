@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	repomock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/stretchr/testify/assert"
@@ -28,16 +29,21 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(nil)
+		reviewRepo.EXPECT().
+			FindByDateSpotID(ctx, uint(3)).
+			Return([]*model.DateSpotReview{}, nil)
 
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
-			ReviewID: 1,
-			Rate:     &rate,
-			Content:  &content,
+			ReviewID:   1,
+			DateSpotID: 3,
+			Rate:       &rate,
+			Content:    &content,
 		})
 
 		require.NoError(t, err)
 		assert.Equal(t, uint(1), output.ReviewID)
+		assert.NotNil(t, output.DateSpotReviews)
 	})
 
 	t.Run("success_with_rate_only", func(t *testing.T) {
@@ -48,11 +54,15 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(nil)
+		reviewRepo.EXPECT().
+			FindByDateSpotID(ctx, uint(3)).
+			Return([]*model.DateSpotReview{}, nil)
 
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
-			ReviewID: 1,
-			Rate:     &rate,
+			ReviewID:   1,
+			DateSpotID: 3,
+			Rate:       &rate,
 		})
 
 		require.NoError(t, err)
@@ -64,11 +74,11 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
-		// リポジトリは呼ばれない
 
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
-			ReviewID: 1,
+			ReviewID:   1,
+			DateSpotID: 3,
 		})
 
 		assert.Error(t, err)
@@ -89,8 +99,9 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
-			ReviewID: 1,
-			Rate:     &rate,
+			ReviewID:   1,
+			DateSpotID: 3,
+			Rate:       &rate,
 		})
 
 		assert.Error(t, err)

@@ -5,108 +5,59 @@ import (
 
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
+	"github.com/samber/lo"
 )
 
-// DateSpotDataResponse は生成型 DateSpotData の代替で、
-// OpeningTime / ClosingTime を *time.Time にして null をそのまま JSON 出力します。
-type DateSpotDataResponse struct {
-	AverageRate float32    `json:"average_rate"`
-	ClosingTime *time.Time `json:"closing_time"`
-	CreatedAt   time.Time  `json:"created_at"`
-	GenreId     int        `json:"genre_id"`
-	Id          int        `json:"id"`
-	Image       ImageData  `json:"image"`
-	Name        string     `json:"name"`
-	OpeningTime *time.Time `json:"opening_time"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-}
-
-// DateSpotSummaryDataResponse は生成型 DateSpotSummaryData の代替で、
-// DateSpot フィールドに DateSpotDataResponse を使います。
-type DateSpotSummaryDataResponse struct {
-	AverageRate       float32              `json:"average_rate"`
-	CityName          string               `json:"city_name"`
-	DateSpot          DateSpotDataResponse `json:"date_spot"`
-	GenreName         string               `json:"genre_name"`
-	Id                int                  `json:"id"`
-	Latitude          float32              `json:"latitude"`
-	Longitude         float32              `json:"longitude"`
-	PrefectureName    string               `json:"prefecture_name"`
-	ReviewTotalNumber int                  `json:"review_total_number"`
-}
-
-// DateSpotShowResponse は GET /api/v1/date_spots/:id のレスポンス型です。
-type DateSpotShowResponse struct {
-	DateSpot          DateSpotSummaryDataResponse `json:"date_spot"`
-	ReviewAverageRate float64                     `json:"review_average_rate"`
-	DateSpotReviews   []DateSpotReviewItem        `json:"date_spot_reviews"`
-}
-
-// DateSpotReviewItem はレビュー一覧の各要素です。
-type DateSpotReviewItem struct {
-	Id         int       `json:"id"`
-	Rate       *float64  `json:"rate"`
-	Content    *string   `json:"content"`
-	UserId     int       `json:"user_id"`
-	DateSpotId int       `json:"date_spot_id"`
-	UserName   string    `json:"user_name"`
-	UserGender string    `json:"user_gender"`
-	UserImage  ImageData `json:"user_image"`
-}
-
 // NewDateSpotShowResponse は DateSpot とレビュー一覧から DateSpotShowResponse を構築します。
-func NewDateSpotShowResponse(dateSpot *model.DateSpot, reviews []*model.DateSpotReview) DateSpotShowResponse {
-	return DateSpotShowResponse{
+func NewDateSpotShowResponse(dateSpot *model.DateSpot, reviews []*model.DateSpotReview) DateSpotShowResponseData {
+	return DateSpotShowResponseData{
 		DateSpot:          newDateSpotSummaryData(dateSpot),
-		ReviewAverageRate: dateSpot.AverageRate,
-		DateSpotReviews:   newDateSpotReviewItems(reviews),
+		ReviewAverageRate: float32(dateSpot.AverageRate),
+		DateSpotReviews:   newDateSpotShowResponseDataDateSpotReviewsInner(reviews),
 	}
 }
 
-func newDateSpotReviewItems(reviews []*model.DateSpotReview) []DateSpotReviewItem {
-	items := make([]DateSpotReviewItem, 0, len(reviews))
-	for _, r := range reviews {
-		item := DateSpotReviewItem{
+func newDateSpotShowResponseDataDateSpotReviewsInner(reviews []*model.DateSpotReview) []DateSpotShowResponseDataDateSpotReviewsInner {
+	return lo.Map(reviews, func(r *model.DateSpotReview, _ int) DateSpotShowResponseDataDateSpotReviewsInner {
+		item := DateSpotShowResponseDataDateSpotReviewsInner{
 			Id:         int(r.ID),
-			Rate:       r.Rate,
-			Content:    r.Content,
-			UserId:     int(r.UserID),
 			DateSpotId: int(r.DateSpotID),
+			UserId:     int(r.UserID),
+		}
+		if r.Rate != nil {
+			f := float32(*r.Rate)
+			item.Rate = &f
+		}
+		if r.Content != nil {
+			item.Content = r.Content
 		}
 		if r.User != nil {
 			item.UserName = r.User.Name
 			item.UserGender = string(r.User.Gender)
 			item.UserImage = ImageData{Url: r.User.Image}
 		}
-		items = append(items, item)
-	}
-	return items
+		return item
+	})
 }
 
-// NewCreateDateSpotResponse は DateSpotID から DateSpotFormResponseData を構築します。
 func NewCreateDateSpotResponse(dateSpotID uint) DateSpotFormResponseData {
 	return DateSpotFormResponseData{
 		DateSpotId: int(dateSpotID),
 	}
 }
 
-func NewDateSpotResponse(dateSpot *model.DateSpot) DateSpotSummaryDataResponse {
+func NewDateSpotResponse(dateSpot *model.DateSpot) DateSpotSummaryData {
 	return newDateSpotSummaryData(dateSpot)
 }
 
-func NewDateSpotsResponse(dateSpots []*model.DateSpot) []DateSpotSummaryDataResponse {
-	response := make([]DateSpotSummaryDataResponse, 0, len(dateSpots))
-	for _, ds := range dateSpots {
-		response = append(response, newDateSpotSummaryData(ds))
-	}
-	return response
+func NewDateSpotsResponse(dateSpots []*model.DateSpot) []DateSpotSummaryData {
+	return lo.Map(dateSpots, func(ds *model.DateSpot, _ int) DateSpotSummaryData {
+		return newDateSpotSummaryData(ds)
+	})
 }
 
-// NewDateSpotSummaries は生成型の []DateSpotSummaryData を返すヘルパーです。
-// Top のレスポンス（generated types）と互換にするために使います。
 func NewDateSpotSummaries(dateSpots []*model.DateSpot) []DateSpotSummaryData {
-	response := make([]DateSpotSummaryData, 0, len(dateSpots))
-	for _, ds := range dateSpots {
+	return lo.Map(dateSpots, func(ds *model.DateSpot, _ int) DateSpotSummaryData {
 		var (
 			latitude       float32
 			longitude      float32
@@ -151,7 +102,7 @@ func NewDateSpotSummaries(dateSpots []*model.DateSpot) []DateSpotSummaryData {
 			ClosingTime: closingTime,
 		}
 
-		response = append(response, DateSpotSummaryData{
+		return DateSpotSummaryData{
 			AverageRate:       float32(ds.AverageRate),
 			CityName:          ds.CityName,
 			DateSpot:          dateSpot,
@@ -161,12 +112,11 @@ func NewDateSpotSummaries(dateSpots []*model.DateSpot) []DateSpotSummaryData {
 			Longitude:         longitude,
 			PrefectureName:    prefectureName,
 			ReviewTotalNumber: ds.ReviewTotalNumber,
-		})
-	}
-	return response
+		}
+	})
 }
 
-func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryDataResponse {
+func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryData {
 	var (
 		latitude       float32
 		longitude      float32
@@ -186,7 +136,7 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryDataResponse {
 		prefectureName = master.PrefectureNameByID(*ds.PrefectureID)
 	}
 
-	return DateSpotSummaryDataResponse{
+	return DateSpotSummaryData{
 		Id:                int(ds.ID),
 		CityName:          ds.CityName,
 		Latitude:          latitude,
@@ -199,13 +149,21 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryDataResponse {
 	}
 }
 
-func newDateSpotData(ds *model.DateSpot) DateSpotDataResponse {
+func newDateSpotData(ds *model.DateSpot) DateSpotData {
 	var genreId int
 	if ds.GenreID != nil {
 		genreId = *ds.GenreID
 	}
 
-	return DateSpotDataResponse{
+	var openingTime, closingTime time.Time
+	if ds.OpeningTime != nil {
+		openingTime = *ds.OpeningTime
+	}
+	if ds.ClosingTime != nil {
+		closingTime = *ds.ClosingTime
+	}
+
+	return DateSpotData{
 		Id:          int(ds.ID),
 		Name:        ds.Name,
 		Image:       ImageData{Url: ds.Image},
@@ -213,7 +171,7 @@ func newDateSpotData(ds *model.DateSpot) DateSpotDataResponse {
 		AverageRate: float32(ds.AverageRate),
 		CreatedAt:   ds.CreatedAt,
 		UpdatedAt:   ds.UpdatedAt,
-		OpeningTime: ds.OpeningTime,
-		ClosingTime: ds.ClosingTime,
+		OpeningTime: openingTime,
+		ClosingTime: closingTime,
 	}
 }

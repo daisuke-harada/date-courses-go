@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -19,15 +18,23 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+func newTestUser(id uint, email string) *model.User {
+	return &model.User{
+		ID:     id,
+		Name:   "テストユーザー",
+		Email:  email,
+		Gender: model.GenderMale,
+	}
+}
+
 func TestGetApiV1CoursesHandler(t *testing.T) {
 	t.Run("success_returns_200_with_courses", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		now := time.Now()
 		courses := []*model.Course{
-			{ID: 1, UserID: 1, TravelMode: "car", Authority: "public", CreatedAt: now, UpdatedAt: now},
-			{ID: 2, UserID: 2, TravelMode: "walk", Authority: "public", CreatedAt: now, UpdatedAt: now},
+			{ID: 1, TravelMode: "car", Authority: "public", User: newTestUser(1, "user1@example.com")},
+			{ID: 2, TravelMode: "walk", Authority: "public", User: newTestUser(2, "user2@example.com")},
 		}
 
 		mockPort := usecasemock.NewMockGetCoursesInputPort(ctrl)
@@ -46,21 +53,18 @@ func TestGetApiV1CoursesHandler(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)
 
-		var resp map[string]interface{}
+		var resp []interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		assert.Contains(t, resp, "courses")
-		coursesList := resp["courses"].([]interface{})
-		assert.Equal(t, 2, len(coursesList))
+		assert.Equal(t, 2, len(resp))
 	})
 
 	t.Run("success_with_prefecture_id_filter", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		now := time.Now()
 		prefectureID := 13
 		courses := []*model.Course{
-			{ID: 1, UserID: 1, TravelMode: "car", Authority: "public", CreatedAt: now, UpdatedAt: now},
+			{ID: 1, TravelMode: "car", Authority: "public", User: newTestUser(1, "user1@example.com")},
 		}
 
 		mockPort := usecasemock.NewMockGetCoursesInputPort(ctrl)
@@ -79,10 +83,9 @@ func TestGetApiV1CoursesHandler(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)
 
-		var resp map[string]interface{}
+		var resp []interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		coursesList := resp["courses"].([]interface{})
-		assert.Equal(t, 1, len(coursesList))
+		assert.Equal(t, 1, len(resp))
 	})
 
 	t.Run("success_returns_empty_list", func(t *testing.T) {
@@ -105,10 +108,9 @@ func TestGetApiV1CoursesHandler(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)
 
-		var resp map[string]interface{}
+		var resp []interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
-		coursesList := resp["courses"].([]interface{})
-		assert.Equal(t, 0, len(coursesList))
+		assert.Equal(t, 0, len(resp))
 	})
 
 	t.Run("error_usecase_failure_returns_error", func(t *testing.T) {

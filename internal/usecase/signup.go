@@ -141,3 +141,33 @@ func (i *SignupInteractor) Execute(ctx context.Context, input SignupInput) (*Sig
 
 	return out, nil
 }
+
+// NewSignupInput builds SignupInput from raw string form values.
+// It converts gender string to model.Gender when possible. If genderStr is empty or invalid,
+// the zero value is used and validation will catch it.
+func NewSignupInput(name, email, genderStr, password, passwordConfirmation, imageStr string) (SignupInput, error) {
+	var gender model.Gender
+	if genderStr != "" {
+		g := model.Gender(genderStr)
+		if g == model.GenderMale || g == model.GenderFemale {
+			gender = g
+		} else {
+			// invalid gender -> treat as empty and let Validate() handle it
+			gender = ""
+		}
+	}
+
+	var image *string
+	if imageStr != "" {
+		image = &imageStr
+	}
+
+	return SignupInput{
+		Name:                 name,
+		Email:                email,
+		Gender:               gender,
+		Password:             password,
+		PasswordConfirmation: passwordConfirmation,
+		Image:                image,
+	}, nil
+}

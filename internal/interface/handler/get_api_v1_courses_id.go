@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -16,13 +18,11 @@ func (h *GetApiV1CoursesIdHandler) GetApiV1CoursesId(ctx echo.Context, arg1 int)
 	if err != nil {
 		return err
 	}
-	course := output.Course
-	return ctx.JSON(http.StatusOK, map[string]interface{}{
-		"id":          course.ID,
-		"user_id":     course.UserID,
-		"travel_mode": course.TravelMode,
-		"authority":   course.Authority,
-		"created_at":  course.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		"updated_at":  course.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
-	})
+
+	resp, err := openapi.NewCourseResponse(output.Course)
+	if err != nil {
+		return apperror.InternalServerError(err)
+	}
+
+	return ctx.JSON(http.StatusOK, resp)
 }

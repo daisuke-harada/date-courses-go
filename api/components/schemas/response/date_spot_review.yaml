@@ -63,12 +63,9 @@ components:
     DateSpotReviewResponseData:
       type: object
       required:
-        - date_spot
         - date_spot_reviews
         - review_average_rate
       properties:
-        date_spot:
-          $ref: "./date_spot_summary_data.yaml#/components/schemas/DateSpotSummaryData"
         date_spot_reviews:
           type: array
           items:

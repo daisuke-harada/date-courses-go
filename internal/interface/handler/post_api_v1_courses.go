@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -43,5 +44,5 @@ func (h *PostApiV1CoursesHandler) PostApiV1Courses(ctx echo.Context) error {
 		return err
 	}
 
-	return ctx.JSON(http.StatusCreated, map[string]int{"course_id": int(output.CourseID)})
+	return ctx.JSON(http.StatusCreated, openapi.NewCreateCourseResponse(output.CourseID))
 }

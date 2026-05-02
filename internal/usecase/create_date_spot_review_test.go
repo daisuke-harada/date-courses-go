@@ -32,6 +32,9 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 				r.ID = 10
 				return nil
 			})
+		reviewRepo.EXPECT().
+			FindByDateSpotID(ctx, uint(2)).
+			Return([]*model.DateSpotReview{}, nil)
 
 		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{
@@ -43,6 +46,7 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, uint(10), output.ReviewID)
+		assert.NotNil(t, output.DateSpotReviews)
 	})
 
 	t.Run("error_validation_missing_user_id", func(t *testing.T) {
@@ -50,7 +54,6 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
-		// リポジトリは呼ばれない
 
 		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{
@@ -70,7 +73,6 @@ func TestCreateDateSpotReviewInteractor_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
-		// リポジトリは呼ばれない
 
 		interactor := usecase.NewCreateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.CreateDateSpotReviewInput{

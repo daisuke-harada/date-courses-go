@@ -29,9 +29,9 @@ func TestGetApiV1CoursesIdHandler(t *testing.T) {
 			Return(&usecase.GetCourseOutput{
 				Course: &model.Course{
 					ID:         1,
-					UserID:     2,
 					TravelMode: "DRIVING",
 					Authority:  "公開",
+					User:       newTestUser(2, "user@example.com"),
 				},
 			}, nil)
 
@@ -49,9 +49,10 @@ func TestGetApiV1CoursesIdHandler(t *testing.T) {
 		var resp map[string]interface{}
 		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
 		assert.Equal(t, float64(1), resp["id"])
-		assert.Equal(t, float64(2), resp["user_id"])
 		assert.Equal(t, "DRIVING", resp["travel_mode"])
 		assert.Equal(t, "公開", resp["authority"])
+		user := resp["user"].(map[string]interface{})
+		assert.Equal(t, float64(2), user["id"])
 	})
 
 	t.Run("error_not_found", func(t *testing.T) {
