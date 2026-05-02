@@ -22,7 +22,7 @@ func (h *GetApiV1CoursesHandler) GetApiV1Courses(ctx echo.Context, params openap
 		return err
 	}
 
-	resp, err := openapi.BuildGetCoursesResponse(output)
+	resp, err := openapi.NewCoursesResponse(output.Courses)
 	if err != nil {
 		return apperror.InternalServerError(err)
 	}

@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	repomock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/stretchr/testify/assert"
@@ -26,10 +27,21 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
+			FindByID(ctx, uint(1)).
+			Return(&model.DateSpotReview{ID: 1, DateSpotID: 3}, nil)
+		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(nil)
+		reviewRepo.EXPECT().
+			FindByDateSpotID(ctx, uint(3)).
+			Return([]*model.DateSpotReview{}, nil)
 
-		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
+		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
+		dateSpotRepo.EXPECT().
+			FindByID(ctx, uint(3)).
+			Return(&model.DateSpot{ID: 3, Name: "テストスポット"}, nil)
+
+		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID: 1,
 			Rate:     &rate,
@@ -38,6 +50,8 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, uint(1), output.ReviewID)
+		assert.NotNil(t, output.DateSpot)
+		assert.NotNil(t, output.DateSpotReviews)
 	})
 
 	t.Run("success_with_rate_only", func(t *testing.T) {
@@ -46,10 +60,21 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
+			FindByID(ctx, uint(1)).
+			Return(&model.DateSpotReview{ID: 1, DateSpotID: 3}, nil)
+		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(nil)
+		reviewRepo.EXPECT().
+			FindByDateSpotID(ctx, uint(3)).
+			Return([]*model.DateSpotReview{}, nil)
 
-		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
+		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
+		dateSpotRepo.EXPECT().
+			FindByID(ctx, uint(3)).
+			Return(&model.DateSpot{ID: 3, Name: "テストスポット"}, nil)
+
+		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID: 1,
 			Rate:     &rate,
@@ -64,9 +89,9 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
-		// リポジトリは呼ばれない
+		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
 
-		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
+		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID: 1,
 		})
@@ -78,16 +103,45 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		assert.Equal(t, http.StatusUnprocessableEntity, statusCode)
 	})
 
+	t.Run("error_review_not_found", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
+		reviewRepo.EXPECT().
+			FindByID(ctx, uint(1)).
+			Return(nil, errors.New("not found"))
+
+		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
+
+		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
+		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
+			ReviewID: 1,
+			Rate:     &rate,
+		})
+
+		assert.Error(t, err)
+		assert.Nil(t, output)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusNotFound, statusCode)
+	})
+
 	t.Run("error_repository_update_failed", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
+			FindByID(ctx, uint(1)).
+			Return(&model.DateSpotReview{ID: 1, DateSpotID: 3}, nil)
+		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(errors.New("db error"))
 
-		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
+		dateSpotRepo := repomock.NewMockDateSpotRepository(ctrl)
+
+		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo, dateSpotRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID: 1,
 			Rate:     &rate,

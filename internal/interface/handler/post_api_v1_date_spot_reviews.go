@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -53,7 +54,5 @@ func (h *PostApiV1DateSpotReviewsHandler) PostApiV1DateSpotReviews(ctx echo.Cont
 		return err
 	}
 
-	return ctx.JSON(http.StatusCreated, map[string]interface{}{
-		"review_id": int(output.ReviewID),
-	})
+	return ctx.JSON(http.StatusCreated, openapi.NewDateSpotShowResponse(output.DateSpot, output.DateSpotReviews))
 }

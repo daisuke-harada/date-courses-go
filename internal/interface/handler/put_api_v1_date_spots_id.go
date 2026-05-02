@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -47,5 +48,5 @@ func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id in
 		return err
 	}
 
-	return ctx.JSON(http.StatusOK, map[string]string{"message": "success"})
+	return ctx.JSON(http.StatusOK, openapi.DateSpotFormResponseData{DateSpotId: id})
 }

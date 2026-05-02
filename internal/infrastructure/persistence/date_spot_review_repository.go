@@ -26,6 +26,16 @@ func (r *dateSpotReviewRepository) Create(ctx context.Context, review *model.Dat
 	return nil
 }
 
+// FindByID は指定 ID のレビューを返します。
+func (r *dateSpotReviewRepository) FindByID(ctx context.Context, id uint) (*model.DateSpotReview, error) {
+	var review model.DateSpotReview
+	if err := r.db.WithContext(ctx).First(&review, id).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotReviewRepository.FindByID failed", "err", err)
+		return nil, err
+	}
+	return &review, nil
+}
+
 // DeleteByID は指定 ID のレビューを削除します。
 func (r *dateSpotReviewRepository) DeleteByID(ctx context.Context, id uint) error {
 	if err := r.db.WithContext(ctx).Delete(&model.DateSpotReview{}, id).Error; err != nil {

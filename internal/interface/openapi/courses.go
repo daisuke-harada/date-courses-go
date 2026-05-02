@@ -1,22 +1,28 @@
 package openapi
 
 import (
-	"github.com/daisuke-harada/date-courses-go/internal/usecase"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 )
 
-func BuildGetCoursesResponse(output *usecase.GetCoursesOutput) (map[string]interface{}, error) {
-	courses := make([]map[string]interface{}, len(output.Courses))
-	for i, course := range output.Courses {
-		courses[i] = map[string]interface{}{
-			"id":            course.ID,
-			"user_id":       course.UserID,
-			"travel_mode":   course.TravelMode,
-			"authority":     course.Authority,
-			"created_at":    course.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-			"updated_at":    course.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+// NewCoursesResponse は []*model.Course から []CourseResponseDataBody を構築します。
+func NewCoursesResponse(courses []*model.Course) ([]CourseResponseDataBody, error) {
+	responses := make([]CourseResponseDataBody, 0, len(courses))
+	for _, c := range courses {
+		cr, err := buildCourseResponseBody(c)
+		if err != nil {
+			return nil, err
 		}
+		responses = append(responses, cr)
 	}
-	return map[string]interface{}{
-		"courses": courses,
-	}, nil
+	return responses, nil
+}
+
+// NewCourseResponse は *model.Course から CourseResponseDataBody を構築します。
+func NewCourseResponse(course *model.Course) (CourseResponseDataBody, error) {
+	return buildCourseResponseBody(course)
+}
+
+// NewCreateCourseResponse は CourseID から CourseFormResponseData を構築します。
+func NewCreateCourseResponse(courseID uint) CourseFormResponseData {
+	return CourseFormResponseData{CourseId: int(courseID)}
 }

@@ -1,12 +1,14 @@
 package handler_test
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/url"
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
@@ -16,14 +18,17 @@ import (
 )
 
 func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
-	t.Run("success_returns_200", func(t *testing.T) {
+	t.Run("success_returns_200_with_date_spot", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockPort := usecasemock.NewMockDeleteDateSpotReviewInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), usecase.DeleteDateSpotReviewInput{ReviewID: 10}).
-			Return(nil)
+			Return(&usecase.DeleteDateSpotReviewOutput{
+				DateSpot:        &model.DateSpot{ID: 5, Name: "テストスポット"},
+				DateSpotReviews: []*model.DateSpotReview{},
+			}, nil)
 
 		ctx, rec := setupFormRequest(http.MethodDelete, "/api/v1/date_spot_reviews/10", url.Values{})
 
@@ -32,6 +37,12 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 
 		require.NoError(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)
+
+		var resp map[string]interface{}
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &resp))
+		assert.Contains(t, resp, "date_spot")
+		assert.Contains(t, resp, "date_spot_reviews")
+		assert.Contains(t, resp, "review_average_rate")
 	})
 
 	t.Run("error_usecase_returns_error", func(t *testing.T) {
@@ -41,7 +52,7 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		mockPort := usecasemock.NewMockDeleteDateSpotReviewInputPort(ctrl)
 		mockPort.EXPECT().
 			Execute(gomock.Any(), gomock.Any()).
-			Return(apperror.InternalServerError(errors.New("db error")))
+			Return(nil, apperror.InternalServerError(errors.New("db error")))
 
 		ctx, _ := setupFormRequest(http.MethodDelete, "/api/v1/date_spot_reviews/10", url.Values{})
 
