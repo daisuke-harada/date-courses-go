@@ -1,12 +1,10 @@
 package openapi
 
-import (
-	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
-)
+import "github.com/daisuke-harada/date-courses-go/internal/domain/model"
 
 // NewCoursesResponse は []*model.Course から []CourseResponseDataBody を構築します。
-func NewCoursesResponse(courses []*model.Course) ([]CourseResponseDataBody, error) {
-	responses := make([]CourseResponseDataBody, 0, len(courses))
+func NewCoursesResponse(courses []*model.Course) ([]CourseResponseData, error) {
+	responses := make([]CourseResponseData, 0, len(courses))
 	for _, c := range courses {
 		cr, err := buildCourseResponseBody(c)
 		if err != nil {
@@ -17,8 +15,8 @@ func NewCoursesResponse(courses []*model.Course) ([]CourseResponseDataBody, erro
 	return responses, nil
 }
 
-// NewCourseResponse は *model.Course から CourseResponseDataBody を構築します。
-func NewCourseResponse(course *model.Course) (CourseResponseDataBody, error) {
+// NewCourseResponse は *model.Course から CourseResponseData を構築します。
+func NewCourseResponse(course *model.Course) (CourseResponseData, error) {
 	return buildCourseResponseBody(course)
 }
 

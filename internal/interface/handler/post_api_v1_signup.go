@@ -16,17 +16,17 @@ type PostApiV1SignupHandler struct {
 
 func (h *PostApiV1SignupHandler) PostApiV1Signup(ctx echo.Context) error {
 	// multipart/form-data からフィールドを取得
-	gender, err := NewModelGender(ctx.FormValue("gender"))
-	if err != nil {
-		gender = ""
-	}
 
-	input := usecase.SignupInput{
-		Name:                 ctx.FormValue("name"),
-		Email:                ctx.FormValue("email"),
-		Gender:               gender,
-		Password:             ctx.FormValue("password"),
-		PasswordConfirmation: ctx.FormValue("password_confirmation"),
+	input, err := usecase.NewSignupInput(
+		ctx.FormValue("name"),
+		ctx.FormValue("email"),
+		ctx.FormValue("gender"),
+		ctx.FormValue("password"),
+		ctx.FormValue("password_confirmation"),
+		ctx.FormValue("image"),
+	)
+	if err != nil {
+		return err
 	}
 
 	// image は任意フィールド

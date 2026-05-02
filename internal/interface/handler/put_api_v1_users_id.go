@@ -15,23 +15,17 @@ type PutApiV1UsersIdHandler struct {
 
 func (h *PutApiV1UsersIdHandler) PutApiV1UsersId(ctx echo.Context, id int) error {
 	// multipart/form-data からフィールドを取得
-	gender, err := NewModelGender(ctx.FormValue("gender"))
+	input, err := usecase.NewUpdateUserInput(
+		id,
+		ctx.FormValue("name"),
+		ctx.FormValue("email"),
+		ctx.FormValue("gender"),
+		ctx.FormValue("password"),
+		ctx.FormValue("password_confirmation"),
+		ctx.FormValue("image"),
+	)
 	if err != nil {
-		gender = ""
-	}
-
-	input := usecase.UpdateUserInput{
-		ID:                   uint(id),
-		Name:                 ctx.FormValue("name"),
-		Email:                ctx.FormValue("email"),
-		Gender:               gender,
-		Password:             ctx.FormValue("password"),
-		PasswordConfirmation: ctx.FormValue("password_confirmation"),
-	}
-
-	// image は任意フィールド
-	if image := ctx.FormValue("image"); image != "" {
-		input.Image = &image
+		return err
 	}
 
 	output, err := h.InputPort.Execute(ctx.Request().Context(), input)

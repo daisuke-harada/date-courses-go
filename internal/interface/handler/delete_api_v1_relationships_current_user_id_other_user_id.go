@@ -22,7 +22,7 @@ func (h *DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler) DeleteApiV1Rel
 		return err
 	}
 
-	resp, err := openapi.BuildDeleteRelationshipResponse(output)
+	resp, err := openapi.NewUnFollowResponseData(output)
 	if err != nil {
 		return apperror.InternalServerError(err)
 	}

@@ -40,10 +40,6 @@ func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id in
 		Image:        req.Image,
 	}
 
-	if err := input.Validate(); err != nil {
-		return err
-	}
-
 	if err := h.InputPort.Execute(ctx.Request().Context(), input); err != nil {
 		return err
 	}

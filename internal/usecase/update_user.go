@@ -113,3 +113,32 @@ func (i *UpdateUserInteractor) Execute(ctx context.Context, input UpdateUserInpu
 
 	return &UpdateUserOutput{UserWithRelations: uwr}, nil
 }
+
+// NewUpdateUserInput builds UpdateUserInput from raw form string values.
+// Invalid gender values are treated as empty and left for Validate() to report.
+func NewUpdateUserInput(id int, name, email, genderStr, password, passwordConfirmation, imageStr string) (UpdateUserInput, error) {
+	var gender model.Gender
+	if genderStr != "" {
+		g := model.Gender(genderStr)
+		if g == model.GenderMale || g == model.GenderFemale {
+			gender = g
+		} else {
+			gender = ""
+		}
+	}
+
+	var image *string
+	if imageStr != "" {
+		image = &imageStr
+	}
+
+	return UpdateUserInput{
+		ID:                   uint(id),
+		Name:                 name,
+		Email:                email,
+		Gender:               gender,
+		Image:                image,
+		Password:             password,
+		PasswordConfirmation: passwordConfirmation,
+	}, nil
+}
