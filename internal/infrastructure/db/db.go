@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
-	pg "gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -14,13 +14,13 @@ type Connector interface {
 	Open(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error)
 }
 
-type PostgresConnector struct{}
+type MySQLConnector struct{}
 
-func (PostgresConnector) Open(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name, cfg.SSLMode)
+func (MySQLConnector) Open(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name)
 
-	gdb, err := gorm.Open(pg.Open(dsn), &gorm.Config{})
+	gdb, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
@@ -45,10 +45,9 @@ func (PostgresConnector) Open(ctx context.Context, cfg config.DBConfig) (*gorm.D
 }
 
 func NewConnector() Connector {
-	return PostgresConnector{}
+	return MySQLConnector{}
 }
 
-// Connect uses a Connector to open a *gorm.DB. Currently delegates to PostgresConnector.
 func Connect(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error) {
 	connector := NewConnector()
 	return connector.Open(ctx, cfg)

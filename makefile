@@ -5,15 +5,13 @@ deps:
 
 docker-up:
 	docker compose up -d
-	# wait for PostgreSQL to be ready before proceeding
-	docker compose exec db sh -c 'until pg_isready -U "$$POSTGRES_USER"; do sleep 1; done'
+	# wait for MySQL to be ready before proceeding
+	docker compose exec db bash -c 'until mysqladmin ping -u "${DB_USER}" -p"${DB_ROOT_PASSWORD}" --silent 2>/dev/null; do sleep 1; done'
 
 gen: openapi-generate go-generate
 
 apply-schema:
-	# use DB_* variables (kept in .envrc) and pass password via PGPASSWORD to avoid
-	# treating an empty -U value as the next flag. This also avoids interactive prompt.
-	PGPASSWORD="${DB_PASSWORD}" psqldef -U "${DB_USER}" -h "${DB_HOST}" -p "${DB_PORT}" "${DB_NAME}" < ./internal/infrastructure/db/schema.sql
+	mysqldef -u "${DB_USER}" -p "${DB_PASSWORD}" -h "${DB_HOST}" -P "${DB_PORT}" "${DB_NAME}" < ./internal/infrastructure/db/schema.sql
 
 openapi-generate:
 	bash scripts/openapi-generator-cli.sh
@@ -55,4 +53,4 @@ db-seed:
 	go run ./tools/seed/main.go
 
 db-drop:
-	docker compose exec db psql -U "${DB_USER}" -d "${DB_NAME}" -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+	docker compose exec db mysql -u "${DB_USER}" -p"${DB_PASSWORD}" -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};"
