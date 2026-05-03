@@ -19,6 +19,9 @@ type MySQLConnector struct{}
 func (MySQLConnector) Open(ctx context.Context, cfg config.DBConfig) (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name)
+	if cfg.TLS {
+		dsn += "&tls=true"
+	}
 
 	gdb, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

@@ -13,6 +13,14 @@ gen: openapi-generate go-generate
 apply-schema:
 	mysqldef -u "${DB_USER}" -p "${DB_PASSWORD}" -h "${DB_HOST}" -P "${DB_PORT}" "${DB_NAME}" < ./internal/infrastructure/db/schema.sql
 
+tidb-apply-schema:
+	mysqldef -u "${DB_USER}" -p "${DB_PASSWORD}" -h "${DB_HOST}" -P "${DB_PORT}" --ssl-mode=REQUIRED "${DB_NAME}" < ./internal/infrastructure/db/schema.sql
+
+tidb-seed:
+	go run ./tools/seed/main.go
+
+tidb-setup: tidb-apply-schema tidb-seed
+
 openapi-generate:
 	bash scripts/openapi-generator-cli.sh
 
