@@ -33,6 +33,7 @@ type DBConfig struct {
 	User     string `envconfig:"DB_USER" required:"true"`
 	Password string `envconfig:"DB_PASSWORD" required:"true"`
 	Name     string `envconfig:"DB_NAME" required:"true"`
+	TLS      bool   `envconfig:"DB_TLS" default:"false"`
 	// Connection pool settings
 	MaxOpenConns    int           `envconfig:"DB_MAX_OPEN_CONNS" default:"25"`
 	MaxIdleConns    int           `envconfig:"DB_MAX_IDLE_CONNS" default:"25"`
