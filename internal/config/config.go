@@ -29,11 +29,10 @@ type JWTConfig struct {
 
 type DBConfig struct {
 	Host     string `envconfig:"DB_HOST" required:"true"`
-	Port     int    `envconfig:"DB_PORT" default:"5432"`
+	Port     int    `envconfig:"DB_PORT" default:"3306"`
 	User     string `envconfig:"DB_USER" required:"true"`
 	Password string `envconfig:"DB_PASSWORD" required:"true"`
 	Name     string `envconfig:"DB_NAME" required:"true"`
-	SSLMode  string `envconfig:"DB_SSLMODE" default:"disable"`
 	// Connection pool settings
 	MaxOpenConns    int           `envconfig:"DB_MAX_OPEN_CONNS" default:"25"`
 	MaxIdleConns    int           `envconfig:"DB_MAX_IDLE_CONNS" default:"25"`

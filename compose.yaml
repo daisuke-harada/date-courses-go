@@ -9,15 +9,14 @@ services:
       - ./api/resolved/openapi/openapi.yaml:/openapi.yaml:ro
 
   db:
-    image: postgres:16
+    image: mysql:8
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT}:3306"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/mysql
 
 volumes:
   db_data:
