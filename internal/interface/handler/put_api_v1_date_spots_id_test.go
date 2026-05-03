@@ -58,6 +58,9 @@ func TestPutApiV1DateSpotsIdHandler(t *testing.T) {
 		defer ctrl.Finish()
 
 		mockPort := usecasemock.NewMockUpdateDateSpotInputPort(ctrl)
+		mockPort.EXPECT().
+			Execute(gomock.Any(), gomock.Any()).
+			Return(apperror.UnprocessableEntity("スポット名を入力してください"))
 
 		e := echo.New()
 		form := validUpdateDateSpotForm()

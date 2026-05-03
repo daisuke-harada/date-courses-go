@@ -12,6 +12,7 @@
 - 関数名は `NewXxxResponse` に統一する
 - handler 側では変換関数を呼び出すだけにし、整形ロジックを持たせない
 - 変換中にエラーが起きた場合は `apperror.InternalServerError(err)` で返す
+- **レスポンス整形の最終的な返り値は `internal/interface/openapi/api_types.gen.go` に自動生成された構造体を使用する**（手書きの構造体を新たに定義しない）
 
 ```go
 // internal/interface/openapi/date_spot.go

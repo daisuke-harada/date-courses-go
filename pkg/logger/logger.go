@@ -15,8 +15,7 @@ var (
 	appName string
 	logger  *slog.Logger
 	once    sync.Once
-	logSink io.Writer
-	// （現状はバッファリングを使わないため flush ハンドラは不要）
+	logSink io.Writer //nolint:unused // Close() でリセット用に保持
 )
 
 // request_id 用の context キー

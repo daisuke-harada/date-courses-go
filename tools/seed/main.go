@@ -87,7 +87,11 @@ func geocode(apiKey, address string) (lat *float64, lng *float64) {
 		slog.Warn("geocode: request failed", "address", address, "err", err)
 		return nil, nil
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			slog.Warn("geocode: failed to close response body", "err", err)
+		}
+	}()
 	body, _ := io.ReadAll(resp.Body)
 
 	var result geocodeResult

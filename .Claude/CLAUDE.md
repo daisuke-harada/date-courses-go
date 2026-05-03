@@ -12,7 +12,7 @@ OpenAPI スキーマ（`api/`）から `oapi-codegen` でサーバーインタ�
 - **インクリメンタル**: 各ステップが完了するたびに、ビルドとテストが通る状態を維持すること。
 - **TDD**: 実装コードを書く前にテストを先に書く（Red → Green → Refactor）。テストなしの実装 PR はマージ禁止。
 - **コード品質**: コードは読みやすく、保守しやすいものにすること。冗長なコードや複雑なロジックは避けること。
-- **ビルド保証**: 全タスクが完了したら `make gen && go build ./...` を1回実行し、ビルドエラーがゼロになるまで修正を続けること。エラーが出た場合は該当箇所を調査して修正し、再度 `go build ./...` を実行する。ビルドが通らない状態で作業を終了しない。
+- **ビルド保証**: 全タスクが完了したら `make gen && go build ./... && make lint && make test` を1回実行し、エラーがゼロになるまで修正を続けること。エラーが出た場合は該当箇所を調査して修正し、再度 `make gen && go build ./... && make lint && make test` を実行する。ビルドが通らない状態で作業を終了しない。
 
 ## OpenAPI / コード生成
 
@@ -62,9 +62,6 @@ make db-drop        # スキーマ全削除（NOT NULL 追加時などに使用�
 make gen            # openapi-generate + go-generate（全タスク完了後に go build ./... と合わせて実行）
 make run            # サーバー起動
 ```
-
-> **注意**: `make gen` と `go build ./...` は全タスク完了後に **1回だけ** 実行する。
-> エラーが出た場合は該当箇所を調査して修正し、再度 `go build ./...` を実行する。ビルドが通らない状態で作業を終了しない。
 
 > **注意**: `apply-schema` は既存データがある状態で `NOT NULL` カラムを追加するとエラーになる。
 > その場合は `make db-drop && make apply-schema && make db-seed` の順で実行する。
@@ -200,5 +197,5 @@ func setupFormRequest(method, path string, form url.Values) (echo.Context, *http
 
 ## 環境変数
 
-`.envrc`（direnv）で管理。`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME` が必要。  
+`.envrc`（direnv）で管理。`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME` が必要。
 JWT 認証を使用する場合は `JWT_SECRET_KEY` も必要。

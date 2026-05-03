@@ -45,6 +45,9 @@ mock-usecase:
 test:
 	go test ./...
 
+lint:
+	golangci-lint run ./...
+
 run:
 	go run ./cmd/api/main.go
 
