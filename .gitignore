@@ -1,1 +1,6 @@
 .envrc
+dist/
+samconfig.toml
+env.json
+.aws-sam/
+monolith
