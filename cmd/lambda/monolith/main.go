@@ -18,6 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	adapter := echoadapter.New(e)
+	adapter := echoadapter.NewV2(e)
+	adapter.StripBasePath("/prod")
 	lambda.Start(adapter.ProxyWithContext)
 }

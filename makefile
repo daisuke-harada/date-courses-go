@@ -6,7 +6,7 @@ deps:
 docker-up:
 	docker compose up -d
 	# wait for MySQL to be ready before proceeding
-	docker compose exec db bash -c 'until mysqladmin ping -u "${DB_USER}" -p"${DB_ROOT_PASSWORD}" --silent 2>/dev/null; do sleep 1; done'
+	docker compose exec db bash -c 'until mysqladmin ping -u "${DB_USER}" -p"${DB_PASSWORD}" --silent 2>/dev/null; do sleep 1; done'
 
 gen: openapi-generate go-generate
 
@@ -58,6 +58,25 @@ build-lambda-monolith:
 local-lambda:
 	sam local start-api
 
+sam-build: build-lambda-monolith
+	sam build
+
+sam-deploy: sam-build
+	sam deploy \
+		--stack-name date-courses-go \
+		--region ap-northeast-1 \
+		--no-confirm-changeset \
+		--no-fail-on-empty-changeset \
+		--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+		--resolve-s3 \
+		--profile sam-access
+
+sam-delete:
+	aws cloudformation delete-stack \
+		--stack-name date-courses-go \
+		--region ap-northeast-1 \
+		--profile sam-access
+
 test:
 	go test ./...
 
@@ -72,3 +91,5 @@ db-seed:
 
 db-drop:
 	docker compose exec db mysql -u "${DB_USER}" -p"${DB_PASSWORD}" -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};"
+
+
