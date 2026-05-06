@@ -3,18 +3,31 @@ package model
 import "time"
 
 type DateSpot struct {
-	ID           uint   `gorm:"primaryKey;autoIncrement"`
-	GenreID      *int   `gorm:"index"`
-	PrefectureID *int   `gorm:"index"`
-	Name         string `gorm:"not null"`
-	CityName     string `gorm:"not null"`
+	ID           uint     `gorm:"primaryKey;autoIncrement"`
+	GenreID      *int     `gorm:"index"`
+	PrefectureID *int     `gorm:"index"`
+	Name         string   `gorm:"not null"`
+	CityName     string   `gorm:"not null"`
 	Image        *string
 	Latitude     *float64
 	Longitude    *float64
 	OpeningTime  *time.Time
 	ClosingTime  *time.Time
-	CreatedAt    time.Time `gorm:"not null;autoCreateTime"`
-	UpdatedAt    time.Time `gorm:"not null;autoUpdateTime"`
+
+	// AI バッチ統合フィールド
+	// Source: 'manual'（管理者手動登録）or 'ai'（Gemini 自動生成）
+	Source string `gorm:"not null;default:manual"`
+	// MapsURL: Google Maps 検索 URL（AI スポットはこちらで詳細確認）
+	MapsURL *string `gorm:"column:maps_url"`
+	// LinkStatus: 'active' / 'invalid' / 'unchecked'（週次バッチで更新）
+	LinkStatus string `gorm:"not null;default:active"`
+	// LastCheckedAt: リンク最終確認日時
+	LastCheckedAt *time.Time
+	// NormalizedName: 重複チェック用（全角半角統一・スペース除去・小文字化）
+	NormalizedName string
+
+	CreatedAt time.Time `gorm:"not null;autoCreateTime"`
+	UpdatedAt time.Time `gorm:"not null;autoUpdateTime"`
 
 	// DB集計フィールド (SELECT時のみ使用、マイグレーション対象外)
 	// gorm:"->" だと Find() でカラムがマッピングされないケースがあるため column タグのみ指定する
