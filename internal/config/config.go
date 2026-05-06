@@ -17,6 +17,8 @@ type Config struct {
 	DB         DBConfig
 	GoogleMaps GoogleMapsConfig
 	JWT        JWTConfig
+	Gemini     GeminiConfig
+	Batch      BatchConfig
 }
 
 type GoogleMapsConfig struct {
@@ -40,6 +42,24 @@ type DBConfig struct {
 	ConnMaxLifetime time.Duration `envconfig:"DB_CONN_MAX_LIFETIME" default:"5m"`
 }
 
+// GeminiConfig は Gemini API の設定です。
+type GeminiConfig struct {
+	APIKey string `envconfig:"GEMINI_API_KEY"`
+	Model  string `envconfig:"GEMINI_MODEL" default:"gemini-2.0-flash-lite"`
+}
+
+// BatchConfig はバッチ処理の設定です。
+type BatchConfig struct {
+	// SpotsPerCombination は1タスクあたり要求スポット数
+	SpotsPerCombination int `envconfig:"BATCH_SPOTS_PER_COMBINATION" default:"5"`
+	// MinExistingSpots はこの数以上あるタスクはスキップ
+	MinExistingSpots int `envconfig:"BATCH_MIN_EXISTING_SPOTS" default:"5"`
+	// MaxTasksPerRun は1回あたり上限タスク数（コスト制御）
+	MaxTasksPerRun int `envconfig:"BATCH_MAX_TASKS_PER_RUN" default:"50"`
+	// LinkCheckTimeoutSec は HTTP HEAD タイムアウト秒数
+	LinkCheckTimeoutSec int `envconfig:"LINK_CHECK_TIMEOUT_SECONDS" default:"10"`
+}
+
 func Get() *Config {
 	once.Do(func() {
 		cfg = &Config{}
@@ -53,6 +73,12 @@ func Get() *Config {
 		}
 		if e := envconfig.Process("", &cfg.JWT); e != nil {
 			slog.Error("failed to process environment jwt", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.Gemini); e != nil {
+			slog.Error("failed to process environment gemini", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.Batch); e != nil {
+			slog.Error("failed to process environment batch", "err", e)
 		}
 	})
 
