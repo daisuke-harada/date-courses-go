@@ -1,0 +1,122 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: date-courses-go – HTTP API + Lambda monolith (arm64 / provided.al2023)
+
+# DB は TiDB Cloud（外部エンドポイント）のため VPC 設定は不要。
+# シークレット管理の詳細は Step 5（samconfig.toml / SSM）で確定する。
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Architectures:
+      - arm64
+    Runtime: provided.al2023
+
+Parameters:
+  Stage:
+    Type: String
+    Default: prod
+    AllowedValues: [prod, staging]
+    Description: Deployment stage name
+  DbHost:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/db-host
+  DbPort:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/db-port
+  DbUser:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/db-user
+  DbPassword:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/db-password
+  DbName:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/db-name
+  JwtSecretKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/jwt-secret-key
+  GoogleMapsApiKey:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /date-course-go/prod/google-maps-api-key
+
+Resources:
+  DateCoursesFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: go1.x
+    Properties:
+      FunctionName: !Sub date-courses-go-${Stage}
+      CodeUri: cmd/lambda/monolith/
+      Handler: bootstrap
+      Description: date-courses-go API handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          DB_HOST: !Ref DbHost
+          DB_PORT: !Ref DbPort
+          DB_USER: !Ref DbUser
+          DB_PASSWORD: !Ref DbPassword
+          DB_NAME: !Ref DbName
+          DB_TLS: "true"
+          DB_MAX_OPEN_CONNS: "25"
+          DB_MAX_IDLE_CONNS: "25"
+          DB_CONN_MAX_LIFETIME: "5m"
+          JWT_SECRET_KEY: !Ref JwtSecretKey
+          GOOGLE_MAPS_API_KEY: !Ref GoogleMapsApiKey
+      Events:
+        ApiProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref DateCoursesHttpApi
+            Path: /{proxy+}
+            Method: ANY
+        ApiRoot:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref DateCoursesHttpApi
+            Path: /
+            Method: ANY
+
+  DateCoursesHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref Stage
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub date-courses-go-lambda-role-${Stage}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+Outputs:
+  ApiEndpoint:
+    Description: HTTP API endpoint URL
+    Value: !Sub "https://${DateCoursesHttpApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}"
+  FunctionName:
+    Description: Lambda function name
+    Value: !Ref DateCoursesFunction
+  FunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt DateCoursesFunction.Arn

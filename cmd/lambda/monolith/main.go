@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/aws/aws-lambda-go/lambda"
+	echoadapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
 	iface "github.com/daisuke-harada/date-courses-go/internal/interface"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
 )
@@ -16,7 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// TODO(Step 3): github.com/awslabs/aws-lambda-go-api-proxy/echo を使って
-	// Lambda ハンドラーとして起動する。現在はスケルトン。
-	_ = e
+	adapter := echoadapter.NewV2(e)
+	adapter.StripBasePath("/prod")
+	lambda.Start(adapter.ProxyWithContext)
 }
