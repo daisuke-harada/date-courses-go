@@ -25,6 +25,19 @@ const (
 	WALKING CourseFormRequestDataTravelMode = "WALKING"
 )
 
+// Defines values for DateSpotSummaryDataLinkStatus.
+const (
+	Active    DateSpotSummaryDataLinkStatus = "active"
+	Invalid   DateSpotSummaryDataLinkStatus = "invalid"
+	Unchecked DateSpotSummaryDataLinkStatus = "unchecked"
+)
+
+// Defines values for DateSpotSummaryDataSource.
+const (
+	Ai     DateSpotSummaryDataSource = "ai"
+	Manual DateSpotSummaryDataSource = "manual"
+)
+
 // Defines values for Gender.
 const (
 	GenderEmpty Gender = "男性"
@@ -138,16 +151,25 @@ type DateSpotShowResponseDataDateSpotReviewsInner struct {
 
 // DateSpotSummaryData defines model for DateSpotSummaryData.
 type DateSpotSummaryData struct {
-	AverageRate       float32      `json:"average_rate"`
-	CityName          string       `json:"city_name"`
-	DateSpot          DateSpotData `json:"date_spot"`
-	GenreName         string       `json:"genre_name"`
-	Id                int          `json:"id"`
-	Latitude          float32      `json:"latitude"`
-	Longitude         float32      `json:"longitude"`
-	PrefectureName    string       `json:"prefecture_name"`
-	ReviewTotalNumber int          `json:"review_total_number"`
+	AverageRate       float32                        `json:"average_rate"`
+	CityName          string                         `json:"city_name"`
+	DateSpot          DateSpotData                   `json:"date_spot"`
+	GenreName         string                         `json:"genre_name"`
+	Id                int                            `json:"id"`
+	Latitude          float32                        `json:"latitude"`
+	LinkStatus        *DateSpotSummaryDataLinkStatus `json:"link_status"`
+	Longitude         float32                        `json:"longitude"`
+	MapsUrl           *string                        `json:"maps_url"`
+	PrefectureName    string                         `json:"prefecture_name"`
+	ReviewTotalNumber int                            `json:"review_total_number"`
+	Source            *DateSpotSummaryDataSource     `json:"source,omitempty"`
 }
+
+// DateSpotSummaryDataLinkStatus defines model for DateSpotSummaryData.LinkStatus.
+type DateSpotSummaryDataLinkStatus string
+
+// DateSpotSummaryDataSource defines model for DateSpotSummaryData.Source.
+type DateSpotSummaryDataSource string
 
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {

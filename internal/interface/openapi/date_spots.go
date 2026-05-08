@@ -58,61 +58,7 @@ func NewDateSpotsResponse(dateSpots []*model.DateSpot) []DateSpotSummaryData {
 
 func NewDateSpotSummaries(dateSpots []*model.DateSpot) []DateSpotSummaryData {
 	return lo.Map(dateSpots, func(ds *model.DateSpot, _ int) DateSpotSummaryData {
-		var (
-			latitude       float32
-			longitude      float32
-			genreName      string
-			prefectureName string
-		)
-		if ds.Latitude != nil {
-			latitude = float32(*ds.Latitude)
-		}
-		if ds.Longitude != nil {
-			longitude = float32(*ds.Longitude)
-		}
-		if ds.GenreID != nil {
-			genreName = master.GenreNameByID(*ds.GenreID)
-		}
-		if ds.PrefectureID != nil {
-			prefectureName = master.PrefectureNameByID(*ds.PrefectureID)
-		}
-
-		var genreId int
-		if ds.GenreID != nil {
-			genreId = *ds.GenreID
-		}
-
-		var openingTime, closingTime time.Time
-		if ds.OpeningTime != nil {
-			openingTime = *ds.OpeningTime
-		}
-		if ds.ClosingTime != nil {
-			closingTime = *ds.ClosingTime
-		}
-
-		dateSpot := DateSpotData{
-			Id:          int(ds.ID),
-			Name:        ds.Name,
-			Image:       ImageData{Url: ds.Image},
-			GenreId:     genreId,
-			AverageRate: float32(ds.AverageRate),
-			CreatedAt:   ds.CreatedAt,
-			UpdatedAt:   ds.UpdatedAt,
-			OpeningTime: openingTime,
-			ClosingTime: closingTime,
-		}
-
-		return DateSpotSummaryData{
-			AverageRate:       float32(ds.AverageRate),
-			CityName:          ds.CityName,
-			DateSpot:          dateSpot,
-			GenreName:         genreName,
-			Id:                int(ds.ID),
-			Latitude:          latitude,
-			Longitude:         longitude,
-			PrefectureName:    prefectureName,
-			ReviewTotalNumber: ds.ReviewTotalNumber,
-		}
+		return newDateSpotSummaryData(ds)
 	})
 }
 
@@ -136,6 +82,9 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryData {
 		prefectureName = master.PrefectureNameByID(*ds.PrefectureID)
 	}
 
+	source := DateSpotSummaryDataSource(ds.Source)
+	linkStatus := DateSpotSummaryDataLinkStatus(ds.LinkStatus)
+
 	return DateSpotSummaryData{
 		Id:                int(ds.ID),
 		CityName:          ds.CityName,
@@ -145,6 +94,9 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryData {
 		PrefectureName:    prefectureName,
 		AverageRate:       float32(ds.AverageRate),
 		ReviewTotalNumber: ds.ReviewTotalNumber,
+		Source:            &source,
+		MapsUrl:           ds.MapsURL,
+		LinkStatus:        &linkStatus,
 		DateSpot:          newDateSpotData(ds),
 	}
 }

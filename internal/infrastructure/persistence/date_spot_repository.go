@@ -97,3 +97,39 @@ func (r *dateSpotRepository) Delete(ctx context.Context, id uint) error {
 	slog.InfoContext(ctx, "dateSpotRepository.Delete succeeded", "id", id)
 	return nil
 }
+
+func (r *dateSpotRepository) ExistsByNormalizedNameAndPrefecture(ctx context.Context, normalizedName string, prefectureID int) (bool, error) {
+	var count int64
+	if err := r.db.WithContext(ctx).
+		Model(&model.DateSpot{}).
+		Where("normalized_name = ? AND prefecture_id = ?", normalizedName, prefectureID).
+		Count(&count).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotRepository.ExistsByNormalizedNameAndPrefecture failed", "err", err)
+		return false, apperror.InternalServerError(err)
+	}
+	return count > 0, nil
+}
+
+func (r *dateSpotRepository) CountByPrefectureAndGenre(ctx context.Context, prefectureID, genreID int) (int64, error) {
+	var count int64
+	if err := r.db.WithContext(ctx).
+		Model(&model.DateSpot{}).
+		Where("prefecture_id = ? AND genre_id = ?", prefectureID, genreID).
+		Count(&count).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotRepository.CountByPrefectureAndGenre failed", "err", err)
+		return 0, apperror.InternalServerError(err)
+	}
+	return count, nil
+}
+
+func (r *dateSpotRepository) CreateBatch(ctx context.Context, dateSpots []*model.DateSpot) error {
+	if len(dateSpots) == 0 {
+		return nil
+	}
+	if err := r.db.WithContext(ctx).Create(&dateSpots).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotRepository.CreateBatch failed", "err", err)
+		return apperror.InternalServerError(err)
+	}
+	slog.InfoContext(ctx, "dateSpotRepository.CreateBatch succeeded", "count", len(dateSpots))
+	return nil
+}

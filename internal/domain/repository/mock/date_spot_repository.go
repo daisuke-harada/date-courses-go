@@ -42,6 +42,21 @@ func (m *MockDateSpotRepository) EXPECT() *MockDateSpotRepositoryMockRecorder {
 	return m.recorder
 }
 
+// CountByPrefectureAndGenre mocks base method.
+func (m *MockDateSpotRepository) CountByPrefectureAndGenre(ctx context.Context, prefectureID, genreID int) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountByPrefectureAndGenre", ctx, prefectureID, genreID)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountByPrefectureAndGenre indicates an expected call of CountByPrefectureAndGenre.
+func (mr *MockDateSpotRepositoryMockRecorder) CountByPrefectureAndGenre(ctx, prefectureID, genreID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountByPrefectureAndGenre", reflect.TypeOf((*MockDateSpotRepository)(nil).CountByPrefectureAndGenre), ctx, prefectureID, genreID)
+}
+
 // Create mocks base method.
 func (m *MockDateSpotRepository) Create(ctx context.Context, dateSpot *model.DateSpot) error {
 	m.ctrl.T.Helper()
@@ -56,6 +71,20 @@ func (mr *MockDateSpotRepositoryMockRecorder) Create(ctx, dateSpot any) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockDateSpotRepository)(nil).Create), ctx, dateSpot)
 }
 
+// CreateBatch mocks base method.
+func (m *MockDateSpotRepository) CreateBatch(ctx context.Context, dateSpots []*model.DateSpot) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateBatch", ctx, dateSpots)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateBatch indicates an expected call of CreateBatch.
+func (mr *MockDateSpotRepositoryMockRecorder) CreateBatch(ctx, dateSpots any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateBatch", reflect.TypeOf((*MockDateSpotRepository)(nil).CreateBatch), ctx, dateSpots)
+}
+
 // Delete mocks base method.
 func (m *MockDateSpotRepository) Delete(ctx context.Context, id uint) error {
 	m.ctrl.T.Helper()
@@ -68,6 +97,21 @@ func (m *MockDateSpotRepository) Delete(ctx context.Context, id uint) error {
 func (mr *MockDateSpotRepositoryMockRecorder) Delete(ctx, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockDateSpotRepository)(nil).Delete), ctx, id)
+}
+
+// ExistsByNormalizedNameAndPrefecture mocks base method.
+func (m *MockDateSpotRepository) ExistsByNormalizedNameAndPrefecture(ctx context.Context, normalizedName string, prefectureID int) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExistsByNormalizedNameAndPrefecture", ctx, normalizedName, prefectureID)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ExistsByNormalizedNameAndPrefecture indicates an expected call of ExistsByNormalizedNameAndPrefecture.
+func (mr *MockDateSpotRepositoryMockRecorder) ExistsByNormalizedNameAndPrefecture(ctx, normalizedName, prefectureID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExistsByNormalizedNameAndPrefecture", reflect.TypeOf((*MockDateSpotRepository)(nil).ExistsByNormalizedNameAndPrefecture), ctx, normalizedName, prefectureID)
 }
 
 // FindByID mocks base method.

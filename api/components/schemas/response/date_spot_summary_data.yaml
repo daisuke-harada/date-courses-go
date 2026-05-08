@@ -32,5 +32,15 @@ components:
         average_rate:
           type: number
           format: float
+        source:
+          type: string
+          enum: [manual, ai]
+        maps_url:
+          type: string
+          nullable: true
+        link_status:
+          type: string
+          enum: [active, invalid, unchecked]
+          nullable: true
         date_spot:
           $ref: "./date_spots.yaml#/components/schemas/DateSpotData"

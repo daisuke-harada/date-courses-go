@@ -20,4 +20,7 @@ type DateSpotRepository interface {
 	Search(ctx context.Context, params DateSpotSearchParams) ([]*model.DateSpot, error)
 	Update(ctx context.Context, id uint, dateSpot *model.DateSpot) error
 	Delete(ctx context.Context, id uint) error
+	ExistsByNormalizedNameAndPrefecture(ctx context.Context, normalizedName string, prefectureID int) (bool, error)
+	CountByPrefectureAndGenre(ctx context.Context, prefectureID, genreID int) (int64, error)
+	CreateBatch(ctx context.Context, dateSpots []*model.DateSpot) error
 }

@@ -26,6 +26,11 @@ CREATE TABLE date_spots (
   longitude DOUBLE,
   opening_time DATETIME,
   closing_time DATETIME,
+  source VARCHAR(20) NOT NULL DEFAULT 'manual',
+  maps_url VARCHAR(1000),
+  link_status VARCHAR(20) NOT NULL DEFAULT 'active',
+  last_checked_at DATETIME,
+  normalized_name VARCHAR(255),
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
@@ -34,6 +39,7 @@ CREATE TABLE date_spots (
 -- indexes (date_spots)
 CREATE INDEX index_date_spots_on_genre_id_and_created_at ON date_spots (genre_id, created_at);
 CREATE INDEX index_date_spots_on_prefecture_id_and_created_at ON date_spots (prefecture_id, created_at);
+CREATE INDEX index_date_spots_on_normalized_name_and_prefecture_id ON date_spots (normalized_name, prefecture_id);
 
 -- テーブル: courses
 CREATE TABLE courses (
