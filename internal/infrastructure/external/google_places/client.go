@@ -92,7 +92,7 @@ func (c *Client) findPlaceID(ctx context.Context, query string) (string, error) 
 	if err != nil {
 		return "", fmt.Errorf("google_places: do find request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -129,7 +129,7 @@ func (c *Client) fetchDetail(ctx context.Context, placeID string) (*PlaceDetail,
 	if err != nil {
 		return nil, fmt.Errorf("google_places: do detail request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

@@ -57,7 +57,7 @@ func (c *Client) Search(ctx context.Context, spotName, cityName string) (*Coordi
 	if err != nil {
 		return nil, fmt.Errorf("nominatim: do request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
