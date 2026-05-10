@@ -134,40 +134,50 @@ export GOOGLE_MAPS_API_KEY=your-key
 
 ## 自動生成について
 
-このプロジェクトの自動生成フローをまとめます。現在の実装に基づく内容です。
-
-### 概要
-生成は次の順で行います。
-
-1. OpenAPI を解決して `api/resolved/openapi/openapi.yaml` を作成（スクリプト使用）
-2. `oapi-codegen` で型・Echo サーバインターフェースを生成（`gen` パッケージ）
-3. 自前ジェネレータで `gen.ServerInterface` に合わせた handler スタブを生成（既存ファイルは上書きしない）
-
-### 主要ファイル
-- OpenAPI 解決スクリプト
-  - `scripts/openapi-generator-cli.sh` — Docker で openapi-generator-cli を呼ぶ（出力先: `api/resolved`）
-- oapi-codegen 実行（`openapi` パッケージ）
-  - `internal/interface/openapi/generate.go` に `//go:generate` 指示がある
-    - types: `api_types.gen.go`（`-generate types`）
-    - echo-server: `api_server.gen.go`（`-generate echo-server`）
-    - 生成後に handler ジェネレータを呼び出す: `//go:generate go run ../handler_generator.go`
-- handler ジェネレータ（自作）
-  - `internal/interface/handler_generator.go`
-    - `openapi.ServerInterface` を reflect で読み、テンプレートから handler ファイルを生成
-    - テンプレート: `templates/handler.tmpl`, `templates/handler_constructor.tmpl`
-    - 出力先: `internal/interface/handler/`
-    - 挙動: 既存ファイルが存在する場合は生成をスキップ（手書き実装を上書きしない）
-
-### 実行手順（推奨）
+### `make gen` の動作
 
 ```bash
 make gen
 ```
 
-### 運用ルール（重要）
-- `internal/interface/openapi` は「生成物専用」フォルダにしてください。手書きコードを混ぜないこと。
-- handler ジェネレータは既存ファイルを上書きしないため、消したくない実装はそのまま残ります。OpenAPI の変更で新しい operation が増えたら `go generate ./internal/interface/openapi` を実行して足りない handler を生成してください。
-- generator 実行は `openapi` パッケージ経由で行う（`go generate ./internal/interface/openapi`）。`handler_generator.go` を直接 `go run` すると相対パスやビルド条件で期待通り動かないことがあります。
+`gen` は `openapi-generate` と `go-generate` の 2 つのターゲットを順に実行します。
+
+#### 1. `openapi-generate`
+
+```bash
+bash scripts/openapi-generator-cli.sh
+```
+
+Docker で `openapi-generator-cli` を起動し、分割された OpenAPI 定義を結合して `api/resolved/openapi/openapi.yaml` を生成します。
+
+#### 2. `go-generate`
+
+`go-generate` は `mock-generate` を先に実行してから `go generate ./internal/interface/openapi` を実行します。
+
+**mock-generate**（`go-generate` の依存）
+
+`internal/domain/repository/`・`internal/domain/service/`・`internal/usecase/` 以下のインターフェースファイルを `mockgen` で読み込み、テスト用モックを生成します。
+
+| 出力先 | 対象 |
+|---|---|
+| `internal/domain/repository/mock/` | repository インターフェース |
+| `internal/domain/service/mock/` | service インターフェース |
+| `internal/usecase/mock/` | usecase インターフェース |
+
+**`go generate ./internal/interface/openapi`**
+
+`internal/interface/openapi/generate.go` の `//go:generate` 指示を順に実行します。
+
+| 指示 | 出力ファイル | 内容 |
+|---|---|---|
+| `oapi-codegen -generate types` | `api_types.gen.go` | リクエスト・レスポンス型 |
+| `oapi-codegen -generate echo-server` | `api_server.gen.go` | Echo 向けサーバインターフェース |
+| `go run ../handler_generator.go` | `internal/interface/handler/` 以下 | handler スタブ（既存ファイルはスキップ） |
+| `go run ../auth_generator.go` | `auth_routes.gen.go` | 認証ルート定義 |
+
+### ファイル構成の補足
+
+`internal/interface/openapi/` には `.gen.go`（生成物）と手書きの `.go` ファイルが共存しています。生成物は上書きされますが、手書きファイルは `go generate` では変更されません。
 
 ---
 
