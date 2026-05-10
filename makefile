@@ -68,14 +68,12 @@ sam-deploy: sam-build
 		--no-confirm-changeset \
 		--no-fail-on-empty-changeset \
 		--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-		--resolve-s3 \
-		--profile sam-access
+		--resolve-s3
 
 sam-delete:
 	aws cloudformation delete-stack \
 		--stack-name date-courses-go \
 		--region ap-northeast-1 \
-		--profile sam-access
 
 test:
 	go test ./...

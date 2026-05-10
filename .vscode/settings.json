@@ -1,0 +1,24 @@
+{
+  "yaml.schemas": {
+    "https://s3.amazonaws.com/cfn-resource-provider-schemas/CloudFormation.schema.json": [
+      "template.yaml",
+      "template.yml"
+    ]
+  },
+  "yaml.customTags": [
+    "!Ref scalar",
+    "!Sub scalar",
+    "!Sub sequence",
+    "!GetAtt scalar",
+    "!If sequence",
+    "!Not sequence",
+    "!Equals sequence",
+    "!And sequence",
+    "!Or sequence",
+    "!Select sequence",
+    "!Split sequence",
+    "!Join sequence",
+    "!ImportValue scalar",
+    "!Condition scalar"
+  ]
+}
