@@ -96,6 +96,14 @@ Resources:
           - Content-Type
           - Authorization
 
+  SsmApiEndpoint:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/date-course-go/${Stage}/api-endpoint"
+      Type: String
+      Value: !Sub "https://${DateCoursesHttpApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}"
+      Description: API Gateway endpoint URL (Terraform / React 向け)
+
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
