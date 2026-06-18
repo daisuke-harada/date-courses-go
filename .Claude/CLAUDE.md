@@ -12,6 +12,14 @@ OpenAPI スキーマ（`api/`）から `oapi-codegen` でサーバーインタ�
 - **TDD**: 実装コードを書く前にテストを先に書く（Red → Green → Refactor）。テストなしの実装 PR はマージ禁止。
 - **コード品質**: コードは読みやすく、保守しやすいものにすること。冗長なコードや複雑なロジックは避けること。
 - **ビルド保証**: 全タスクが完了したら `make gen && go build ./... && make lint && make test` を1回実行し、エラーがゼロになるまで修正を続けること。エラーが出た場合は該当箇所を調査して修正し、再度 `make gen && go build ./... && make lint && make test` を実行する。ビルドが通らない状態で作業を終了しない。
+- **push前の必須チェック**: `git push` を実行する前に、必ず以下を順番に実行してすべてエラーゼロを確認すること。1つでも失敗した場合は修正してから再実行し、全クリアするまで push してはならない。
+  ```
+  GOROOT=/Users/haradadaisuke/.goenv/versions/1.26.2 make lint   # 0 issues であること
+  GOROOT=/Users/haradadaisuke/.goenv/versions/1.26.2 make test   # FAIL がないこと
+  ```
+  - `make lint` でエラーが出たら、該当ファイルを修正して再実行する
+  - `make test` で FAIL が出たら、テストと実装を修正して再実行する
+  - 上記2つがクリアになって初めて `git push` を実行してよい
 
 ## OpenAPI / コード生成
 

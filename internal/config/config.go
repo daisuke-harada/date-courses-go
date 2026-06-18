@@ -14,13 +14,32 @@ var (
 )
 
 type Config struct {
-	DB         DBConfig
-	GoogleMaps GoogleMapsConfig
-	JWT        JWTConfig
+	DB           DBConfig
+	GoogleMaps   GoogleMapsConfig
+	GooglePlaces GooglePlacesConfig
+	Gemini       GeminiConfig
+	Batch        BatchConfig
+	JWT          JWTConfig
 }
 
 type GoogleMapsConfig struct {
 	APIKey string `envconfig:"GOOGLE_MAPS_API_KEY" required:"true"`
+}
+
+type GooglePlacesConfig struct {
+	APIKey string `envconfig:"GOOGLE_PLACES_API_KEY" required:"true"`
+}
+
+type GeminiConfig struct {
+	APIKey string `envconfig:"GEMINI_API_KEY" required:"true"`
+	Model  string `envconfig:"GEMINI_MODEL" default:"gemini-2.0-flash-lite"`
+}
+
+type BatchConfig struct {
+	SpotsPerCombination  int `envconfig:"BATCH_SPOTS_PER_COMBINATION" default:"5"`
+	MinExistingSpots     int `envconfig:"BATCH_MIN_EXISTING_SPOTS" default:"5"`
+	MaxTasksPerRun       int `envconfig:"BATCH_MAX_TASKS_PER_RUN" default:"50"`
+	MaxRequestsPerMinute int `envconfig:"BATCH_MAX_REQUESTS_PER_MINUTE" default:"60"`
 }
 
 type JWTConfig struct {
@@ -53,6 +72,15 @@ func Get() *Config {
 		}
 		if e := envconfig.Process("", &cfg.JWT); e != nil {
 			slog.Error("failed to process environment jwt", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.GooglePlaces); e != nil {
+			slog.Error("failed to process environment google places", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.Gemini); e != nil {
+			slog.Error("failed to process environment gemini", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.Batch); e != nil {
+			slog.Error("failed to process environment batch", "err", e)
 		}
 	})
 

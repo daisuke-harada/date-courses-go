@@ -2,6 +2,18 @@ package model
 
 import "time"
 
+type DateSpotSource string
+type DateSpotLinkStatus string
+
+const (
+	DateSpotSourceManual DateSpotSource = "manual"
+	DateSpotSourceAI     DateSpotSource = "ai"
+
+	DateSpotLinkStatusActive    DateSpotLinkStatus = "active"
+	DateSpotLinkStatusInvalid   DateSpotLinkStatus = "invalid"
+	DateSpotLinkStatusUnchecked DateSpotLinkStatus = "unchecked"
+)
+
 type DateSpot struct {
 	ID           uint   `gorm:"primaryKey;autoIncrement"`
 	GenreID      *int   `gorm:"index"`
@@ -13,6 +25,11 @@ type DateSpot struct {
 	Longitude    *float64
 	OpeningTime  *time.Time
 	ClosingTime  *time.Time
+	Source         DateSpotSource     `gorm:"not null;default:manual"`
+	MapsURL        *string            `gorm:"column:maps_url"`
+	LinkStatus     DateSpotLinkStatus `gorm:"not null;default:active"`
+	LastCheckedAt  *time.Time
+	NormalizedName string
 	CreatedAt    time.Time `gorm:"not null;autoCreateTime"`
 	UpdatedAt    time.Time `gorm:"not null;autoUpdateTime"`
 
