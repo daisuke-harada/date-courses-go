@@ -20,6 +20,63 @@ Lambda を採用した理由は次の 2 点です。
 
 ---
 
+## DateSpot（デートスポット）の設計方針
+
+### 基本方針: 実在スポットを外部 API から自動収集する
+
+DateSpot は **実在するスポット情報を外部 API から取得して自動生成する** 方針を採っています。AI（Gemini）による架空スポットの生成や、有償の Google Places API（1 バッチあたり ~$230）は採用していません。
+
+データソースはジャンルに応じて 2 つの無償 API を使い分けます。いずれも **リクルート Web サービス**（環境変数 `RECRUIT_API_KEY` を共用）で提供されます。
+
+| データソース | 用途（ジャンル） | 対象ジャンル ID | レスポンス形式 |
+|---|---|---|---|
+| HotPepper グルメ API | 飲食系（カフェ・寿司・居酒屋・焼肉など） | 2, 3, 7, 8, 9 | JSON |
+| じゃらんnet 観光スポット API | 観光・レジャー系（ショッピング・アウトドア・テーマパーク・公園など） | 1, 4, 5, 6, 10, 11, 12 | XML |
+
+ジャンル ID → 各 API のジャンルコードへのマッピングは、それぞれ `internal/infrastructure/external/hotpepper/`・`internal/infrastructure/external/jalan/` の `AppGenreToXxx` で定義しています。
+
+### 画像のフォールバック
+
+スポット画像は外部 API のレスポンスから取得しますが、画像が無いスポットは **Wikipedia pageimages API（無償・キー不要）** でフォールバック取得します（`internal/infrastructure/external/wikimedia/`）。S3 などへの保存は行わず、外部 URL をそのまま参照します。
+
+### スポット詳細ページへのリンク（`maps_url`）
+
+スポット詳細ページのリンクは `maps_url` カラムに格納します。
+
+| ケース | `maps_url` の中身 |
+|---|---|
+| HotPepper から取得 | HotPepper の店舗ページ URL |
+| じゃらん から取得 | じゃらんのスポットページ URL |
+| 手動登録・URL なし | Google Maps 検索 URL（`BuildMapsURL` によるフォールバック） |
+
+### `source` による出自管理
+
+`date_spots.source`（`model.DateSpotSource`）でスポットの出自を区別します。
+
+| 値 | 意味 |
+|---|---|
+| `manual` | 手動登録 |
+| `hotpepper` | HotPepper グルメ API 由来 |
+| `jalan` | じゃらんnet API 由来 |
+
+### 自動取得できない情報は持たない
+
+**バッチで自動取得・自動更新できない情報はスキーマに持たせない** 方針です。営業時間（`opening_time` / `closing_time`）は両 API とも自然言語の不定形文字列でしか提供されず、機械的にパースして保持するとデータが陳腐化するため、カラムごと削除しました。同様に `link_status`・`last_checked_at` も廃止しています。
+
+### 重複登録の防止
+
+スポット名を `NormalizeName`（NFKC 正規化・空白除去・小文字化）で正規化した `normalized_name` を保持し、都道府県 × 正規化名でユニーク判定を行うことで、バッチ実行時の重複登録を防ぎます。
+
+### バッチ処理フロー
+
+`internal/usecase/batch_create_date_spots.go` の `BatchCreateDateSpotsInteractor` が中核を担います。
+
+1. 都道府県 × ジャンルの既存スポット数を数え、しきい値（`minExistingSpots`）以上あればスキップ
+2. `SpotFetcher.FetchSpots` でジャンルに対応する外部 API からスポット候補を取得
+3. 正規化名で重複チェックし、新規分のみ `CreateBatch` でまとめて登録
+
+---
+
 ## ディレクトリ構成（主要部分）
 
 ```

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
@@ -15,17 +14,14 @@ type PutApiV1DateSpotsIdHandler struct {
 
 func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id int) error {
 	var req struct {
-		Name         string     `form:"name"`
-		GenreID      int        `form:"genre_id"`
-		PrefectureID int        `form:"prefecture_id"`
-		CityName     string     `form:"city_name"`
-		OpeningTime  *time.Time `form:"opening_time"`
-		ClosingTime  *time.Time `form:"closing_time"`
-		Image        *string    `form:"image"`
+		Name         string  `form:"name"`
+		GenreID      int     `form:"genre_id"`
+		PrefectureID int     `form:"prefecture_id"`
+		CityName     string  `form:"city_name"`
+		Image        *string `form:"image"`
 	}
 
 	if err := ctx.Bind(&req); err != nil {
-		// 型変換エラーはバインド失敗として処理
 		return err
 	}
 
@@ -35,8 +31,6 @@ func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id in
 		GenreID:      req.GenreID,
 		PrefectureID: req.PrefectureID,
 		CityName:     req.CityName,
-		OpeningTime:  req.OpeningTime,
-		ClosingTime:  req.ClosingTime,
 		Image:        req.Image,
 	}
 

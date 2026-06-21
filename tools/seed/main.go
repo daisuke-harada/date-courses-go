@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
@@ -104,34 +103,6 @@ func geocode(apiKey, address string) (lat *float64, lng *float64) {
 	return &latVal, &lngVal
 }
 
-// ─── 時刻ヘルパー ──────────────────────────────────────────────────────────────
-
-// normalTime は "HH:MM" を 2000-01-01 HH:MM:SS UTC の *time.Time に変換します。
-func normalTime(t string) *time.Time {
-	if t == "" {
-		return nil
-	}
-	parsed, err := time.ParseInLocation("2006-01-02 15:04", "2000-01-01 "+t, time.UTC)
-	if err != nil {
-		slog.Warn("normalTime: parse failed", "t", t, "err", err)
-		return nil
-	}
-	return &parsed
-}
-
-// midnightTime は深夜0〜5時帯を 2000-01-02 HH:MM:SS UTC に変換します。
-func midnightTime(t string) *time.Time {
-	if t == "" {
-		return nil
-	}
-	parsed, err := time.ParseInLocation("2006-01-02 15:04", "2000-01-02 "+t, time.UTC)
-	if err != nil {
-		slog.Warn("midnightTime: parse failed", "t", t, "err", err)
-		return nil
-	}
-	return &parsed
-}
-
 // ─── DateSpot + Address 登録 ──────────────────────────────────────────────────
 
 func spotAndAddressCreate(
@@ -139,8 +110,6 @@ func spotAndAddressCreate(
 	gdb *gorm.DB,
 	name string,
 	genreID int,
-	openingTime *time.Time,
-	closingTime *time.Time,
 	prefectureID int,
 	cityName string,
 	apiKey string,
@@ -162,8 +131,6 @@ func spotAndAddressCreate(
 			Image:        &imagePath,
 			Latitude:     lat,
 			Longitude:    lng,
-			OpeningTime:  openingTime,
-			ClosingTime:  closingTime,
 		}
 		repo := persistence.NewDateSpotRepository(gdb)
 		if err := repo.Create(ctx, &dateSpot); err != nil {
@@ -463,58 +430,58 @@ func main() {
 	slog.Info("=== seeding DateSpots & Addresses ===")
 
 	// 東京 1〜6
-	spotAndAddressCreate(ctx, gdb, "東京スカイツリー", 11, normalTime("10:00"), normalTime("21:00"), 13, "墨田区押上１丁目１−２", apiKey)
-	spotAndAddressCreate(ctx, gdb, "恵比寿ガーデンプレイス", 1, normalTime("07:00"), midnightTime("00:00"), 13, "渋谷区恵比寿4丁目20 ガーデンプレイス", apiKey)
-	spotAndAddressCreate(ctx, gdb, "プレゴ・プレゴ", 2, normalTime("16:00"), normalTime("23:00"), 13, "新宿区新宿3-31-3 ＮＳプラザ中央　4F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "酒場シナトラ 東京駅店", 9, normalTime("11:00"), normalTime("23:00"), 13, "千代田区丸の内１丁目９−１ 東京駅一番街 2階", apiKey)
-	spotAndAddressCreate(ctx, gdb, "カフェ バッハ", 3, normalTime("10:00"), normalTime("19:00"), 13, "台東区日本堤１丁目２３−９", apiKey)
-	spotAndAddressCreate(ctx, gdb, "おもてなしとりよし 西新宿店", 2, normalTime("17:00"), normalTime("23:00"), 13, "新宿区西新宿1-10-2 110ビル 11F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "東京スカイツリー", 11, 13, "墨田区押上１丁目１−２", apiKey)
+	spotAndAddressCreate(ctx, gdb, "恵比寿ガーデンプレイス", 1, 13, "渋谷区恵比寿4丁目20 ガーデンプレイス", apiKey)
+	spotAndAddressCreate(ctx, gdb, "プレゴ・プレゴ", 2, 13, "新宿区新宿3-31-3 ＮＳプラザ中央　4F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "酒場シナトラ 東京駅店", 9, 13, "千代田区丸の内１丁目９−１ 東京駅一番街 2階", apiKey)
+	spotAndAddressCreate(ctx, gdb, "カフェ バッハ", 3, 13, "台東区日本堤１丁目２３−９", apiKey)
+	spotAndAddressCreate(ctx, gdb, "おもてなしとりよし 西新宿店", 2, 13, "新宿区西新宿1-10-2 110ビル 11F", apiKey)
 
 	// 千葉 7
-	spotAndAddressCreate(ctx, gdb, "東京ディズニーランド", 5, normalTime("10:00"), normalTime("19:00"), 12, "浦安市舞浜１−１", apiKey)
+	spotAndAddressCreate(ctx, gdb, "東京ディズニーランド", 5, 12, "浦安市舞浜１−１", apiKey)
 
 	// 大阪 8〜13
-	spotAndAddressCreate(ctx, gdb, "純喫茶 アメリカン", 3, normalTime("09:00"), normalTime("22:00"), 27, "大阪市中央区道頓堀１丁目７−４", apiKey)
-	spotAndAddressCreate(ctx, gdb, "ユニバーサル・スタジオ・ジャパン", 5, normalTime("11:00"), normalTime("19:00"), 27, "大阪市此花区桜島２丁目１−３３", apiKey)
-	spotAndAddressCreate(ctx, gdb, "焼肉Lab 梅田店", 9, normalTime("12:00"), normalTime("23:00"), 27, "大阪市曽根崎2-10-21 第3河合ビル3F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "居酒屋 牡蠣 やまと", 8, normalTime("16:00"), normalTime("23:00"), 27, "大阪市阿倍野区旭町2-1-2 あべのポンテ1F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "創蔵", 7, normalTime("17:00"), normalTime("22:00"), 27, "大阪市中央区難波4-6-10", apiKey)
-	spotAndAddressCreate(ctx, gdb, "りんくうプレミアム・アウトレット", 1, normalTime("11:00"), normalTime("21:00"), 27, "泉佐野市りんくう往来南３−２８", apiKey)
+	spotAndAddressCreate(ctx, gdb, "純喫茶 アメリカン", 3, 27, "大阪市中央区道頓堀１丁目７−４", apiKey)
+	spotAndAddressCreate(ctx, gdb, "ユニバーサル・スタジオ・ジャパン", 5, 27, "大阪市此花区桜島２丁目１−３３", apiKey)
+	spotAndAddressCreate(ctx, gdb, "焼肉Lab 梅田店", 9, 27, "大阪市曽根崎2-10-21 第3河合ビル3F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "居酒屋 牡蠣 やまと", 8, 27, "大阪市阿倍野区旭町2-1-2 あべのポンテ1F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "創蔵", 7, 27, "大阪市中央区難波4-6-10", apiKey)
+	spotAndAddressCreate(ctx, gdb, "りんくうプレミアム・アウトレット", 1, 27, "泉佐野市りんくう往来南３−２８", apiKey)
 
 	// 京都 14〜19
-	spotAndAddressCreate(ctx, gdb, "京都タワー", 11, normalTime("09:00"), normalTime("21:00"), 26, "京都市下京区烏丸通七条下る 東塩小路町 721-1", apiKey)
-	spotAndAddressCreate(ctx, gdb, "ウメ子の家 四条河原町店", 2, normalTime("17:00"), normalTime("23:00"), 26, "京都市下京区四条小橋東入橋本町105 PONTOビル2F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "CINQUE IKARIYA（チンクエイカリヤ）", 2, normalTime("17:00"), normalTime("22:00"), 26, "京都市中京区突抜町138-3", apiKey)
-	spotAndAddressCreate(ctx, gdb, "京都 焼き鳥 一", 2, normalTime("17:00"), normalTime("22:00"), 26, "京都市中京区四条室町菊水鉾町585 1F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "京都円山　天正", 9, normalTime("17:00"), normalTime("22:00"), 26, "京都市東山区祇園町北側338", apiKey)
-	spotAndAddressCreate(ctx, gdb, "Walden Woods Kyoto", 3, normalTime("08:00"), normalTime("19:00"), 26, "京都市下京区栄町５０８−１", apiKey)
+	spotAndAddressCreate(ctx, gdb, "京都タワー", 11, 26, "京都市下京区烏丸通七条下る 東塩小路町 721-1", apiKey)
+	spotAndAddressCreate(ctx, gdb, "ウメ子の家 四条河原町店", 2, 26, "京都市下京区四条小橋東入橋本町105 PONTOビル2F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "CINQUE IKARIYA（チンクエイカリヤ）", 2, 26, "京都市中京区突抜町138-3", apiKey)
+	spotAndAddressCreate(ctx, gdb, "京都 焼き鳥 一", 2, 26, "京都市中京区四条室町菊水鉾町585 1F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "京都円山　天正", 9, 26, "京都市東山区祇園町北側338", apiKey)
+	spotAndAddressCreate(ctx, gdb, "Walden Woods Kyoto", 3, 26, "京都市下京区栄町５０８−１", apiKey)
 
 	// 神奈川 20〜25
-	spotAndAddressCreate(ctx, gdb, "横浜ランドマークタワー", 11, nil, nil, 14, "横浜市西区みなとみらい２丁目２−１", apiKey)
-	spotAndAddressCreate(ctx, gdb, "横浜・八景島シーパラダイス", 6, normalTime("11:00"), normalTime("17:00"), 14, "横浜市金沢区八景島", apiKey)
-	spotAndAddressCreate(ctx, gdb, "よこはまコスモワールド", 5, normalTime("11:00"), normalTime("21:00"), 14, "横浜市中区新港２丁目８−１", apiKey)
-	spotAndAddressCreate(ctx, gdb, "海の公園 バーベキュー場", 10, normalTime("10:00"), normalTime("19:00"), 14, "横浜市金沢区海の公園１０", apiKey)
-	spotAndAddressCreate(ctx, gdb, "新横浜ラーメン博物館", 2, normalTime("11:00"), normalTime("21:00"), 14, "横浜市港北区新横浜２丁目１４−２１", apiKey)
-	spotAndAddressCreate(ctx, gdb, "旅情個室空間 酒の友 新横浜店", 8, normalTime("17:00"), normalTime("21:00"), 14, "横浜市港北区新横浜3-17-15 3F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "横浜ランドマークタワー", 11, 14, "横浜市西区みなとみらい２丁目２−１", apiKey)
+	spotAndAddressCreate(ctx, gdb, "横浜・八景島シーパラダイス", 6, 14, "横浜市金沢区八景島", apiKey)
+	spotAndAddressCreate(ctx, gdb, "よこはまコスモワールド", 5, 14, "横浜市中区新港２丁目８−１", apiKey)
+	spotAndAddressCreate(ctx, gdb, "海の公園 バーベキュー場", 10, 14, "横浜市金沢区海の公園１０", apiKey)
+	spotAndAddressCreate(ctx, gdb, "新横浜ラーメン博物館", 2, 14, "横浜市港北区新横浜２丁目１４−２１", apiKey)
+	spotAndAddressCreate(ctx, gdb, "旅情個室空間 酒の友 新横浜店", 8, 14, "横浜市港北区新横浜3-17-15 3F", apiKey)
 
 	// 愛知 26〜31
-	spotAndAddressCreate(ctx, gdb, "名古屋港水族館", 6, normalTime("09:30"), normalTime("17:30"), 23, "名古屋市港区港町1-3", apiKey)
-	spotAndAddressCreate(ctx, gdb, "博物館 明治村", 2, normalTime("09:30"), normalTime("17:00"), 23, "犬山市内山1", apiKey)
-	spotAndAddressCreate(ctx, gdb, "茶寮 花の宴", 2, normalTime("11:30"), normalTime("22:00"), 23, "安城市大東町１７−８", apiKey)
-	spotAndAddressCreate(ctx, gdb, "食堂うさぎや", 2, normalTime("11:00"), normalTime("14:00"), 23, "名古屋市名東区高社２丁目９７", apiKey)
-	spotAndAddressCreate(ctx, gdb, "THE ONE AND ONLY", 8, normalTime("18:00"), midnightTime("01:00"), 23, "名古屋市西区牛島町６−１ 名古屋ルーセントタワ 40F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "完全個室ダイニング カーヴ隠れや 名古屋駅店", 8, normalTime("17:30"), midnightTime("02:00"), 23, "名古屋市中村区名駅３丁目１５−１１ Ｍ三ダイニングビル 4F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "名古屋港水族館", 6, 23, "名古屋市港区港町1-3", apiKey)
+	spotAndAddressCreate(ctx, gdb, "博物館 明治村", 2, 23, "犬山市内山1", apiKey)
+	spotAndAddressCreate(ctx, gdb, "茶寮 花の宴", 2, 23, "安城市大東町１７−８", apiKey)
+	spotAndAddressCreate(ctx, gdb, "食堂うさぎや", 2, 23, "名古屋市名東区高社２丁目９７", apiKey)
+	spotAndAddressCreate(ctx, gdb, "THE ONE AND ONLY", 8, 23, "名古屋市西区牛島町６−１ 名古屋ルーセントタワ 40F", apiKey)
+	spotAndAddressCreate(ctx, gdb, "完全個室ダイニング カーヴ隠れや 名古屋駅店", 8, 23, "名古屋市中村区名駅３丁目１５−１１ Ｍ三ダイニングビル 4F", apiKey)
 
 	// 福岡 32〜37
-	spotAndAddressCreate(ctx, gdb, "キャナルシティ博多", 1, normalTime("08:00"), normalTime("23:00"), 40, "福岡市博多区住吉1丁目2", apiKey)
-	spotAndAddressCreate(ctx, gdb, "つなぐダイニング ZINO 天神店", 8, normalTime("20:00"), midnightTime("05:00"), 40, "福岡市中央区大名1-11-22-1", apiKey)
-	spotAndAddressCreate(ctx, gdb, "大濠公園", 12, nil, nil, 40, "福岡市中央区大濠公園", apiKey)
-	spotAndAddressCreate(ctx, gdb, "マリンワールド海の中道", 6, nil, nil, 40, "福岡市東区西戸崎18-28", apiKey)
-	spotAndAddressCreate(ctx, gdb, "麺劇場 玄瑛", 2, normalTime("11:30"), normalTime("21:00"), 40, "福岡市中央区薬院 2-16-3", apiKey)
-	spotAndAddressCreate(ctx, gdb, "芥屋の大門", 4, nil, nil, 40, "糸島市志摩芥屋６７５−２", apiKey)
+	spotAndAddressCreate(ctx, gdb, "キャナルシティ博多", 1, 40, "福岡市博多区住吉1丁目2", apiKey)
+	spotAndAddressCreate(ctx, gdb, "つなぐダイニング ZINO 天神店", 8, 40, "福岡市中央区大名1-11-22-1", apiKey)
+	spotAndAddressCreate(ctx, gdb, "大濠公園", 12, 40, "福岡市中央区大濠公園", apiKey)
+	spotAndAddressCreate(ctx, gdb, "マリンワールド海の中道", 6, 40, "福岡市東区西戸崎18-28", apiKey)
+	spotAndAddressCreate(ctx, gdb, "麺劇場 玄瑛", 2, 40, "福岡市中央区薬院 2-16-3", apiKey)
+	spotAndAddressCreate(ctx, gdb, "芥屋の大門", 4, 40, "糸島市志摩芥屋６７５−２", apiKey)
 
 	// 熊本 38
-	spotAndAddressCreate(ctx, gdb, "あか牛丼いわさき", 2, normalTime("11:00"), midnightTime("00:00"), 43, "阿蘇市乙姫2006-2", apiKey)
+	spotAndAddressCreate(ctx, gdb, "あか牛丼いわさき", 2, 43, "阿蘇市乙姫2006-2", apiKey)
 
 	// ─── Users ───────────────────────────────────────────────────────────────
 	slog.Info("=== seeding Users ===")

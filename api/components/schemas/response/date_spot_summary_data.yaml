@@ -34,13 +34,9 @@ components:
           format: float
         source:
           type: string
-          enum: [manual, ai]
+          enum: [manual, hotpepper, jalan]
         maps_url:
           type: string
-          nullable: true
-        link_status:
-          type: string
-          enum: [active, invalid, unchecked]
           nullable: true
         date_spot:
           $ref: "./date_spots.yaml#/components/schemas/DateSpotData"

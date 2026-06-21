@@ -6,8 +6,6 @@ components:
       - id
       - name
       - image
-      - closing_time
-      - opening_time
       - created_at
       - updated_at
       - average_rate
@@ -19,12 +17,6 @@ components:
           type: string
         image:
           $ref: "./image.yaml#/components/schemas/ImageData"
-        closing_time:
-          type: string
-          format: date-time
-        opening_time:
-          type: string
-          format: date-time
         created_at:
           type: string
           format: date-time

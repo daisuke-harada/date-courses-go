@@ -22,8 +22,6 @@ func validDateSpotForm() url.Values {
 	form.Set("genre_id", "1")
 	form.Set("prefecture_id", "13")
 	form.Set("city_name", "港区")
-	form.Set("opening_time", "2024-01-01T09:00:00Z")
-	form.Set("closing_time", "2024-01-01T21:00:00Z")
 	return form
 }
 
@@ -96,25 +94,6 @@ func TestPostApiV1DateSpotsHandler(t *testing.T) {
 
 		form := validDateSpotForm()
 		form.Del("city_name")
-		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spots", form)
-
-		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
-		err := h.PostApiV1DateSpots(ctx)
-
-		assert.Error(t, err)
-		statusCode, _, _, ok := apperror.HTTPStatus(err)
-		assert.True(t, ok)
-		assert.Equal(t, http.StatusUnprocessableEntity, statusCode)
-	})
-
-	t.Run("error_invalid_opening_time_format", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-
-		mockPort := usecasemock.NewMockCreateDateSpotInputPort(ctrl)
-
-		form := validDateSpotForm()
-		form.Set("opening_time", "not-a-valid-time")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spots", form)
 
 		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
