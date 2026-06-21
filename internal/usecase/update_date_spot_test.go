@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"testing"
-	"time"
 
 	repositorymock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
@@ -14,8 +13,6 @@ import (
 )
 
 func TestUpdateDateSpotInteractor_Execute(t *testing.T) {
-	now := time.Now()
-
 	t.Run("success", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -34,8 +31,6 @@ func TestUpdateDateSpotInteractor_Execute(t *testing.T) {
 			GenreID:      2,
 			PrefectureID: 14,
 			CityName:     "新宿区",
-			OpeningTime:  &now,
-			ClosingTime:  &now,
 		})
 
 		require.NoError(t, err)
@@ -59,8 +54,6 @@ func TestUpdateDateSpotInteractor_Execute(t *testing.T) {
 			GenreID:      2,
 			PrefectureID: 14,
 			CityName:     "新宿区",
-			OpeningTime:  &now,
-			ClosingTime:  &now,
 		})
 
 		assert.Error(t, err)

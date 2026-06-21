@@ -14,25 +14,19 @@ var (
 )
 
 type Config struct {
-	DB           DBConfig
-	GoogleMaps   GoogleMapsConfig
-	GooglePlaces GooglePlacesConfig
-	Gemini       GeminiConfig
-	Batch        BatchConfig
-	JWT          JWTConfig
+	DB         DBConfig
+	GoogleMaps GoogleMapsConfig
+	Recruit    RecruitConfig
+	Batch      BatchConfig
+	JWT        JWTConfig
 }
 
 type GoogleMapsConfig struct {
 	APIKey string `envconfig:"GOOGLE_MAPS_API_KEY" required:"true"`
 }
 
-type GooglePlacesConfig struct {
-	APIKey string `envconfig:"GOOGLE_PLACES_API_KEY" required:"true"`
-}
-
-type GeminiConfig struct {
-	APIKey string `envconfig:"GEMINI_API_KEY" required:"true"`
-	Model  string `envconfig:"GEMINI_MODEL" default:"gemini-2.0-flash-lite"`
+type RecruitConfig struct {
+	APIKey string `envconfig:"RECRUIT_API_KEY" required:"true"`
 }
 
 type BatchConfig struct {
@@ -62,9 +56,7 @@ type DBConfig struct {
 func Get() *Config {
 	once.Do(func() {
 		cfg = &Config{}
-		// Use empty prefix because DB field tags already contain full env names (e.g. DB_HOST).
 		if e := envconfig.Process("", &cfg.DB); e != nil {
-			// use conventional key name "err"
 			slog.Error("failed to process environment db", "err", e)
 		}
 		if e := envconfig.Process("", &cfg.GoogleMaps); e != nil {
@@ -73,11 +65,8 @@ func Get() *Config {
 		if e := envconfig.Process("", &cfg.JWT); e != nil {
 			slog.Error("failed to process environment jwt", "err", e)
 		}
-		if e := envconfig.Process("", &cfg.GooglePlaces); e != nil {
-			slog.Error("failed to process environment google places", "err", e)
-		}
-		if e := envconfig.Process("", &cfg.Gemini); e != nil {
-			slog.Error("failed to process environment gemini", "err", e)
+		if e := envconfig.Process("", &cfg.Recruit); e != nil {
+			slog.Error("failed to process environment recruit", "err", e)
 		}
 		if e := envconfig.Process("", &cfg.Batch); e != nil {
 			slog.Error("failed to process environment batch", "err", e)

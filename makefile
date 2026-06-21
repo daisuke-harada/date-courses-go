@@ -48,32 +48,32 @@ mock-usecase:
 		mockgen -source=$$f -destination=internal/usecase/mock/$$(basename $$f) -package=usecasemock; \
 	done
 
-# Lambda ビルド: provided.al2023 ランタイム向け (arm64)
-# モノリス Lambda（全ルート）。API 個別化時は build-lambda-<api-name> を追加する。
-build-lambda-monolith:
-	mkdir -p dist/lambda/monolith
-	GOARCH=arm64 GOOS=linux go build -o dist/lambda/monolith/bootstrap ./cmd/lambda/monolith
-
-# SAM CLI でローカル実行 (template.yaml が必要)
-local-lambda:
-	sam local start-api
-
-sam-build: build-lambda-monolith
-	sam build
-
-sam-deploy: sam-build
-	sam deploy \
-		--stack-name date-courses-go \
-		--region ap-northeast-1 \
-		--no-confirm-changeset \
-		--no-fail-on-empty-changeset \
-		--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-		--resolve-s3
-
-sam-delete:
-	aws cloudformation delete-stack \
-		--stack-name date-courses-go \
-		--region ap-northeast-1 \
+# # Lambda ビルド: provided.al2023 ランタイム向け (arm64)
+# # モノリス Lambda（全ルート）。API 個別化時は build-lambda-<api-name> を追加する。
+# build-lambda-monolith:
+# 	mkdir -p dist/lambda/monolith
+# 	GOARCH=arm64 GOOS=linux go build -o dist/lambda/monolith/bootstrap ./cmd/lambda/monolith
+#
+# # SAM CLI でローカル実行 (template.yaml が必要)
+# local-lambda:
+# 	sam local start-api
+#
+# sam-build: build-lambda-monolith
+# 	sam build
+#
+# sam-deploy: sam-build
+# 	sam deploy \
+# 		--stack-name date-courses-go \
+# 		--region ap-northeast-1 \
+# 		--no-confirm-changeset \
+# 		--no-fail-on-empty-changeset \
+# 		--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+# 		--resolve-s3
+#
+# sam-delete:
+# 	aws cloudformation delete-stack \
+# 		--stack-name date-courses-go \
+# 		--region ap-northeast-1
 
 test:
 	go test ./...

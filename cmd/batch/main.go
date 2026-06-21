@@ -4,14 +4,14 @@ import (
 	"context"
 	"log/slog"
 	"os"
-	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/gemini"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/google_places"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/hotpepper"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/jalan"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/wikimedia"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
@@ -31,9 +31,10 @@ func main() {
 	}
 
 	repo := persistence.NewDateSpotRepository(gormDB)
-	geminiClient := gemini.NewClient(cfg.Gemini.APIKey, cfg.Gemini.Model)
-	placesClient := google_places.NewClient(cfg.GooglePlaces.APIKey)
-	fetcher := external.NewSpotFetcher(geminiClient, placesClient)
+	hotpepperClient := hotpepper.NewClient(cfg.Recruit.APIKey)
+	jalanClient := jalan.NewClient(cfg.Recruit.APIKey)
+	wikimediaClient := wikimedia.NewClient()
+	fetcher := external.NewSpotFetcher(hotpepperClient, jalanClient, wikimediaClient)
 
 	interactor := usecase.NewBatchCreateDateSpotsInteractor(
 		repo,
@@ -56,6 +57,7 @@ func main() {
 			input := usecase.BatchCreateDateSpotsInput{
 				PrefectureID:   pref.ID,
 				PrefectureName: pref.Name,
+				PrefCode:       pref.PrefCode,
 				GenreID:        genre.ID,
 				GenreName:      genre.Name,
 			}
@@ -69,8 +71,6 @@ func main() {
 			}
 
 			taskCount++
-			// Nominatim の 1req/sec 制限を守るため少し待機
-			time.Sleep(1100 * time.Millisecond)
 		}
 	}
 

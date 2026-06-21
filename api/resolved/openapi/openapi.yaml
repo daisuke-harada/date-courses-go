@@ -701,73 +701,67 @@ components:
       type: object
     TopResponseData:
       example:
-        main_prefectures:
-        - name: name
-          id: 4
-          area_id: 7
-        - name: name
-          id: 4
-          area_id: 7
         date_spots:
-        - city_name: city_name
-          prefecture_name: prefecture_name
+        - id: 0
+          city_name: city_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
-        - city_name: city_name
-          prefecture_name: prefecture_name
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
+        - id: 0
+          city_name: city_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
-        genres:
-        - name: name
-          id: 2
-        - name: name
-          id: 2
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
         areas:
-        - name: name
-          id: 3
-        - name: name
-          id: 3
+        - id: 3
+          name: name
+        - id: 3
+          name: name
+        genres:
+        - id: 2
+          name: name
+        - id: 2
+          name: name
         main_genres:
-        - name: name
-          id: 2
-        - name: name
-          id: 2
+        - id: 2
+          name: name
+        - id: 2
+          name: name
+        main_prefectures:
+        - id: 4
+          name: name
+          area_id: 7
+        - id: 4
+          name: name
+          area_id: 7
       properties:
         date_spots:
           items:
@@ -820,169 +814,153 @@ components:
       type: object
     SignUpResponseData:
       example:
-        login_status: true
         user:
+          id: 0
+          admin: true
+          email: email
+          gender: 男性
           image:
             url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
+          name: name
           followerIds:
           - 6
           - 6
-          name: name
-          admin: true
           followingIds:
           - 1
           - 1
-          id: 0
-          email: email
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
           date_spot_reviews:
-          - rate: 7.0614014
+          - id: 2
+            rate: 7.0614014
+            content: content
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
+          - id: 2
+            rate: 7.0614014
             content: content
-          - rate: 7.0614014
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
-            content: content
+        login_status: true
         token: token
       properties:
         user:
@@ -998,8 +976,8 @@ components:
       type: object
     SigninFormRequestData:
       example:
-        password: password
         name: name
+        password: password
       properties:
         name:
           type: string
@@ -1011,15 +989,15 @@ components:
       type: object
     LoginResponseData:
       example:
-        login_status: true
         user:
+          id: 5
+          name: name
+          email: email
+          gender: null
           image:
             url: https://openapi-generator.tech
-          gender: null
-          name: name
           admin: true
-          id: 5
-          email: email
+        login_status: true
         token: token
       properties:
         user:
@@ -1035,167 +1013,151 @@ components:
       type: object
     UserResponseData:
       example:
+        id: 0
+        admin: true
+        email: email
+        gender: 男性
         image:
           url: https://openapi-generator.tech
-        courses:
-        - no_duplicate_prefecture_names:
-          - no_duplicate_prefecture_names
-          - no_duplicate_prefecture_names
-          date_spots:
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            link_status: active
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            source: manual
-            maps_url: maps_url
-            genre_name: genre_name
-            longitude: 1.4658129
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            link_status: active
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            source: manual
-            maps_url: maps_url
-            genre_name: genre_name
-            longitude: 1.4658129
-          travel_mode: travel_mode
-          authority: authority
-          id: 5
-          user:
-            image:
-              url: https://openapi-generator.tech
-            gender: null
-            name: name
-            admin: true
-            id: 5
-            email: email
-        - no_duplicate_prefecture_names:
-          - no_duplicate_prefecture_names
-          - no_duplicate_prefecture_names
-          date_spots:
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            link_status: active
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            source: manual
-            maps_url: maps_url
-            genre_name: genre_name
-            longitude: 1.4658129
-          - city_name: city_name
-            prefecture_name: prefecture_name
-            latitude: 6.0274563
-            review_total_number: 5
-            average_rate: 5.637377
-            link_status: active
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 0
-            source: manual
-            maps_url: maps_url
-            genre_name: genre_name
-            longitude: 1.4658129
-          travel_mode: travel_mode
-          authority: authority
-          id: 5
-          user:
-            image:
-              url: https://openapi-generator.tech
-            gender: null
-            name: name
-            admin: true
-            id: 5
-            email: email
-        gender: 男性
+        name: name
         followerIds:
         - 6
         - 6
-        name: name
-        admin: true
         followingIds:
         - 1
         - 1
-        id: 0
-        email: email
+        courses:
+        - id: 5
+          authority: authority
+          travel_mode: travel_mode
+          user:
+            id: 5
+            name: name
+            email: email
+            gender: null
+            image:
+              url: https://openapi-generator.tech
+            admin: true
+          no_duplicate_prefecture_names:
+          - no_duplicate_prefecture_names
+          - no_duplicate_prefecture_names
+          date_spots:
+          - id: 0
+            city_name: city_name
+            latitude: 6.0274563
+            longitude: 1.4658129
+            prefecture_name: prefecture_name
+            genre_name: genre_name
+            review_total_number: 5
+            average_rate: 5.637377
+            source: manual
+            maps_url: maps_url
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 0
+            city_name: city_name
+            latitude: 6.0274563
+            longitude: 1.4658129
+            prefecture_name: prefecture_name
+            genre_name: genre_name
+            review_total_number: 5
+            average_rate: 5.637377
+            source: manual
+            maps_url: maps_url
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+        - id: 5
+          authority: authority
+          travel_mode: travel_mode
+          user:
+            id: 5
+            name: name
+            email: email
+            gender: null
+            image:
+              url: https://openapi-generator.tech
+            admin: true
+          no_duplicate_prefecture_names:
+          - no_duplicate_prefecture_names
+          - no_duplicate_prefecture_names
+          date_spots:
+          - id: 0
+            city_name: city_name
+            latitude: 6.0274563
+            longitude: 1.4658129
+            prefecture_name: prefecture_name
+            genre_name: genre_name
+            review_total_number: 5
+            average_rate: 5.637377
+            source: manual
+            maps_url: maps_url
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 0
+            city_name: city_name
+            latitude: 6.0274563
+            longitude: 1.4658129
+            prefecture_name: prefecture_name
+            genre_name: genre_name
+            review_total_number: 5
+            average_rate: 5.637377
+            source: manual
+            maps_url: maps_url
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
         date_spot_reviews:
-        - rate: 7.0614014
+        - id: 2
+          rate: 7.0614014
+          content: content
           date_spot:
+            id: 2
+            name: name
             image:
               url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
             created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
             genre_id: 9
-          id: 2
+        - id: 2
+          rate: 7.0614014
           content: content
-        - rate: 7.0614014
           date_spot:
+            id: 2
+            name: name
             image:
               url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
             created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
             genre_id: 9
-          id: 2
-          content: content
       properties:
         id:
           type: integer
@@ -1267,328 +1229,296 @@ components:
       example:
         user_name: user_name
         users:
-        - image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
+        - id: 0
+          admin: true
+          email: email
           gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
           followerIds:
           - 6
           - 6
-          name: name
-          admin: true
           followingIds:
           - 1
           - 1
-          id: 0
-          email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-        - image:
-            url: https://openapi-generator.tech
           courses:
-          - no_duplicate_prefecture_names:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
             - no_duplicate_prefecture_names
             - no_duplicate_prefecture_names
             date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
+            - id: 0
+              city_name: city_name
               latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
               review_total_number: 5
               average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
               source: manual
               maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
               latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
               review_total_number: 5
               average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
               source: manual
               maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
             authority: authority
-            id: 5
+            travel_mode: travel_mode
             user:
+              id: 5
+              name: name
+              email: email
+              gender: null
               image:
                 url: https://openapi-generator.tech
-              gender: null
-              name: name
               admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
+            no_duplicate_prefecture_names:
             - no_duplicate_prefecture_names
             - no_duplicate_prefecture_names
             date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
+            - id: 0
+              city_name: city_name
               latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
               review_total_number: 5
               average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
               source: manual
               maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
               latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
               review_total_number: 5
               average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
               source: manual
               maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              gender: null
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
               name: name
-              admin: true
-              id: 5
-              email: email
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+        - id: 0
+          admin: true
+          email: email
           gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
           followerIds:
           - 6
           - 6
-          name: name
-          admin: true
           followingIds:
           - 1
           - 1
-          id: 0
-          email: email
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
           date_spot_reviews:
-          - rate: 7.0614014
+          - id: 2
+            rate: 7.0614014
+            content: content
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
+          - id: 2
+            rate: 7.0614014
             content: content
-          - rate: 7.0614014
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
-            content: content
       properties:
         user_name:
           type: string
@@ -1612,653 +1542,589 @@ components:
       type: object
     FollowResponseData:
       example:
-        followed_user:
-          image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
-          followerIds:
-          - 6
-          - 6
-          name: name
-          admin: true
-          followingIds:
-          - 1
-          - 1
-          id: 0
-          email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
         users:
-        - image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
-          followerIds:
-          - 6
-          - 6
-          name: name
+        - id: 0
           admin: true
-          followingIds:
-          - 1
-          - 1
-          id: 0
           email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-        - image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
           gender: 男性
-          followerIds:
-          - 6
-          - 6
-          name: name
-          admin: true
-          followingIds:
-          - 1
-          - 1
-          id: 0
-          email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-        current_user:
           image:
             url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
+          name: name
           followerIds:
           - 6
           - 6
-          name: name
-          admin: true
           followingIds:
           - 1
           - 1
-          id: 0
-          email: email
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
           date_spot_reviews:
-          - rate: 7.0614014
+          - id: 2
+            rate: 7.0614014
+            content: content
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
+          - id: 2
+            rate: 7.0614014
             content: content
-          - rate: 7.0614014
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
+        - id: 0
+          admin: true
+          email: email
+          gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
+          followerIds:
+          - 6
+          - 6
+          followingIds:
+          - 1
+          - 1
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
             content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+        current_user:
+          id: 0
+          admin: true
+          email: email
+          gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
+          followerIds:
+          - 6
+          - 6
+          followingIds:
+          - 1
+          - 1
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+        followed_user:
+          id: 0
+          admin: true
+          email: email
+          gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
+          followerIds:
+          - 6
+          - 6
+          followingIds:
+          - 1
+          - 1
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
       properties:
         users:
           items:
@@ -2275,653 +2141,589 @@ components:
       type: object
     UnFollowResponseData:
       example:
-        unfollowed_user:
-          image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
-          followerIds:
-          - 6
-          - 6
-          name: name
-          admin: true
-          followingIds:
-          - 1
-          - 1
-          id: 0
-          email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
         users:
-        - image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
-          followerIds:
-          - 6
-          - 6
-          name: name
+        - id: 0
           admin: true
-          followingIds:
-          - 1
-          - 1
-          id: 0
           email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-        - image:
-            url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
           gender: 男性
-          followerIds:
-          - 6
-          - 6
-          name: name
-          admin: true
-          followingIds:
-          - 1
-          - 1
-          id: 0
-          email: email
-          date_spot_reviews:
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-          - rate: 7.0614014
-            date_spot:
-              image:
-                url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
-              created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
-              genre_id: 9
-            id: 2
-            content: content
-        current_user:
           image:
             url: https://openapi-generator.tech
-          courses:
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          - no_duplicate_prefecture_names:
-            - no_duplicate_prefecture_names
-            - no_duplicate_prefecture_names
-            date_spots:
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            - city_name: city_name
-              prefecture_name: prefecture_name
-              latitude: 6.0274563
-              review_total_number: 5
-              average_rate: 5.637377
-              link_status: active
-              date_spot:
-                image:
-                  url: https://openapi-generator.tech
-                updated_at: 2000-01-23T04:56:07.000+00:00
-                closing_time: 2000-01-23T04:56:07.000+00:00
-                opening_time: 2000-01-23T04:56:07.000+00:00
-                name: name
-                average_rate: 7.0614014
-                created_at: 2000-01-23T04:56:07.000+00:00
-                id: 2
-                genre_id: 9
-              id: 0
-              source: manual
-              maps_url: maps_url
-              genre_name: genre_name
-              longitude: 1.4658129
-            travel_mode: travel_mode
-            authority: authority
-            id: 5
-            user:
-              image:
-                url: https://openapi-generator.tech
-              gender: null
-              name: name
-              admin: true
-              id: 5
-              email: email
-          gender: 男性
+          name: name
           followerIds:
           - 6
           - 6
-          name: name
-          admin: true
           followingIds:
           - 1
           - 1
-          id: 0
-          email: email
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
           date_spot_reviews:
-          - rate: 7.0614014
+          - id: 2
+            rate: 7.0614014
+            content: content
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
+          - id: 2
+            rate: 7.0614014
             content: content
-          - rate: 7.0614014
             date_spot:
+              id: 2
+              name: name
               image:
                 url: https://openapi-generator.tech
-              updated_at: 2000-01-23T04:56:07.000+00:00
-              closing_time: 2000-01-23T04:56:07.000+00:00
-              opening_time: 2000-01-23T04:56:07.000+00:00
-              name: name
-              average_rate: 7.0614014
               created_at: 2000-01-23T04:56:07.000+00:00
-              id: 2
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
               genre_id: 9
-            id: 2
+        - id: 0
+          admin: true
+          email: email
+          gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
+          followerIds:
+          - 6
+          - 6
+          followingIds:
+          - 1
+          - 1
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
             content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+        current_user:
+          id: 0
+          admin: true
+          email: email
+          gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
+          followerIds:
+          - 6
+          - 6
+          followingIds:
+          - 1
+          - 1
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+        unfollowed_user:
+          id: 0
+          admin: true
+          email: email
+          gender: 男性
+          image:
+            url: https://openapi-generator.tech
+          name: name
+          followerIds:
+          - 6
+          - 6
+          followingIds:
+          - 1
+          - 1
+          courses:
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          - id: 5
+            authority: authority
+            travel_mode: travel_mode
+            user:
+              id: 5
+              name: name
+              email: email
+              gender: null
+              image:
+                url: https://openapi-generator.tech
+              admin: true
+            no_duplicate_prefecture_names:
+            - no_duplicate_prefecture_names
+            - no_duplicate_prefecture_names
+            date_spots:
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+            - id: 0
+              city_name: city_name
+              latitude: 6.0274563
+              longitude: 1.4658129
+              prefecture_name: prefecture_name
+              genre_name: genre_name
+              review_total_number: 5
+              average_rate: 5.637377
+              source: manual
+              maps_url: maps_url
+              date_spot:
+                id: 2
+                name: name
+                image:
+                  url: https://openapi-generator.tech
+                created_at: 2000-01-23T04:56:07.000+00:00
+                updated_at: 2000-01-23T04:56:07.000+00:00
+                average_rate: 7.0614014
+                genre_id: 9
+          date_spot_reviews:
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
+          - id: 2
+            rate: 7.0614014
+            content: content
+            date_spot:
+              id: 2
+              name: name
+              image:
+                url: https://openapi-generator.tech
+              created_at: 2000-01-23T04:56:07.000+00:00
+              updated_at: 2000-01-23T04:56:07.000+00:00
+              average_rate: 7.0614014
+              genre_id: 9
       properties:
         users:
           items:
@@ -2938,28 +2740,25 @@ components:
       type: object
     DateSpotSummaryData:
       example:
+        id: 0
         city_name: city_name
-        prefecture_name: prefecture_name
         latitude: 6.0274563
+        longitude: 1.4658129
+        prefecture_name: prefecture_name
+        genre_name: genre_name
         review_total_number: 5
         average_rate: 5.637377
-        link_status: active
-        date_spot:
-          image:
-            url: https://openapi-generator.tech
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          closing_time: 2000-01-23T04:56:07.000+00:00
-          opening_time: 2000-01-23T04:56:07.000+00:00
-          name: name
-          average_rate: 7.0614014
-          created_at: 2000-01-23T04:56:07.000+00:00
-          id: 2
-          genre_id: 9
-        id: 0
         source: manual
         maps_url: maps_url
-        genre_name: genre_name
-        longitude: 1.4658129
+        date_spot:
+          id: 2
+          name: name
+          image:
+            url: https://openapi-generator.tech
+          created_at: 2000-01-23T04:56:07.000+00:00
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          average_rate: 7.0614014
+          genre_id: 9
       properties:
         id:
           type: integer
@@ -2983,16 +2782,10 @@ components:
         source:
           enum:
           - manual
-          - ai
+          - hotpepper
+          - jalan
           type: string
         maps_url:
-          nullable: true
-          type: string
-        link_status:
-          enum:
-          - active
-          - invalid
-          - unchecked
           nullable: true
           type: string
         date_spot:
@@ -3014,12 +2807,6 @@ components:
           type: string
         genre_id:
           type: integer
-        opening_time:
-          format: date-time
-          type: string
-        closing_time:
-          format: date-time
-          type: string
         image:
           $ref: "#/components/schemas/ImageData_1"
         prefecture_id:
@@ -3028,11 +2815,9 @@ components:
           type: string
       required:
       - city_name
-      - closing_time
       - genre_id
       - image
       - name
-      - opening_time
       - prefecture_id
       type: object
     DateSpotFormResponseData:
@@ -3046,49 +2831,46 @@ components:
       type: object
     DateSpotShowResponseData:
       example:
-        review_average_rate: 0.8008282
         date_spot:
+          id: 0
           city_name: city_name
-          prefecture_name: prefecture_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
+        review_average_rate: 0.8008282
         date_spot_reviews:
-        - rate: 1.4658129
+        - id: 6
+          rate: 1.4658129
+          content: content
           user_id: 5
+          date_spot_id: 5
+          user_name: user_name
+          user_gender: user_gender
           user_image:
             url: https://openapi-generator.tech
-          user_name: user_name
-          date_spot_id: 5
-          user_gender: user_gender
-          id: 6
+        - id: 6
+          rate: 1.4658129
           content: content
-        - rate: 1.4658129
           user_id: 5
+          date_spot_id: 5
+          user_name: user_name
+          user_gender: user_gender
           user_image:
             url: https://openapi-generator.tech
-          user_name: user_name
-          date_spot_id: 5
-          user_gender: user_gender
-          id: 6
-          content: content
       properties:
         date_spot:
           $ref: "#/components/schemas/DateSpotSummaryData"
@@ -3123,26 +2905,26 @@ components:
       type: object
     DateSpotReviewResponseData:
       example:
-        review_average_rate: 0.8008282
         date_spot_reviews:
-        - rate: 1.4658129
+        - id: 6
+          rate: 1.4658129
+          content: content
           user_id: 5
+          date_spot_id: 5
+          user_name: user_name
+          user_gender: user_gender
           user_image:
             url: https://openapi-generator.tech
-          user_name: user_name
-          date_spot_id: 5
-          user_gender: user_gender
-          id: 6
+        - id: 6
+          rate: 1.4658129
           content: content
-        - rate: 1.4658129
           user_id: 5
+          date_spot_id: 5
+          user_name: user_name
+          user_gender: user_gender
           user_image:
             url: https://openapi-generator.tech
-          user_name: user_name
-          date_spot_id: 5
-          user_gender: user_gender
-          id: 6
-          content: content
+        review_average_rate: 0.8008282
       properties:
         date_spot_reviews:
           items:
@@ -3157,65 +2939,59 @@ components:
       type: object
     CourseResponseData:
       example:
+        id: 5
+        authority: authority
+        travel_mode: travel_mode
+        user:
+          id: 5
+          name: name
+          email: email
+          gender: null
+          image:
+            url: https://openapi-generator.tech
+          admin: true
         no_duplicate_prefecture_names:
         - no_duplicate_prefecture_names
         - no_duplicate_prefecture_names
         date_spots:
-        - city_name: city_name
-          prefecture_name: prefecture_name
+        - id: 0
+          city_name: city_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
-        - city_name: city_name
-          prefecture_name: prefecture_name
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
+        - id: 0
+          city_name: city_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
-        travel_mode: travel_mode
-        authority: authority
-        id: 5
-        user:
-          image:
-            url: https://openapi-generator.tech
-          gender: null
-          name: name
-          admin: true
-          id: 5
-          email: email
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
       properties:
         id:
           type: integer
@@ -3276,8 +3052,8 @@ components:
       type: object
     AreaData:
       example:
-        name: name
         id: 3
+        name: name
       properties:
         id:
           type: integer
@@ -3289,8 +3065,8 @@ components:
       type: object
     GenreData:
       example:
-        name: name
         id: 2
+        name: name
       properties:
         id:
           type: integer
@@ -3302,8 +3078,8 @@ components:
       type: object
     PrefectureData:
       example:
-        name: name
         id: 4
+        name: name
         area_id: 7
       properties:
         id:
@@ -3324,13 +3100,13 @@ components:
       type: string
     UserData:
       example:
+        id: 5
+        name: name
+        email: email
+        gender: null
         image:
           url: https://openapi-generator.tech
-        gender: null
-        name: name
         admin: true
-        id: 5
-        email: email
       properties:
         id:
           type: integer
@@ -3366,20 +3142,18 @@ components:
       type: object
     DateSpotReviewData:
       example:
+        id: 2
         rate: 7.0614014
+        content: content
         date_spot:
+          id: 2
+          name: name
           image:
             url: https://openapi-generator.tech
-          updated_at: 2000-01-23T04:56:07.000+00:00
-          closing_time: 2000-01-23T04:56:07.000+00:00
-          opening_time: 2000-01-23T04:56:07.000+00:00
-          name: name
-          average_rate: 7.0614014
           created_at: 2000-01-23T04:56:07.000+00:00
-          id: 2
+          updated_at: 2000-01-23T04:56:07.000+00:00
+          average_rate: 7.0614014
           genre_id: 9
-        id: 2
-        content: content
       properties:
         id:
           type: integer
@@ -3398,15 +3172,13 @@ components:
       type: object
     DateSpotData:
       example:
+        id: 2
+        name: name
         image:
           url: https://openapi-generator.tech
-        updated_at: 2000-01-23T04:56:07.000+00:00
-        closing_time: 2000-01-23T04:56:07.000+00:00
-        opening_time: 2000-01-23T04:56:07.000+00:00
-        name: name
-        average_rate: 7.0614014
         created_at: 2000-01-23T04:56:07.000+00:00
-        id: 2
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        average_rate: 7.0614014
         genre_id: 9
       properties:
         id:
@@ -3415,12 +3187,6 @@ components:
           type: string
         image:
           $ref: "#/components/schemas/ImageData"
-        closing_time:
-          format: date-time
-          type: string
-        opening_time:
-          format: date-time
-          type: string
         created_at:
           format: date-time
           type: string
@@ -3434,13 +3200,11 @@ components:
           type: integer
       required:
       - average_rate
-      - closing_time
       - created_at
       - genre_id
       - id
       - image
       - name
-      - opening_time
       - updated_at
       type: object
     ImageData_1:
@@ -3455,50 +3219,44 @@ components:
     _api_v1_genres__id__get_200_response:
       example:
         date_spots:
-        - city_name: city_name
-          prefecture_name: prefecture_name
+        - id: 0
+          city_name: city_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
-        - city_name: city_name
-          prefecture_name: prefecture_name
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
+        - id: 0
+          city_name: city_name
           latitude: 6.0274563
+          longitude: 1.4658129
+          prefecture_name: prefecture_name
+          genre_name: genre_name
           review_total_number: 5
           average_rate: 5.637377
-          link_status: active
-          date_spot:
-            image:
-              url: https://openapi-generator.tech
-            updated_at: 2000-01-23T04:56:07.000+00:00
-            closing_time: 2000-01-23T04:56:07.000+00:00
-            opening_time: 2000-01-23T04:56:07.000+00:00
-            name: name
-            average_rate: 7.0614014
-            created_at: 2000-01-23T04:56:07.000+00:00
-            id: 2
-            genre_id: 9
-          id: 0
           source: manual
           maps_url: maps_url
-          genre_name: genre_name
-          longitude: 1.4658129
+          date_spot:
+            id: 2
+            name: name
+            image:
+              url: https://openapi-generator.tech
+            created_at: 2000-01-23T04:56:07.000+00:00
+            updated_at: 2000-01-23T04:56:07.000+00:00
+            average_rate: 7.0614014
+            genre_id: 9
       properties:
         date_spots:
           items:
@@ -3509,15 +3267,15 @@ components:
       type: object
     DateSpotShowResponseData_date_spot_reviews_inner:
       example:
+        id: 6
         rate: 1.4658129
+        content: content
         user_id: 5
+        date_spot_id: 5
+        user_name: user_name
+        user_gender: user_gender
         user_image:
           url: https://openapi-generator.tech
-        user_name: user_name
-        date_spot_id: 5
-        user_gender: user_gender
-        id: 6
-        content: content
       properties:
         id:
           type: integer

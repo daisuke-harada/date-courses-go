@@ -1,14 +1,11 @@
 package openapi
 
 import (
-	"time"
-
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/samber/lo"
 )
 
-// NewDateSpotShowResponse は DateSpot とレビュー一覧から DateSpotShowResponse を構築します。
 func NewDateSpotShowResponse(dateSpot *model.DateSpot, reviews []*model.DateSpotReview) DateSpotShowResponseData {
 	return DateSpotShowResponseData{
 		DateSpot:          newDateSpotSummaryData(dateSpot),
@@ -83,7 +80,6 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryData {
 	}
 
 	source := DateSpotSummaryDataSource(ds.Source)
-	linkStatus := DateSpotSummaryDataLinkStatus(ds.LinkStatus)
 
 	return DateSpotSummaryData{
 		Id:                int(ds.ID),
@@ -96,7 +92,6 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryData {
 		ReviewTotalNumber: ds.ReviewTotalNumber,
 		Source:            &source,
 		MapsUrl:           ds.MapsURL,
-		LinkStatus:        &linkStatus,
 		DateSpot:          newDateSpotData(ds),
 	}
 }
@@ -107,14 +102,6 @@ func newDateSpotData(ds *model.DateSpot) DateSpotData {
 		genreId = *ds.GenreID
 	}
 
-	var openingTime, closingTime time.Time
-	if ds.OpeningTime != nil {
-		openingTime = *ds.OpeningTime
-	}
-	if ds.ClosingTime != nil {
-		closingTime = *ds.ClosingTime
-	}
-
 	return DateSpotData{
 		Id:          int(ds.ID),
 		Name:        ds.Name,
@@ -123,7 +110,5 @@ func newDateSpotData(ds *model.DateSpot) DateSpotData {
 		AverageRate: float32(ds.AverageRate),
 		CreatedAt:   ds.CreatedAt,
 		UpdatedAt:   ds.UpdatedAt,
-		OpeningTime: openingTime,
-		ClosingTime: closingTime,
 	}
 }

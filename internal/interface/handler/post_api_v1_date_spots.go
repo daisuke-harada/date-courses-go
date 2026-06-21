@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
@@ -18,8 +17,6 @@ type PostApiV1DateSpotsHandler struct {
 func (h *PostApiV1DateSpotsHandler) PostApiV1DateSpots(ctx echo.Context) error {
 	genreIDStr := ctx.FormValue("genre_id")
 	prefectureIDStr := ctx.FormValue("prefecture_id")
-	openingTimeStr := ctx.FormValue("opening_time")
-	closingTimeStr := ctx.FormValue("closing_time")
 
 	genreID := 0
 	if genreIDStr != "" {
@@ -39,24 +36,6 @@ func (h *PostApiV1DateSpotsHandler) PostApiV1DateSpots(ctx echo.Context) error {
 		prefectureID = id
 	}
 
-	var openingTime *time.Time
-	if openingTimeStr != "" {
-		parsedTime, err := time.Parse(time.RFC3339, openingTimeStr)
-		if err != nil {
-			return apperror.UnprocessableEntity("opening_time の形式が正しくありません（RFC3339 形式で指定してください）")
-		}
-		openingTime = &parsedTime
-	}
-
-	var closingTime *time.Time
-	if closingTimeStr != "" {
-		parsedTime, err := time.Parse(time.RFC3339, closingTimeStr)
-		if err != nil {
-			return apperror.UnprocessableEntity("closing_time の形式が正しくありません（RFC3339 形式で指定してください）")
-		}
-		closingTime = &parsedTime
-	}
-
 	var imagePtr *string
 	if image := ctx.FormValue("image"); image != "" {
 		imagePtr = &image
@@ -67,8 +46,6 @@ func (h *PostApiV1DateSpotsHandler) PostApiV1DateSpots(ctx echo.Context) error {
 		GenreID:      genreID,
 		PrefectureID: prefectureID,
 		CityName:     ctx.FormValue("city_name"),
-		OpeningTime:  openingTime,
-		ClosingTime:  closingTime,
 		Image:        imagePtr,
 	}
 
