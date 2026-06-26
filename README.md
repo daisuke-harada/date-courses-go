@@ -7,7 +7,7 @@
 
 ## 🎯 見どころ
 
-- **実在スポットの自動収集** — デートスポットを **HotPepper グルメ API / じゃらんnet 観光スポット API** から自動取得するバッチを実装（後述）。
+- **実在スポットの自動収集** — デートスポットを **HotPepper グルメ API** から自動取得するバッチを実装。全国47都道府県 × 全12ジャンルを実データで投入できます（後述）。
 - **フルサーバレス構成** — AWS Lambda(arm64) + API Gateway HTTP API + TiDB Cloud。常時稼働サーバ不要でコストを最小化。
 - **OpenAPI First / 型安全** — OpenAPI 定義から型・サーバインターフェース・ハンドラスタブを自動生成。仕様とコードのズレを防ぐ。
 - **クリーンアーキテクチャ** — domain / usecase / interface / infrastructure の4層で責務分離。repository は interface＋mockでテスト容易。
@@ -18,7 +18,7 @@
 ## 目次
 
 - [アーキテクチャ](#アーキテクチャ)
-- [実在スポットの自動収集（HotPepper / じゃらん 連携）](#実在スポットの自動収集hotpepper--じゃらん-連携)
+- [実在スポットの自動収集（HotPepper 連携）](#実在スポットの自動収集hotpepper-連携)
 - [技術スタック](#技術スタック)
 - [ディレクトリ構成（クリーンアーキテクチャ）](#ディレクトリ構成クリーンアーキテクチャ)
 - [CI/CD・IaC（SAM）](#cicdiacsam)
@@ -40,7 +40,6 @@ flowchart LR
 
     subgraph Batch["スポット自動収集バッチ (cmd/batch)"]
         B["BatchCreateDateSpots"] --> HP["HotPepper グルメ API"]
-        B --> JL["じゃらん 観光スポット API"]
         B --> WM["Wikipedia pageimages<br/>(画像フォールバック)"]
         B --> TiDB
     end
@@ -51,21 +50,18 @@ DB は TiDB Cloud（外部エンドポイント）で VPC 不要。シークレ�
 
 ---
 
-## 実在スポットの自動収集（HotPepper / じゃらん 連携）
+## 実在スポットの自動収集（HotPepper 連携）
 
-デートスポットは **AI生成の架空データや高価な Google Places API（1バッチ ~$230）を使わず**、実在スポットを**無償の外部 API から自動収集**します。データソースはジャンルに応じて使い分けます（いずれもリクルート Web サービス。`RECRUIT_API_KEY` を共用）。
+デートスポットは **AI生成の架空データや高価な Google Places API（1バッチ ~$230）を使わず**、実在スポットを **HotPepper グルメ API（無償・リクルート Web サービス）** から自動収集します。HotPepper は地域名（`keyword`）とジャンルコードで検索し、アプリの12ジャンルそれぞれに別の HotPepper ジャンルコードを割り当てることで、ジャンルごとに異なる実在店舗が集まるようにしています。
 
-| データソース | 用途（ジャンル） | 対象ジャンルID | 形式 |
-|---|---|---|---|
-| **HotPepper グルメ API** | 飲食系（カフェ・寿司・居酒屋・焼肉 等） | 2, 3, 7, 8, 9 | JSON |
-| **じゃらんnet 観光スポット API** | 観光・レジャー系（ショッピング・アウトドア・テーマパーク・公園 等） | 1, 4, 5, 6, 10, 11, 12 | XML |
+> ✅ 実行実績: **全国47都道府県 × 全12ジャンルで約2,400件**を投入（画像・緯度経度ともに100%充足）。
 
 ### 設計上の工夫（面接で語れるポイント）
 
-- **ジャンルでデータソースを自動振り分け** — `SpotFetcher` がジャンルIDを見て HotPepper / じゃらん を選択（`internal/infrastructure/external/spot_fetcher.go`）。
-- **画像フォールバック** — 外部APIに画像が無いスポットは **Wikipedia pageimages API（無償・キー不要）** で補完。
+- **地域 × ジャンルで網羅取得** — `keyword`=都道府県名 ＋ ジャンルコードで、47都道府県 × 12ジャンルを総当たりで収集（`internal/infrastructure/external/`）。
+- **画像フォールバック** — APIレスポンスに画像が無いスポットは **Wikipedia pageimages API（無償・キー不要）** で補完。
 - **重複登録の防止** — スポット名を `NormalizeName`（NFKC正規化・空白除去・小文字化）した `normalized_name` を保持し、**都道府県 × 正規化名**でユニーク判定。
-- **冪等なバッチ設計** — 都道府県×ジャンルの既存数がしきい値以上ならスキップ。再実行しても重複・無駄な書き込みが起きない。
+- **冪等なバッチ設計** — 都道府県×ジャンルの既存数がしきい値以上ならスキップ。再実行しても重複・無駄な書き込みが起きない（何度走らせても安全）。
 - **持たない設計** — 営業時間など「機械的に自動更新できない情報」は、陳腐化を避けるためあえてスキーマに持たせない。
 
 ### バッチ処理フロー（`internal/usecase/batch_create_date_spots.go`）
@@ -79,7 +75,6 @@ DB は TiDB Cloud（外部エンドポイント）で VPC 不要。シークレ�
 | 値 | 意味 | `maps_url` の中身 |
 |---|---|---|
 | `hotpepper` | HotPepper 由来 | HotPepper 店舗ページ URL |
-| `jalan` | じゃらん 由来 | じゃらん スポットページ URL |
 | `manual` | 手動登録 | Google Maps 検索 URL（`BuildMapsURL` フォールバック） |
 
 ---
@@ -91,7 +86,7 @@ DB は TiDB Cloud（外部エンドポイント）で VPC 不要。シークレ�
 | 言語 / FW | Go / Echo v4 |
 | DB / ORM | TiDB Cloud（本番）/ MySQL（ローカル）/ GORM |
 | API設計 | OpenAPI（`oapi-codegen` で型・サーバ生成）/ JWT 認証 |
-| 外部API | HotPepper グルメ / じゃらんnet / Wikipedia pageimages（＋Gemini・Google Places・Nominatim クライアント） |
+| 外部API | HotPepper グルメ / Wikipedia pageimages（＋Gemini・Google Places・Nominatim クライアント） |
 | インフラ / IaC | AWS Lambda(arm64) / API Gateway HTTP API / SAM / SSM Parameter Store |
 | CI/CD | GitHub Actions（build / lint / test / SAM deploy・OIDC） |
 | テスト | `go test` / `go.uber.org/mock`（TDD） |

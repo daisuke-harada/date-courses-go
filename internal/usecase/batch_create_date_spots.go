@@ -122,7 +122,6 @@ func (i *BatchCreateDateSpotsInteractor) buildDateSpot(
 	input BatchCreateDateSpotsInput,
 	normalized string,
 ) *model.DateSpot {
-	var source model.DateSpotSource
 	var mapsURL *string
 
 	if c.PageURL != "" {
@@ -132,13 +131,8 @@ func (i *BatchCreateDateSpotsInteractor) buildDateSpot(
 		mapsURL = &u
 	}
 
-	// ジャンルIDによってソースを判定（hotpepper: 2,3,7,8,9 / jalan: それ以外）
-	switch input.GenreID {
-	case 2, 3, 7, 8, 9:
-		source = model.DateSpotSourceHotPepper
-	default:
-		source = model.DateSpotSourceJalan
-	}
+	// スポットはすべて HotPepper グルメ API から取得する
+	source := model.DateSpotSourceHotPepper
 
 	spot := &model.DateSpot{
 		Name:           c.Name,
