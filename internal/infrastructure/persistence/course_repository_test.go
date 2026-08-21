@@ -2,6 +2,7 @@ package persistence_test
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
@@ -13,9 +14,9 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// newDryRunDB は実際には接続しない GORM のセッションを返します。
+// newDryRunDB は実際には接続しない GORM のセッションと、発行された SQL の記録先を返します。
 // DryRun では SQL の組み立てだけが行われるため、発行されるクエリを検証できます。
-func newDryRunDB(t *testing.T) (*gorm.DB, *string) {
+func newDryRunDB(t *testing.T) (*gorm.DB, *[]string) {
 	t.Helper()
 
 	db, err := gorm.Open(mysql.New(mysql.Config{
@@ -29,13 +30,19 @@ func newDryRunDB(t *testing.T) (*gorm.DB, *string) {
 	})
 	require.NoError(t, err)
 
-	var captured string
-	err = db.Callback().Query().After("gorm:query").Register("test:capture_sql", func(d *gorm.DB) {
-		captured = d.Statement.SQL.String()
-	})
-	require.NoError(t, err)
+	captured := []string{}
+	capture := func(d *gorm.DB) {
+		captured = append(captured, d.Statement.SQL.String())
+	}
+	require.NoError(t, db.Callback().Query().After("gorm:query").Register("test:capture_query", capture))
+	require.NoError(t, db.Callback().Delete().After("gorm:delete").Register("test:capture_delete", capture))
 
 	return db, &captured
+}
+
+// issuedSQL は記録された SQL をまとめて1つの文字列にします。
+func issuedSQL(captured *[]string) string {
+	return strings.Join(*captured, "\n")
 }
 
 func TestCourseRepository_Search(t *testing.T) {
@@ -43,24 +50,24 @@ func TestCourseRepository_Search(t *testing.T) {
 
 	// 一覧には公開コースだけを載せる。作成者本人の非公開コースも出さない
 	t.Run("filters_to_public_courses_only", func(t *testing.T) {
-		db, sql := newDryRunDB(t)
+		db, captured := newDryRunDB(t)
 		repo := persistence.NewCourseRepository(db)
 
 		_, _ = repo.Search(ctx, repository.CourseSearchParams{})
 
-		assert.Contains(t, *sql, "WHERE courses.authority = ?")
-		assert.NotContains(t, *sql, "user_id")
+		assert.Contains(t, issuedSQL(captured), "WHERE courses.authority = ?")
+		assert.NotContains(t, issuedSQL(captured), "user_id")
 	})
 
 	t.Run("keeps_public_filter_with_prefecture_id", func(t *testing.T) {
-		db, sql := newDryRunDB(t)
+		db, captured := newDryRunDB(t)
 		repo := persistence.NewCourseRepository(db)
 		prefectureID := 13
 
 		_, _ = repo.Search(ctx, repository.CourseSearchParams{PrefectureID: &prefectureID})
 
-		assert.Contains(t, *sql, "courses.authority = ?")
-		assert.Contains(t, *sql, "date_spots.prefecture_id = ?")
+		assert.Contains(t, issuedSQL(captured), "courses.authority = ?")
+		assert.Contains(t, issuedSQL(captured), "date_spots.prefecture_id = ?")
 	})
 }
 
@@ -69,12 +76,12 @@ func TestCourseRepository_FindByID(t *testing.T) {
 
 	// 公開 or 自分の非公開。OR は括弧で囲まれていないと AND と結合して条件が壊れる
 	t.Run("filters_by_visibility", func(t *testing.T) {
-		db, sql := newDryRunDB(t)
+		db, captured := newDryRunDB(t)
 		repo := persistence.NewCourseRepository(db)
 
 		_, _ = repo.FindByID(ctx, 1, 7)
 
-		assert.Contains(t, *sql, "(courses.authority = ? OR courses.user_id = ?)")
+		assert.Contains(t, issuedSQL(captured), "(courses.authority = ? OR courses.user_id = ?)")
 	})
 }
 
@@ -83,23 +90,23 @@ func TestCourseRepository_FindByUserID(t *testing.T) {
 
 	// 他人から見えるマイページ。公開コースだけを返す
 	t.Run("public_only_filters_by_authority", func(t *testing.T) {
-		db, sql := newDryRunDB(t)
+		db, captured := newDryRunDB(t)
 		repo := persistence.NewCourseRepository(db)
 
 		_, _ = repo.FindPublicByUserID(ctx, 1)
 
-		assert.Contains(t, *sql, "courses.user_id = ?")
-		assert.Contains(t, *sql, "courses.authority = ?")
+		assert.Contains(t, issuedSQL(captured), "courses.user_id = ?")
+		assert.Contains(t, issuedSQL(captured), "courses.authority = ?")
 	})
 
 	// 本人のマイページ。非公開コースも含めるので authority で絞らない
 	t.Run("all_does_not_filter_by_authority", func(t *testing.T) {
-		db, sql := newDryRunDB(t)
+		db, captured := newDryRunDB(t)
 		repo := persistence.NewCourseRepository(db)
 
 		_, _ = repo.FindAllByUserID(ctx, 1)
 
-		assert.Contains(t, *sql, "courses.user_id = ?")
-		assert.NotContains(t, *sql, "authority")
+		assert.Contains(t, issuedSQL(captured), "courses.user_id = ?")
+		assert.NotContains(t, issuedSQL(captured), "authority")
 	})
 }
