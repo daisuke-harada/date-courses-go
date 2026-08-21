@@ -10,13 +10,10 @@ components:
     CourseFormRequestData:
       type: object
       required:
-        - user_id
         - date_spots
         - travel_mode
         - authority
       properties:
-        user_id:
-          type: integer
         date_spots:
           type: array
           items:
