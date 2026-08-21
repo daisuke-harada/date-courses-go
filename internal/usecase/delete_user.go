@@ -14,6 +14,8 @@ type DeleteUserInputPort interface {
 
 type DeleteUserInput struct {
 	ID uint
+	// OperatorID は削除を実行するユーザー（トークンの currentUser）の ID です。
+	OperatorID uint
 }
 
 type DeleteUserInteractor struct {
@@ -30,6 +32,11 @@ func (i *DeleteUserInteractor) Execute(ctx context.Context, input DeleteUserInpu
 	user, err := i.UserRepository.FindByID(ctx, input.ID)
 	if err != nil {
 		return apperror.NotFound()
+	}
+
+	// 退会できるのは本人だけ
+	if user.ID != input.OperatorID {
+		return apperror.Forbidden("他のユーザーのアカウントは削除できません")
 	}
 
 	if err := i.UserRepository.Delete(ctx, user.ID); err != nil {

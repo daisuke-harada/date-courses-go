@@ -7,7 +7,9 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/labstack/echo/v4"
@@ -23,8 +25,27 @@ func TestDeleteApiV1UsersIdHandler(t *testing.T) {
 
 		mockPort := usecasemock.NewMockDeleteUserInputPort(ctrl)
 		mockPort.EXPECT().
-			Execute(gomock.Any(), usecase.DeleteUserInput{ID: 1}).
+			Execute(gomock.Any(), usecase.DeleteUserInput{ID: 1, OperatorID: 1}).
 			Return(nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/1", nil)
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
+
+		h := handler.DeleteApiV1UsersIdHandler{InputPort: mockPort}
+		err := h.DeleteApiV1UsersId(ctx, 1)
+
+		require.NoError(t, err)
+		assert.Equal(t, http.StatusNoContent, rec.Code)
+	})
+
+	t.Run("error_unauthorized_without_current_user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockPort := usecasemock.NewMockDeleteUserInputPort(ctrl)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/1", nil)
@@ -34,8 +55,10 @@ func TestDeleteApiV1UsersIdHandler(t *testing.T) {
 		h := handler.DeleteApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1UsersId(ctx, 1)
 
-		require.NoError(t, err)
-		assert.Equal(t, http.StatusNoContent, rec.Code)
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusUnauthorized, statusCode)
 	})
 
 	t.Run("error_user_not_found", func(t *testing.T) {
@@ -51,6 +74,7 @@ func TestDeleteApiV1UsersIdHandler(t *testing.T) {
 		req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/999", nil)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 
 		h := handler.DeleteApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1UsersId(ctx, 999)
@@ -74,6 +98,7 @@ func TestDeleteApiV1UsersIdHandler(t *testing.T) {
 		req := httptest.NewRequest(http.MethodDelete, "/api/v1/users/1", nil)
 		rec := httptest.NewRecorder()
 		ctx := e.NewContext(req, rec)
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 
 		h := handler.DeleteApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1UsersId(ctx, 1)

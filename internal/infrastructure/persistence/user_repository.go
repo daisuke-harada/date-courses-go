@@ -116,12 +116,39 @@ func (r *userRepository) Update(ctx context.Context, user *model.User) error {
 	return nil
 }
 
-// Delete はユーザーを削除します。
+// Delete は指定IDのユーザーを、紐づく子レコードごと削除します。
+// users を参照する外部キーがあるため、コース・レビュー・フォロー関係を
+// 先に消さないとユーザー本体を削除できない。
+// 途中で失敗して一部だけが消えた状態にならないよう、トランザクションにまとめる。
 func (r *userRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&model.User{}, id).Error; err != nil {
+	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		return deleteUser(tx, id)
+	})
+	if err != nil {
 		slog.ErrorContext(ctx, "userRepository.Delete failed", "err", err)
 		return err
 	}
 	slog.InfoContext(ctx, "userRepository.Delete succeeded", "user_id", id)
 	return nil
+}
+
+// deleteUser は依存関係の深い順に削除します。
+// 呼び出し側がトランザクションを張る前提のため、db にはその tx を渡します。
+func deleteUser(db *gorm.DB, id uint) error {
+	// during_spots はコース経由の孫レコード。コースより先に消す
+	if err := db.Where("course_id IN (?)", db.Raw("SELECT id FROM courses WHERE user_id = ?", id)).
+		Delete(&model.DuringSpot{}).Error; err != nil {
+		return err
+	}
+	if err := db.Where("user_id = ?", id).Delete(&model.Course{}).Error; err != nil {
+		return err
+	}
+	if err := db.Where("user_id = ?", id).Delete(&model.DateSpotReview{}).Error; err != nil {
+		return err
+	}
+	// フォローしている側・されている側の両方を消す
+	if err := db.Where("user_id = ? OR follow_id = ?", id, id).Delete(&model.Relationship{}).Error; err != nil {
+		return err
+	}
+	return db.Delete(&model.User{}, id).Error
 }
