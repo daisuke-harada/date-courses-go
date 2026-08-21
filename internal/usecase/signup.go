@@ -84,22 +84,20 @@ type SignupOutput struct {
 type SignupInteractor struct {
 	UserRepository repository.UserRepository
 	AuthService    service.AuthService
-	JWTSecretKey   string
+	JWTSecretKey   JWTSecretKey
 }
 
+// jwtSecretKey は可変長引数ではなく JWTSecretKey 型で受け取る。
+// 可変長引数だと DI コンテナ（dig）が値を渡せず、常に空文字になってしまう。
 func NewSignupUsecase(
 	userRepository repository.UserRepository,
 	authService service.AuthService,
-	jwtSecret ...string,
+	jwtSecretKey JWTSecretKey,
 ) SignupInputPort {
-	secret := ""
-	if len(jwtSecret) > 0 {
-		secret = jwtSecret[0]
-	}
 	return &SignupInteractor{
 		UserRepository: userRepository,
 		AuthService:    authService,
-		JWTSecretKey:   secret,
+		JWTSecretKey:   jwtSecretKey,
 	}
 }
 
@@ -129,17 +127,13 @@ func (i *SignupInteractor) Execute(ctx context.Context, input SignupInput) (*Sig
 		return nil, apperror.InternalServerError(err)
 	}
 
-	out := &SignupOutput{User: user}
-	// If a JWT secret is configured, issue a token so the user is logged in after signup
-	if i.JWTSecretKey != "" {
-		token, err := jwtpkg.Encode(user.ID, i.JWTSecretKey)
-		if err != nil {
-			return nil, apperror.InternalServerError(err)
-		}
-		out.Token = token
+	// 登録直後にそのままログイン状態にできるよう、ログインと同じくトークンを発行する
+	token, err := jwtpkg.Encode(user.ID, string(i.JWTSecretKey))
+	if err != nil {
+		return nil, apperror.InternalServerError(err)
 	}
 
-	return out, nil
+	return &SignupOutput{User: user, Token: token}, nil
 }
 
 // NewSignupInput builds SignupInput from raw string form values.
