@@ -9,6 +9,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	repositorymock "github.com/daisuke-harada/date-courses-go/internal/domain/repository/mock"
 	servicemock "github.com/daisuke-harada/date-courses-go/internal/domain/service/mock"
+	jwtpkg "github.com/daisuke-harada/date-courses-go/internal/pkg/jwt"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -66,12 +67,19 @@ func TestSignupInteractor_Execute(t *testing.T) {
 		authService := servicemock.NewMockAuthService(ctrl)
 		authService.EXPECT().HashPassword("password123").Return("hashed_password", nil)
 
-		interactor := usecase.NewSignupUsecase(userRepo, authService)
+		interactor := usecase.NewSignupUsecase(userRepo, authService, "test-secret")
 		output, err := interactor.Execute(ctx, validSignupInput())
 
 		require.NoError(t, err)
 		require.NotNil(t, output)
 		assert.Equal(t, uint(5), output.User.ID)
+
+		// 登録直後にログイン状態にできるよう、必ずトークンを発行する。
+		// 発行されないと、フロントはログイン済みに見えて何も操作できない状態になる。
+		require.NotEmpty(t, output.Token)
+		userID, err := jwtpkg.Decode(output.Token, "test-secret")
+		require.NoError(t, err)
+		assert.Equal(t, uint(5), userID)
 	})
 
 	t.Run("error_validation_invalid_gender", func(t *testing.T) {
@@ -86,7 +94,7 @@ func TestSignupInteractor_Execute(t *testing.T) {
 		input := validSignupInput()
 		input.Gender = "その他" // invalid
 
-		interactor := usecase.NewSignupUsecase(userRepo, authService)
+		interactor := usecase.NewSignupUsecase(userRepo, authService, "test-secret")
 		output, err := interactor.Execute(ctx, input)
 
 		assert.Error(t, err)
@@ -107,7 +115,7 @@ func TestSignupInteractor_Execute(t *testing.T) {
 
 		authService := servicemock.NewMockAuthService(ctrl)
 
-		interactor := usecase.NewSignupUsecase(userRepo, authService)
+		interactor := usecase.NewSignupUsecase(userRepo, authService, "test-secret")
 		output, err := interactor.Execute(ctx, validSignupInput())
 
 		assert.Error(t, err)
@@ -130,7 +138,7 @@ func TestSignupInteractor_Execute(t *testing.T) {
 		authService := servicemock.NewMockAuthService(ctrl)
 		authService.EXPECT().HashPassword("password123").Return("hashed_password", nil)
 
-		interactor := usecase.NewSignupUsecase(userRepo, authService)
+		interactor := usecase.NewSignupUsecase(userRepo, authService, "test-secret")
 		output, err := interactor.Execute(ctx, validSignupInput())
 
 		assert.Error(t, err)
