@@ -10,6 +10,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/stretchr/testify/assert"
@@ -35,7 +36,7 @@ func TestDeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler(t *testing.T) {
 
 		mockPort := usecasemock.NewMockDeleteRelationshipInputPort(ctrl)
 		mockPort.EXPECT().
-			Execute(gomock.Any(), usecase.DeleteRelationshipInput{UserID: 1, FollowID: 2}).
+			Execute(gomock.Any(), usecase.DeleteRelationshipInput{UserID: 1, FollowID: 2, OperatorID: 1}).
 			Return(&usecase.DeleteRelationshipOutput{
 				Users:          []*model.UserWithRelations{currentUwr, unfollowedUwr},
 				CurrentUser:    currentUwr,
@@ -44,6 +45,7 @@ func TestDeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler(t *testing.T) {
 
 		ctx, rec := setupFormRequest(http.MethodDelete, "/api/v1/relationships/1/2", url.Values{})
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1RelationshipsCurrentUserIdOtherUserId(ctx, 1, 2)
 
@@ -68,6 +70,7 @@ func TestDeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler(t *testing.T) {
 
 		ctx, _ := setupFormRequest(http.MethodDelete, "/api/v1/relationships/1/2", url.Values{})
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1RelationshipsCurrentUserIdOtherUserId(ctx, 1, 2)
 

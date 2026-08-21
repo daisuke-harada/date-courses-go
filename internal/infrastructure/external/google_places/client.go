@@ -76,11 +76,11 @@ func (c *Client) FetchPlaceDetail(ctx context.Context, spotName, cityName string
 
 func (c *Client) findPlaceID(ctx context.Context, query string) (string, error) {
 	params := url.Values{
-		"input":          {query},
-		"inputtype":      {"textquery"},
-		"fields":         {"place_id"},
-		"language":       {"ja"},
-		"key":            {c.apiKey},
+		"input":     {query},
+		"inputtype": {"textquery"},
+		"fields":    {"place_id"},
+		"language":  {"ja"},
+		"key":       {c.apiKey},
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, searchURL+"?"+params.Encode(), nil)

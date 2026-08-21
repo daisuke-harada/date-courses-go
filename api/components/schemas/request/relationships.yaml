@@ -1,12 +1,11 @@
 components:
   schemas:
+    # フォローする側はリクエストではなく JWT の currentUser から決まるため
+    # current_user_id は受け取らない
     FollowReauestData:
       type: object
       required:
-        - current_user_id
         - followed_user_id
       properties:
-        current_user_id:
-          type: integer
         followed_user_id:
           type: integer

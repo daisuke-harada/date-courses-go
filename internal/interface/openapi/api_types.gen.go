@@ -213,7 +213,6 @@ type ErrorResponse struct {
 
 // FollowReauestData defines model for FollowReauestData.
 type FollowReauestData struct {
-	CurrentUserId  int `json:"current_user_id"`
 	FollowedUserId int `json:"followed_user_id"`
 }
 

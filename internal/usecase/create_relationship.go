@@ -30,16 +30,14 @@ func (i *CreateRelationshipInput) Validate() error {
 	return nil
 }
 
-func NewCreateRelationshipInputFromStrings(currentUserIDStr, followedUserIDStr string) (CreateRelationshipInput, error) {
-	cur, err := strconv.Atoi(currentUserIDStr)
-	if err != nil {
-		return CreateRelationshipInput{}, apperror.BadRequest("current_user_id は数値で指定してください")
-	}
+// NewCreateRelationshipInputFromStrings はフォーム値から Input を組み立てます。
+// フォローする側はリクエストではなくトークンから決めるため、currentUserID は呼び出し側が渡します。
+func NewCreateRelationshipInputFromStrings(currentUserID uint, followedUserIDStr string) (CreateRelationshipInput, error) {
 	fol, err := strconv.Atoi(followedUserIDStr)
 	if err != nil {
 		return CreateRelationshipInput{}, apperror.BadRequest("followed_user_id は数値で指定してください")
 	}
-	return CreateRelationshipInput{CurrentUserID: uint(cur), FollowedUserID: uint(fol)}, nil
+	return CreateRelationshipInput{CurrentUserID: currentUserID, FollowedUserID: uint(fol)}, nil
 }
 
 type CreateRelationshipOutput struct {
