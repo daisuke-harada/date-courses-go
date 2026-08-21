@@ -16,7 +16,6 @@ func NewSignupResponse(user *model.User, token string) (SignUpResponseData, erro
 		User: UserResponseData{
 			Id:              int(user.ID),
 			Admin:           user.Admin,
-			Email:           user.Email,
 			Gender:          gender,
 			Image:           ImageData{Url: user.Image},
 			Name:            user.Name,

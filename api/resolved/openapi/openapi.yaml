@@ -817,7 +817,6 @@ components:
         user:
           id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -1015,7 +1014,6 @@ components:
       example:
         id: 0
         admin: true
-        email: email
         gender: 男性
         image:
           url: https://openapi-generator.tech
@@ -1163,8 +1161,6 @@ components:
           type: integer
         admin:
           type: boolean
-        email:
-          type: string
         gender:
           $ref: "#/components/schemas/Gender"
         image:
@@ -1191,7 +1187,6 @@ components:
       - admin
       - courses
       - date_spot_reviews
-      - email
       - followerIds
       - followingIds
       - gender
@@ -1231,7 +1226,6 @@ components:
         users:
         - id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -1376,7 +1370,6 @@ components:
               genre_id: 9
         - id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -1545,7 +1538,6 @@ components:
         users:
         - id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -1690,7 +1682,6 @@ components:
               genre_id: 9
         - id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -1836,7 +1827,6 @@ components:
         current_user:
           id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -1982,7 +1972,6 @@ components:
         followed_user:
           id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -2144,7 +2133,6 @@ components:
         users:
         - id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -2289,7 +2277,6 @@ components:
               genre_id: 9
         - id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -2435,7 +2422,6 @@ components:
         current_user:
           id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -2581,7 +2567,6 @@ components:
         unfollowed_user:
           id: 0
           admin: true
-          email: email
           gender: 男性
           image:
             url: https://openapi-generator.tech
@@ -3117,7 +3102,6 @@ components:
           type: boolean
       required:
       - admin
-      - email
       - gender
       - id
       - image

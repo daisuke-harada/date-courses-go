@@ -89,13 +89,36 @@ func (r *dateSpotRepository) Update(ctx context.Context, id uint, dateSpot *mode
 	return nil
 }
 
+// Delete は指定IDのデートスポットを、紐づく子レコードごと削除します。
+// レビューとコースの中間テーブルが date_spots を参照しているため、
+// 先に消さないとスポット本体を削除できない。
+// 一部だけ消えた状態にならないよう、トランザクションにまとめる。
+//
+// なお during_spots を消すと、そのスポットを含んでいた他ユーザーのコースからは
+// スポットが1件減る。実在しなくなったスポットを管理者が消す運用のため、
+// コース側を残したうえで中間レコードだけを取り除く方針とする。
 func (r *dateSpotRepository) Delete(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&model.DateSpot{}, id).Error; err != nil {
+	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		return deleteDateSpot(tx, id)
+	})
+	if err != nil {
 		slog.ErrorContext(ctx, "dateSpotRepository.Delete failed", "err", err, "id", id)
 		return err
 	}
 	slog.InfoContext(ctx, "dateSpotRepository.Delete succeeded", "id", id)
 	return nil
+}
+
+// deleteDateSpot は依存関係の深い順に削除します。
+// 呼び出し側がトランザクションを張る前提のため、db にはその tx を渡します。
+func deleteDateSpot(db *gorm.DB, id uint) error {
+	if err := db.Where("date_spot_id = ?", id).Delete(&model.DateSpotReview{}).Error; err != nil {
+		return err
+	}
+	if err := db.Where("date_spot_id = ?", id).Delete(&model.DuringSpot{}).Error; err != nil {
+		return err
+	}
+	return db.Delete(&model.DateSpot{}, id).Error
 }
 
 func (r *dateSpotRepository) ExistsByNormalizedNameAndPrefecture(ctx context.Context, normalizedName string, prefectureID int) (bool, error) {

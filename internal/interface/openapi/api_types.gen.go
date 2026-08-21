@@ -304,12 +304,12 @@ type UnFollowResponseData struct {
 
 // UserData defines model for UserData.
 type UserData struct {
-	Admin  bool                `json:"admin"`
-	Email  openapi_types.Email `json:"email"`
-	Gender Gender              `json:"gender"`
-	Id     int                 `json:"id"`
-	Image  ImageData           `json:"image"`
-	Name   string              `json:"name"`
+	Admin  bool                 `json:"admin"`
+	Email  *openapi_types.Email `json:"email,omitempty"`
+	Gender Gender               `json:"gender"`
+	Id     int                  `json:"id"`
+	Image  ImageData            `json:"image"`
+	Name   string               `json:"name"`
 }
 
 // UserFormRequestData defines model for UserFormRequestData.
@@ -328,7 +328,6 @@ type UserResponseData struct {
 	Admin           bool                 `json:"admin"`
 	Courses         []CourseResponseData `json:"courses"`
 	DateSpotReviews []DateSpotReviewData `json:"date_spot_reviews"`
-	Email           string               `json:"email"`
 	FollowerIds     []int                `json:"followerIds"`
 	FollowingIds    []int                `json:"followingIds"`
 	Gender          Gender               `json:"gender"`
