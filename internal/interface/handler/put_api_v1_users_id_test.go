@@ -9,7 +9,9 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/labstack/echo/v4"
@@ -45,11 +47,62 @@ func TestPutApiV1UsersIdHandler(t *testing.T) {
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("1")
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
+
 		h := handler.PutApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.PutApiV1UsersId(ctx, 1)
 
 		require.NoError(t, err)
 		assert.Equal(t, http.StatusOK, rec.Code)
+	})
+
+	t.Run("error_unauthorized_without_current_user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockPort := usecasemock.NewMockUpdateUserInputPort(ctrl)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPut, "/api/v1/users/1", strings.NewReader(validUpdateUserForm().Encode()))
+		req.Header.Set(echo.HeaderContentType, "application/x-www-form-urlencoded")
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("id")
+		ctx.SetParamValues("1")
+
+		h := handler.PutApiV1UsersIdHandler{InputPort: mockPort}
+		err := h.PutApiV1UsersId(ctx, 1)
+
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusUnauthorized, statusCode)
+	})
+
+	// currentUser の ID が OperatorID として usecase に渡る
+	t.Run("passes_current_user_as_operator", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		user := dummyUserWithRelations(1, "テストユーザー")
+		mockPort := usecasemock.NewMockUpdateUserInputPort(ctrl)
+		mockPort.EXPECT().
+			Execute(gomock.Any(), gomock.Cond(func(in usecase.UpdateUserInput) bool {
+				return in.OperatorID == 7
+			})).
+			Return(&usecase.UpdateUserOutput{UserWithRelations: user}, nil)
+
+		e := echo.New()
+		req := httptest.NewRequest(http.MethodPut, "/api/v1/users/1", strings.NewReader(validUpdateUserForm().Encode()))
+		req.Header.Set(echo.HeaderContentType, "application/x-www-form-urlencoded")
+		rec := httptest.NewRecorder()
+		ctx := e.NewContext(req, rec)
+		ctx.SetParamNames("id")
+		ctx.SetParamValues("1")
+		middleware.SetCurrentUser(ctx, &model.User{ID: 7, Name: "bob"})
+
+		h := handler.PutApiV1UsersIdHandler{InputPort: mockPort}
+		require.NoError(t, h.PutApiV1UsersId(ctx, 1))
 	})
 
 	t.Run("error_usecase_returns_unprocessable_entity", func(t *testing.T) {
@@ -70,6 +123,8 @@ func TestPutApiV1UsersIdHandler(t *testing.T) {
 		ctx := e.NewContext(req, rec)
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("1")
+
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 
 		h := handler.PutApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.PutApiV1UsersId(ctx, 1)
@@ -97,6 +152,8 @@ func TestPutApiV1UsersIdHandler(t *testing.T) {
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("999")
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
+
 		h := handler.PutApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.PutApiV1UsersId(ctx, 999)
 
@@ -122,6 +179,8 @@ func TestPutApiV1UsersIdHandler(t *testing.T) {
 		ctx := e.NewContext(req, rec)
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("1")
+
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 
 		h := handler.PutApiV1UsersIdHandler{InputPort: mockPort}
 		err := h.PutApiV1UsersId(ctx, 1)
