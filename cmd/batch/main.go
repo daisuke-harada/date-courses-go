@@ -10,7 +10,6 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/hotpepper"
-	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/jalan"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/wikimedia"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
@@ -32,9 +31,8 @@ func main() {
 
 	repo := persistence.NewDateSpotRepository(gormDB)
 	hotpepperClient := hotpepper.NewClient(cfg.Recruit.APIKey)
-	jalanClient := jalan.NewClient(cfg.Recruit.APIKey)
 	wikimediaClient := wikimedia.NewClient()
-	fetcher := external.NewSpotFetcher(hotpepperClient, jalanClient, wikimediaClient)
+	fetcher := external.NewSpotFetcher(hotpepperClient, wikimediaClient)
 
 	interactor := usecase.NewBatchCreateDateSpotsInteractor(
 		repo,
