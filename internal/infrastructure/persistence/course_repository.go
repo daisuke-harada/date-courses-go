@@ -36,31 +36,41 @@ func (r *courseRepository) Create(ctx context.Context, course *model.Course) err
 	return nil
 }
 
-// FindPublicByUserID は指定ユーザーの公開コースを DuringSpots→DateSpot 込みで返します。
-// 他人から見えるコース一覧はすべてこちらを使います。
-func (r *courseRepository) FindPublicByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
-	return r.findByUserID(ctx, userID, true)
+// FindPublicByUserIDs は指定ユーザーたちの公開コースを userID ごとにまとめて返します。
+// ユーザー一覧では人数分のクエリになるため、IN 句で1回にまとめています。
+func (r *courseRepository) FindPublicByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]*model.Course, error) {
+	result := make(map[uint][]*model.Course, len(userIDs))
+	if len(userIDs) == 0 {
+		return result, nil
+	}
+
+	var courses []*model.Course
+	if err := r.db.WithContext(ctx).
+		Where("courses.user_id IN ?", userIDs).
+		Where("courses.authority = ?", model.CourseAuthorityPublic).
+		Preload("User").
+		Preload("DuringSpots.DateSpot").
+		Find(&courses).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.FindPublicByUserIDs failed", "err", err)
+		return nil, err
+	}
+
+	for _, c := range courses {
+		result[c.UserID] = append(result[c.UserID], c)
+	}
+	return result, nil
 }
 
 // FindAllByUserID は指定ユーザーのコースを非公開も含めて返します。
 // 本人がマイページを開いたときだけ使います。
 func (r *courseRepository) FindAllByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
-	return r.findByUserID(ctx, userID, false)
-}
-
-func (r *courseRepository) findByUserID(ctx context.Context, userID uint, publicOnly bool) ([]*model.Course, error) {
 	var courses []*model.Course
-	db := r.db.WithContext(ctx).
+	if err := r.db.WithContext(ctx).
 		Where("courses.user_id = ?", userID).
 		Preload("User").
-		Preload("DuringSpots.DateSpot")
-
-	if publicOnly {
-		db = db.Where("courses.authority = ?", model.CourseAuthorityPublic)
-	}
-
-	if err := db.Find(&courses).Error; err != nil {
-		slog.ErrorContext(ctx, "courseRepository.findByUserID failed", "err", err)
+		Preload("DuringSpots.DateSpot").
+		Find(&courses).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.FindAllByUserID failed", "err", err)
 		return nil, err
 	}
 	return courses, nil

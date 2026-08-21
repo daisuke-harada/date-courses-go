@@ -99,19 +99,19 @@ func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByID(ctx, id any) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByID), ctx, id)
 }
 
-// FindByUserID mocks base method.
-func (m *MockDateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
+// FindByUserIDs mocks base method.
+func (m *MockDateSpotReviewRepository) FindByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]*model.DateSpotReview, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByUserID", ctx, userID)
-	ret0, _ := ret[0].([]*model.DateSpotReview)
+	ret := m.ctrl.Call(m, "FindByUserIDs", ctx, userIDs)
+	ret0, _ := ret[0].(map[uint][]*model.DateSpotReview)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindByUserID indicates an expected call of FindByUserID.
-func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByUserID(ctx, userID any) *gomock.Call {
+// FindByUserIDs indicates an expected call of FindByUserIDs.
+func (mr *MockDateSpotReviewRepositoryMockRecorder) FindByUserIDs(ctx, userIDs any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByUserID), ctx, userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserIDs", reflect.TypeOf((*MockDateSpotReviewRepository)(nil).FindByUserIDs), ctx, userIDs)
 }
 
 // UpdateByID mocks base method.

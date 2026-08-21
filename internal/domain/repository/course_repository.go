@@ -14,8 +14,9 @@ type CourseSearchParams struct {
 // 非公開コースを含めるのは、本人がマイページを開いたときに使う FindAllByUserID だけです。
 type CourseRepository interface {
 	Create(ctx context.Context, course *model.Course) error
-	// FindPublicByUserID は指定ユーザーの公開コースだけを返します。
-	FindPublicByUserID(ctx context.Context, userID uint) ([]*model.Course, error)
+	// FindPublicByUserIDs は指定ユーザーたちの公開コースを userID ごとにまとめて返します。
+	// ユーザー一覧のたびに人数分のクエリを投げないよう、一括で取得します。
+	FindPublicByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]*model.Course, error)
 	// FindAllByUserID は非公開コースも含めて返します。本人のマイページ専用です。
 	FindAllByUserID(ctx context.Context, userID uint) ([]*model.Course, error)
 	Search(ctx context.Context, params CourseSearchParams) ([]*model.Course, error)
