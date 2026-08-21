@@ -58,17 +58,27 @@ func (r *dateSpotReviewRepository) FindByDateSpotID(ctx context.Context, dateSpo
 	return reviews, nil
 }
 
-// FindByUserID は指定ユーザーのレビュー一覧を DateSpot 込みで返します。
-func (r *dateSpotReviewRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.DateSpotReview, error) {
+// FindByUserIDs は指定ユーザーたちのレビューを userID ごとにまとめて返します。
+// ユーザー一覧では人数分のクエリになるため、IN 句で1回にまとめています。
+func (r *dateSpotReviewRepository) FindByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]*model.DateSpotReview, error) {
+	result := make(map[uint][]*model.DateSpotReview, len(userIDs))
+	if len(userIDs) == 0 {
+		return result, nil
+	}
+
 	var reviews []*model.DateSpotReview
 	if err := r.db.WithContext(ctx).
-		Where("user_id = ?", userID).
+		Where("user_id IN ?", userIDs).
 		Preload("DateSpot").
 		Find(&reviews).Error; err != nil {
-		slog.ErrorContext(ctx, "dateSpotReviewRepository.FindByUserID failed", "err", err)
+		slog.ErrorContext(ctx, "dateSpotReviewRepository.FindByUserIDs failed", "err", err)
 		return nil, err
 	}
-	return reviews, nil
+
+	for _, rv := range reviews {
+		result[rv.UserID] = append(result[rv.UserID], rv)
+	}
+	return result, nil
 }
 
 // UpdateByID は指定 ID のレビューを更新します。nil フィールドは更新しません。

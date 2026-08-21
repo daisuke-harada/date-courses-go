@@ -118,6 +118,15 @@ func ForbiddenWithCause(cause error, msg ...string) error {
 	return newAppError(http.StatusForbidden, "アクセスが禁止されています", cause, msg)
 }
 
+// ---------- 429 Too Many Requests ----------
+
+// TooManyRequests は 429 エラーを返します。
+// msg を省略した場合は "リクエストが多すぎます。しばらくしてから再度お試しください" が
+// デフォルトメッセージになります。
+func TooManyRequests(msg ...string) error {
+	return newAppError(http.StatusTooManyRequests, "リクエストが多すぎます。しばらくしてから再度お試しください", nil, msg)
+}
+
 // ---------- 422 Unprocessable Entity ----------
 
 // UnprocessableEntity は 422 エラーを返します。

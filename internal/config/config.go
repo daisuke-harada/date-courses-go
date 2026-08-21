@@ -19,6 +19,8 @@ type Config struct {
 	Recruit    RecruitConfig
 	Batch      BatchConfig
 	JWT        JWTConfig
+	CORS       CORSConfig
+	RateLimit  RateLimitConfig
 }
 
 type GoogleMapsConfig struct {
@@ -38,6 +40,17 @@ type BatchConfig struct {
 
 type JWTConfig struct {
 	SecretKey string `envconfig:"JWT_SECRET_KEY" required:"true"`
+}
+
+type RateLimitConfig struct {
+	// LoginAttemptsPerMinute はログイン・新規登録の1分あたりの試行上限（IP ごと）です。
+	LoginAttemptsPerMinute int `envconfig:"RATE_LIMIT_LOGIN_ATTEMPTS_PER_MINUTE" default:"10"`
+}
+
+type CORSConfig struct {
+	// AllowOrigins は CORS で許可するオリジンです。カンマ区切りで指定します。
+	// 本番のフロントエンドのドメインは環境変数で渡すため、既定値はローカル開発用のみ。
+	AllowOrigins []string `envconfig:"CORS_ALLOW_ORIGINS" default:"http://localhost:3000,http://localhost:8080"`
 }
 
 type DBConfig struct {
@@ -70,6 +83,12 @@ func Get() *Config {
 		}
 		if e := envconfig.Process("", &cfg.Batch); e != nil {
 			slog.Error("failed to process environment batch", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.CORS); e != nil {
+			slog.Error("failed to process environment cors", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.RateLimit); e != nil {
+			slog.Error("failed to process environment rate limit", "err", e)
 		}
 	})
 

@@ -96,7 +96,8 @@ func NewEcho(cfg *config.Config, userRepo repository.UserRepository) *echo.Echo 
 	e.HTTPErrorHandler = middleware.CustomHTTPErrorHandler
 	e.Use(echoMiddleware.Recover())
 	e.Use(echoMiddleware.RequestID())
-	e.Use(middleware.CORSMiddleware())
+	e.Use(middleware.CORSMiddleware(cfg.CORS.AllowOrigins))
+	e.Use(middleware.LoginRateLimitMiddleware(cfg.RateLimit.LoginAttemptsPerMinute))
 	e.Use(middleware.RequestIDMiddleware)
 	e.Use(middleware.AccessLogMiddleware)
 	e.Use(middleware.JWTAuthMiddleware(cfg.JWT.SecretKey, userRepo))

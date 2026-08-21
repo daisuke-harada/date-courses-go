@@ -88,15 +88,27 @@ func TestCourseRepository_FindByID(t *testing.T) {
 func TestCourseRepository_FindByUserID(t *testing.T) {
 	ctx := context.Background()
 
-	// 他人から見えるマイページ。公開コースだけを返す
-	t.Run("public_only_filters_by_authority", func(t *testing.T) {
+	// 他人から見えるマイページ。公開コースだけを返す。
+	// 一覧で人数分のクエリにならないよう IN 句でまとめて引く
+	t.Run("public_only_filters_by_authority_with_in_clause", func(t *testing.T) {
 		db, captured := newDryRunDB(t)
 		repo := persistence.NewCourseRepository(db)
 
-		_, _ = repo.FindPublicByUserID(ctx, 1)
+		_, _ = repo.FindPublicByUserIDs(ctx, []uint{1, 2, 3})
 
-		assert.Contains(t, issuedSQL(captured), "courses.user_id = ?")
+		assert.Contains(t, issuedSQL(captured), "courses.user_id IN ")
 		assert.Contains(t, issuedSQL(captured), "courses.authority = ?")
+	})
+
+	t.Run("public_by_user_ids_returns_empty_without_ids", func(t *testing.T) {
+		db, captured := newDryRunDB(t)
+		repo := persistence.NewCourseRepository(db)
+
+		result, err := repo.FindPublicByUserIDs(ctx, nil)
+
+		require.NoError(t, err)
+		assert.Empty(t, result)
+		assert.Empty(t, issuedSQL(captured), "ID が無ければクエリを発行しない")
 	})
 
 	// 本人のマイページ。非公開コースも含めるので authority で絞らない

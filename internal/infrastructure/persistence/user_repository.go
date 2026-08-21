@@ -80,30 +80,49 @@ func (r *userRepository) ExistsByEmail(ctx context.Context, email string) (bool,
 	return count > 0, nil
 }
 
-// FindFollowerIDsByUserID は指定ユーザーをフォローしているユーザーのIDリストを返します。
-func (r *userRepository) FindFollowerIDsByUserID(ctx context.Context, userID uint) ([]int, error) {
-	var ids []int
-	if err := r.db.WithContext(ctx).
-		Table("relationships").
-		Where("follow_id = ?", userID).
-		Pluck("user_id", &ids).Error; err != nil {
-		slog.ErrorContext(ctx, "userRepository.FindFollowerIDsByUserID failed", "err", err)
-		return nil, err
-	}
-	return ids, nil
+// relationshipPair は relationships の1行を「対象ユーザー」と「相手ユーザー」の組で表します。
+type relationshipPair struct {
+	TargetID uint
+	OtherID  int
 }
 
-// FindFollowingIDsByUserID は指定ユーザーがフォローしているユーザーのIDリストを返します。
-func (r *userRepository) FindFollowingIDsByUserID(ctx context.Context, userID uint) ([]int, error) {
-	var ids []int
+// FindFollowerIDsByUserIDs は指定ユーザーたちをフォローしているユーザーの ID を
+// userID ごとにまとめて返します。
+func (r *userRepository) FindFollowerIDsByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]int, error) {
+	return r.findRelationshipIDs(ctx, userIDs, "follow_id", "user_id")
+}
+
+// FindFollowingIDsByUserIDs は指定ユーザーたちがフォローしているユーザーの ID を
+// userID ごとにまとめて返します。
+func (r *userRepository) FindFollowingIDsByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]int, error) {
+	return r.findRelationshipIDs(ctx, userIDs, "user_id", "follow_id")
+}
+
+// findRelationshipIDs は relationships を1回のクエリで引き、targetColumn ごとに
+// otherColumn の ID をまとめます。ユーザー一覧で人数分のクエリを投げないための一括取得です。
+func (r *userRepository) findRelationshipIDs(ctx context.Context, userIDs []uint, targetColumn, otherColumn string) (map[uint][]int, error) {
+	result := make(map[uint][]int, len(userIDs))
+	for _, id := range userIDs {
+		result[id] = []int{}
+	}
+	if len(userIDs) == 0 {
+		return result, nil
+	}
+
+	var pairs []relationshipPair
 	if err := r.db.WithContext(ctx).
 		Table("relationships").
-		Where("user_id = ?", userID).
-		Pluck("follow_id", &ids).Error; err != nil {
-		slog.ErrorContext(ctx, "userRepository.FindFollowingIDsByUserID failed", "err", err)
+		Select(targetColumn+" AS target_id, "+otherColumn+" AS other_id").
+		Where(targetColumn+" IN ?", userIDs).
+		Scan(&pairs).Error; err != nil {
+		slog.ErrorContext(ctx, "userRepository.findRelationshipIDs failed", "err", err, "target", targetColumn)
 		return nil, err
 	}
-	return ids, nil
+
+	for _, p := range pairs {
+		result[p.TargetID] = append(result[p.TargetID], p.OtherID)
+	}
+	return result, nil
 }
 
 // Update はユーザー情報を更新します。

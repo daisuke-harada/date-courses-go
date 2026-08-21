@@ -114,34 +114,34 @@ func (mr *MockUserRepositoryMockRecorder) FindByName(ctx, name any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByName", reflect.TypeOf((*MockUserRepository)(nil).FindByName), ctx, name)
 }
 
-// FindFollowerIDsByUserID mocks base method.
-func (m *MockUserRepository) FindFollowerIDsByUserID(ctx context.Context, userID uint) ([]int, error) {
+// FindFollowerIDsByUserIDs mocks base method.
+func (m *MockUserRepository) FindFollowerIDsByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindFollowerIDsByUserID", ctx, userID)
-	ret0, _ := ret[0].([]int)
+	ret := m.ctrl.Call(m, "FindFollowerIDsByUserIDs", ctx, userIDs)
+	ret0, _ := ret[0].(map[uint][]int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindFollowerIDsByUserID indicates an expected call of FindFollowerIDsByUserID.
-func (mr *MockUserRepositoryMockRecorder) FindFollowerIDsByUserID(ctx, userID any) *gomock.Call {
+// FindFollowerIDsByUserIDs indicates an expected call of FindFollowerIDsByUserIDs.
+func (mr *MockUserRepositoryMockRecorder) FindFollowerIDsByUserIDs(ctx, userIDs any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindFollowerIDsByUserID", reflect.TypeOf((*MockUserRepository)(nil).FindFollowerIDsByUserID), ctx, userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindFollowerIDsByUserIDs", reflect.TypeOf((*MockUserRepository)(nil).FindFollowerIDsByUserIDs), ctx, userIDs)
 }
 
-// FindFollowingIDsByUserID mocks base method.
-func (m *MockUserRepository) FindFollowingIDsByUserID(ctx context.Context, userID uint) ([]int, error) {
+// FindFollowingIDsByUserIDs mocks base method.
+func (m *MockUserRepository) FindFollowingIDsByUserIDs(ctx context.Context, userIDs []uint) (map[uint][]int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindFollowingIDsByUserID", ctx, userID)
-	ret0, _ := ret[0].([]int)
+	ret := m.ctrl.Call(m, "FindFollowingIDsByUserIDs", ctx, userIDs)
+	ret0, _ := ret[0].(map[uint][]int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindFollowingIDsByUserID indicates an expected call of FindFollowingIDsByUserID.
-func (mr *MockUserRepositoryMockRecorder) FindFollowingIDsByUserID(ctx, userID any) *gomock.Call {
+// FindFollowingIDsByUserIDs indicates an expected call of FindFollowingIDsByUserIDs.
+func (mr *MockUserRepositoryMockRecorder) FindFollowingIDsByUserIDs(ctx, userIDs any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindFollowingIDsByUserID", reflect.TypeOf((*MockUserRepository)(nil).FindFollowingIDsByUserID), ctx, userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindFollowingIDsByUserIDs", reflect.TypeOf((*MockUserRepository)(nil).FindFollowingIDsByUserIDs), ctx, userIDs)
 }
 
 // Search mocks base method.
