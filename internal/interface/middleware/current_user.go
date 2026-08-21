@@ -25,6 +25,16 @@ func CurrentUser(ctx echo.Context) *model.User {
 	return user
 }
 
+// CurrentUserID は認証済みユーザーの ID を返します。未認証の場合は 0 を返します。
+// 非公開データの絞り込みなど「誰が見ているか」だけが必要な場面で使います。
+func CurrentUserID(ctx echo.Context) uint {
+	user := CurrentUser(ctx)
+	if user == nil {
+		return 0
+	}
+	return user.ID
+}
+
 // RequireCurrentUser は認証済みユーザーを返します。未認証の場合は 401 を返します。
 // 認証必須ルートでも、リクエストの user_id ではなく必ずこのユーザーを操作主体として扱います。
 func RequireCurrentUser(ctx echo.Context) (*model.User, error) {

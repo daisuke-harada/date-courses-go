@@ -69,7 +69,7 @@ func (s *userService) BuildUserWithRelations(ctx context.Context, user *model.Us
 	go func() {
 		defer wg.Done()
 		var err error
-		courses, err = s.CourseRepository.FindByUserID(ctx, user.ID)
+		courses, err = s.CourseRepository.FindPublicByUserID(ctx, user.ID)
 		if err != nil {
 			errCh <- apperror.InternalServerError(err)
 		}

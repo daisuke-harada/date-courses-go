@@ -26,7 +26,8 @@ func NewDeleteCourseUsecase(courseRepository repository.CourseRepository) Delete
 }
 
 func (i *DeleteCourseInteractor) Execute(ctx context.Context, input DeleteCourseInput) error {
-	course, err := i.CourseRepository.FindByID(ctx, input.CourseID)
+	// 削除者から見えないコース（他人の非公開コース）は存在しないものとして扱う
+	course, err := i.CourseRepository.FindByID(ctx, input.CourseID, input.OperatorID)
 	if err != nil {
 		return apperror.NotFoundWithCause(err)
 	}

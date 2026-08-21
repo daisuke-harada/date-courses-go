@@ -22,7 +22,7 @@ func TestDeleteCourseUsecase(t *testing.T) {
 
 		mockCourseRepo := repomock.NewMockCourseRepository(ctrl)
 		mockCourseRepo.EXPECT().
-			FindByID(gomock.Any(), uint(1)).
+			FindByID(gomock.Any(), uint(1), gomock.Any()).
 			Return(&model.Course{ID: 1, UserID: 10}, nil)
 		mockCourseRepo.EXPECT().
 			DeleteByID(gomock.Any(), uint(1)).
@@ -39,7 +39,7 @@ func TestDeleteCourseUsecase(t *testing.T) {
 
 		mockCourseRepo := repomock.NewMockCourseRepository(ctrl)
 		mockCourseRepo.EXPECT().
-			FindByID(gomock.Any(), uint(1)).
+			FindByID(gomock.Any(), uint(1), gomock.Any()).
 			Return(&model.Course{ID: 1, UserID: 10}, nil)
 
 		uc := usecase.NewDeleteCourseUsecase(mockCourseRepo)
@@ -57,7 +57,7 @@ func TestDeleteCourseUsecase(t *testing.T) {
 
 		mockCourseRepo := repomock.NewMockCourseRepository(ctrl)
 		mockCourseRepo.EXPECT().
-			FindByID(gomock.Any(), uint(1)).
+			FindByID(gomock.Any(), uint(1), gomock.Any()).
 			Return(nil, errors.New("record not found"))
 
 		uc := usecase.NewDeleteCourseUsecase(mockCourseRepo)
@@ -75,7 +75,7 @@ func TestDeleteCourseUsecase(t *testing.T) {
 
 		mockCourseRepo := repomock.NewMockCourseRepository(ctrl)
 		mockCourseRepo.EXPECT().
-			FindByID(gomock.Any(), uint(1)).
+			FindByID(gomock.Any(), uint(1), gomock.Any()).
 			Return(&model.Course{ID: 1, UserID: 10}, nil)
 		mockCourseRepo.EXPECT().
 			DeleteByID(gomock.Any(), uint(1)).
