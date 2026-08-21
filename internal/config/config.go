@@ -21,6 +21,7 @@ type Config struct {
 	JWT        JWTConfig
 	CORS       CORSConfig
 	RateLimit  RateLimitConfig
+	Demo       DemoConfig
 }
 
 type GoogleMapsConfig struct {
@@ -40,6 +41,12 @@ type BatchConfig struct {
 
 type JWTConfig struct {
 	SecretKey string `envconfig:"JWT_SECRET_KEY" required:"true"`
+}
+
+type DemoConfig struct {
+	// UserName は誰でもログインできるデモ用アカウントの名前です。
+	// このアカウントは共有されるため、更新・削除をサーバー側で禁止します。
+	UserName string `envconfig:"DEMO_USER_NAME" default:"guest"`
 }
 
 type RateLimitConfig struct {
@@ -89,6 +96,9 @@ func Get() *Config {
 		}
 		if e := envconfig.Process("", &cfg.RateLimit); e != nil {
 			slog.Error("failed to process environment rate limit", "err", e)
+		}
+		if e := envconfig.Process("", &cfg.Demo); e != nil {
+			slog.Error("failed to process environment demo", "err", e)
 		}
 	})
 

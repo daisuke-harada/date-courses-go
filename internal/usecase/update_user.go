@@ -76,15 +76,18 @@ type UpdateUserOutput struct {
 type UpdateUserInteractor struct {
 	UserRepository repository.UserRepository
 	UserService    service.UserService
+	DemoUserName   DemoUserName
 }
 
 func NewUpdateUserUsecase(
 	userRepository repository.UserRepository,
 	userService service.UserService,
+	demoUserName DemoUserName,
 ) UpdateUserInputPort {
 	return &UpdateUserInteractor{
 		UserRepository: userRepository,
 		UserService:    userService,
+		DemoUserName:   demoUserName,
 	}
 }
 
@@ -103,6 +106,10 @@ func (i *UpdateUserInteractor) Execute(ctx context.Context, input UpdateUserInpu
 	// パスワードも更新対象のため、ここを開けるとアカウントを乗っ取られる。
 	if user.ID != input.OperatorID {
 		return nil, apperror.Forbidden("他のユーザーのプロフィールは変更できません")
+	}
+
+	if err := verifyNotDemoUser(user, i.DemoUserName); err != nil {
+		return nil, err
 	}
 
 	// パスワードが指定されている場合のみ更新（Rails の allow_nil: true に対応）

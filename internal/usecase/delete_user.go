@@ -20,11 +20,16 @@ type DeleteUserInput struct {
 
 type DeleteUserInteractor struct {
 	UserRepository repository.UserRepository
+	DemoUserName   DemoUserName
 }
 
-func NewDeleteUserUsecase(userRepository repository.UserRepository) DeleteUserInputPort {
+func NewDeleteUserUsecase(
+	userRepository repository.UserRepository,
+	demoUserName DemoUserName,
+) DeleteUserInputPort {
 	return &DeleteUserInteractor{
 		UserRepository: userRepository,
+		DemoUserName:   demoUserName,
 	}
 }
 
@@ -37,6 +42,10 @@ func (i *DeleteUserInteractor) Execute(ctx context.Context, input DeleteUserInpu
 	// 退会できるのは本人だけ
 	if user.ID != input.OperatorID {
 		return apperror.Forbidden("他のユーザーのアカウントは削除できません")
+	}
+
+	if err := verifyNotDemoUser(user, i.DemoUserName); err != nil {
+		return err
 	}
 
 	if err := i.UserRepository.Delete(ctx, user.ID); err != nil {
