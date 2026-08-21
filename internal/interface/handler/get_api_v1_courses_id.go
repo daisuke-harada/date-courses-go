@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -14,7 +15,10 @@ type GetApiV1CoursesIdHandler struct {
 }
 
 func (h *GetApiV1CoursesIdHandler) GetApiV1CoursesId(ctx echo.Context, arg1 int) error {
-	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.GetCourseInput{CourseID: uint(arg1)})
+	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.GetCourseInput{
+		CourseID: uint(arg1),
+		ViewerID: middleware.CurrentUserID(ctx),
+	})
 	if err != nil {
 		return err
 	}

@@ -67,7 +67,7 @@ func (i *CreateCourseInteractor) Execute(ctx context.Context, input CreateCourse
 	course := &model.Course{
 		UserID:     input.UserID,
 		TravelMode: input.TravelMode,
-		Authority:  input.Authority,
+		Authority:  model.CourseAuthority(input.Authority),
 	}
 	if err := i.CourseRepository.Create(ctx, course); err != nil {
 		return nil, apperror.InternalServerError(err)

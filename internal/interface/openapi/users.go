@@ -93,7 +93,7 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseData, error) {
 
 	return CourseResponseData{
 		Id:                         int(course.ID),
-		Authority:                  course.Authority,
+		Authority:                  string(course.Authority),
 		TravelMode:                 course.TravelMode,
 		DateSpots:                  dateSpots,
 		NoDuplicatePrefectureNames: prefectureNames,

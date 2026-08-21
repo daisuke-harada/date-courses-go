@@ -1,3 +1,6 @@
+# set -o pipefail を使うため bash を明示する（デフォルトの sh では動かない環境がある）
+SHELL := /bin/bash
+
 setup: deps gen docker-up apply-schema db-seed
 
 deps:
@@ -75,8 +78,28 @@ mock-usecase:
 # 		--stack-name date-courses-go \
 # 		--region ap-northeast-1
 
+# テスト出力から読む必要のない行を落とすフィルタ。
+# テストを持たないパッケージ、対象外パッケージの警告、実行開始ログ（=== RUN）を除く。
+TEST_FILTER := grep -v -e "no test files" -e "no tests to run" -e "^testing: warning" -e "^=== " -e "^PASS$$"
+
+# テスト実行。パイプで grep を挟むため、go test の失敗を取りこぼさないよう pipefail を付ける。
 test:
-	go test ./...
+	@set -o pipefail; go test ./... | $(TEST_FILTER)
+
+# サブテスト名まで表示する。何がテストされているか確認したいときに使う。
+#   例: make test-v
+test-v:
+	@set -o pipefail; go test -v ./... | $(TEST_FILTER)
+
+# 特定のテストだけ実行する。
+#   例: make test-run RUN=TestGetCourseInteractor_Execute
+#       make test-run RUN='TestCourseRepository.*'
+test-run:
+	@set -o pipefail; go test -v -run '$(RUN)' ./... | $(TEST_FILTER)
+
+# キャッシュを使わず必ず実行する。
+test-fresh:
+	@set -o pipefail; go test -count=1 ./... | $(TEST_FILTER)
 
 lint:
 	golangci-lint run ./...

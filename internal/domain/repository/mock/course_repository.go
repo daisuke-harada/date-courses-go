@@ -70,34 +70,49 @@ func (mr *MockCourseRepositoryMockRecorder) DeleteByID(ctx, id any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockCourseRepository)(nil).DeleteByID), ctx, id)
 }
 
-// FindByID mocks base method.
-func (m *MockCourseRepository) FindByID(ctx context.Context, id uint) (*model.Course, error) {
+// FindAllByUserID mocks base method.
+func (m *MockCourseRepository) FindAllByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByID", ctx, id)
+	ret := m.ctrl.Call(m, "FindAllByUserID", ctx, userID)
+	ret0, _ := ret[0].([]*model.Course)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindAllByUserID indicates an expected call of FindAllByUserID.
+func (mr *MockCourseRepositoryMockRecorder) FindAllByUserID(ctx, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllByUserID", reflect.TypeOf((*MockCourseRepository)(nil).FindAllByUserID), ctx, userID)
+}
+
+// FindByID mocks base method.
+func (m *MockCourseRepository) FindByID(ctx context.Context, id, viewerID uint) (*model.Course, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByID", ctx, id, viewerID)
 	ret0, _ := ret[0].(*model.Course)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByID indicates an expected call of FindByID.
-func (mr *MockCourseRepositoryMockRecorder) FindByID(ctx, id any) *gomock.Call {
+func (mr *MockCourseRepositoryMockRecorder) FindByID(ctx, id, viewerID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockCourseRepository)(nil).FindByID), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockCourseRepository)(nil).FindByID), ctx, id, viewerID)
 }
 
-// FindByUserID mocks base method.
-func (m *MockCourseRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
+// FindPublicByUserID mocks base method.
+func (m *MockCourseRepository) FindPublicByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByUserID", ctx, userID)
+	ret := m.ctrl.Call(m, "FindPublicByUserID", ctx, userID)
 	ret0, _ := ret[0].([]*model.Course)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindByUserID indicates an expected call of FindByUserID.
-func (mr *MockCourseRepositoryMockRecorder) FindByUserID(ctx, userID any) *gomock.Call {
+// FindPublicByUserID indicates an expected call of FindPublicByUserID.
+func (mr *MockCourseRepositoryMockRecorder) FindPublicByUserID(ctx, userID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockCourseRepository)(nil).FindByUserID), ctx, userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindPublicByUserID", reflect.TypeOf((*MockCourseRepository)(nil).FindPublicByUserID), ctx, userID)
 }
 
 // Search mocks base method.

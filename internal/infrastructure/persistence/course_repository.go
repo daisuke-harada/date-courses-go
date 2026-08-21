@@ -18,6 +18,15 @@ func NewCourseRepository(db *gorm.DB) repository.CourseRepository {
 	return &courseRepository{db: db}
 }
 
+// visibleToViewer は「公開コース、または viewerID 自身が作成した非公開コース」に絞る GORM スコープです。
+// viewerID が 0（未ログイン）のときは user_id が 0 のレコードが存在しないため、公開コースだけが残ります。
+func visibleToViewer(viewerID uint) func(*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		// 他の条件と AND で結合されるため、OR は必ず括弧で囲む
+		return db.Where("(courses.authority = ? OR courses.user_id = ?)", model.CourseAuthorityPublic, viewerID)
+	}
+}
+
 func (r *courseRepository) Create(ctx context.Context, course *model.Course) error {
 	if err := r.db.WithContext(ctx).Create(course).Error; err != nil {
 		slog.ErrorContext(ctx, "courseRepository.Create failed", "err", err)
@@ -27,24 +36,43 @@ func (r *courseRepository) Create(ctx context.Context, course *model.Course) err
 	return nil
 }
 
-// FindByUserID は指定ユーザーのコース一覧を DuringSpots→DateSpot 込みで返します。
-func (r *courseRepository) FindByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
+// FindPublicByUserID は指定ユーザーの公開コースを DuringSpots→DateSpot 込みで返します。
+// 他人から見えるコース一覧はすべてこちらを使います。
+func (r *courseRepository) FindPublicByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
+	return r.findByUserID(ctx, userID, true)
+}
+
+// FindAllByUserID は指定ユーザーのコースを非公開も含めて返します。
+// 本人がマイページを開いたときだけ使います。
+func (r *courseRepository) FindAllByUserID(ctx context.Context, userID uint) ([]*model.Course, error) {
+	return r.findByUserID(ctx, userID, false)
+}
+
+func (r *courseRepository) findByUserID(ctx context.Context, userID uint, publicOnly bool) ([]*model.Course, error) {
 	var courses []*model.Course
-	if err := r.db.WithContext(ctx).
-		Where("user_id = ?", userID).
+	db := r.db.WithContext(ctx).
+		Where("courses.user_id = ?", userID).
 		Preload("User").
-		Preload("DuringSpots.DateSpot").
-		Find(&courses).Error; err != nil {
-		slog.ErrorContext(ctx, "courseRepository.FindByUserID failed", "err", err)
+		Preload("DuringSpots.DateSpot")
+
+	if publicOnly {
+		db = db.Where("courses.authority = ?", model.CourseAuthorityPublic)
+	}
+
+	if err := db.Find(&courses).Error; err != nil {
+		slog.ErrorContext(ctx, "courseRepository.findByUserID failed", "err", err)
 		return nil, err
 	}
 	return courses, nil
 }
 
 // Search はフィルタ条件に基づいてコース一覧を返します。
+// デートコース一覧には公開コースだけを載せます。作成者本人であっても
+// 自分の非公開コースはここには出さず、マイページからのみ辿れるようにしています。
 func (r *courseRepository) Search(ctx context.Context, params repository.CourseSearchParams) ([]*model.Course, error) {
 	var courses []*model.Course
 	db := r.db.WithContext(ctx).
+		Where("courses.authority = ?", model.CourseAuthorityPublic).
 		Preload("User").
 		Preload("DuringSpots.DateSpot")
 
@@ -63,9 +91,11 @@ func (r *courseRepository) Search(ctx context.Context, params repository.CourseS
 }
 
 // FindByID は指定IDのコースを返します。
-func (r *courseRepository) FindByID(ctx context.Context, id uint) (*model.Course, error) {
+// 他人の非公開コースは存在を隠すため、見つからなかった場合と同じ扱いになります。
+func (r *courseRepository) FindByID(ctx context.Context, id, viewerID uint) (*model.Course, error) {
 	var course model.Course
 	if err := r.db.WithContext(ctx).
+		Scopes(visibleToViewer(viewerID)).
 		Preload("User").
 		Preload("DuringSpots.DateSpot").
 		First(&course, id).Error; err != nil {

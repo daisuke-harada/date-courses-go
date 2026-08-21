@@ -14,6 +14,8 @@ type GetCourseInputPort interface {
 
 type GetCourseInput struct {
 	CourseID uint
+	// ViewerID は閲覧しているユーザーの ID です。未ログインの場合は 0 になります。
+	ViewerID uint
 }
 
 type GetCourseOutput struct {
@@ -31,7 +33,7 @@ func NewGetCourseUsecase(courseRepository repository.CourseRepository) GetCourse
 }
 
 func (i *GetCourseInteractor) Execute(ctx context.Context, input GetCourseInput) (*GetCourseOutput, error) {
-	course, err := i.CourseRepository.FindByID(ctx, input.CourseID)
+	course, err := i.CourseRepository.FindByID(ctx, input.CourseID, input.ViewerID)
 	if err != nil {
 		return nil, apperror.NotFound()
 	}
