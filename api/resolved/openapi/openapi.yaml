@@ -3019,8 +3019,6 @@ components:
       type: object
     CourseFormRequestData:
       properties:
-        user_id:
-          type: integer
         date_spots:
           items:
             type: integer
@@ -3039,7 +3037,6 @@ components:
       - authority
       - date_spots
       - travel_mode
-      - user_id
       type: object
     CourseFormResponseData:
       example:

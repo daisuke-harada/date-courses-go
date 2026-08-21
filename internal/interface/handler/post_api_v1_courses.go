@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -15,13 +16,19 @@ type PostApiV1CoursesHandler struct {
 }
 
 func (h *PostApiV1CoursesHandler) PostApiV1Courses(ctx echo.Context) error {
-	userID, err := strconv.Atoi(ctx.FormValue("user_id"))
+	// 作成者はリクエストではなくトークンから決める。
+	// リクエストの user_id を信用すると他人名義のコースを登録できてしまう。
+	currentUser, err := middleware.RequireCurrentUser(ctx)
 	if err != nil {
-		return apperror.BadRequest("user_id は整数で指定してください")
+		return err
 	}
 
-	// ctx.FormValue 呼び出し時点で ParseForm 済みなので Form マップを直接参照できる
-	dateSpotIDStrs := ctx.Request().Form["date_spots[]"]
+	form, err := ctx.FormParams()
+	if err != nil {
+		return apperror.BadRequestWithCause(err)
+	}
+
+	dateSpotIDStrs := form["date_spots[]"]
 	var dateSpotIDs []uint
 	for _, s := range dateSpotIDStrs {
 		id, err := strconv.Atoi(s)
@@ -31,11 +38,11 @@ func (h *PostApiV1CoursesHandler) PostApiV1Courses(ctx echo.Context) error {
 		dateSpotIDs = append(dateSpotIDs, uint(id))
 	}
 
-	travelMode := ctx.FormValue("travel_mode")
-	authority := ctx.FormValue("authority")
+	travelMode := form.Get("travel_mode")
+	authority := form.Get("authority")
 
 	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.CreateCourseInput{
-		UserID:      uint(userID),
+		UserID:      currentUser.ID,
 		DateSpotIDs: dateSpotIDs,
 		TravelMode:  travelMode,
 		Authority:   authority,

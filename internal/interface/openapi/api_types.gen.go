@@ -99,7 +99,6 @@ type CourseFormRequestData struct {
 	Authority  CourseFormRequestDataAuthority  `json:"authority"`
 	DateSpots  []int                           `json:"date_spots"`
 	TravelMode CourseFormRequestDataTravelMode `json:"travel_mode"`
-	UserId     int                             `json:"user_id"`
 }
 
 // CourseFormRequestDataAuthority defines model for CourseFormRequestData.Authority.
