@@ -49,12 +49,9 @@ func (i *CreateDateSpotReviewInput) Validate() error {
 
 // NewCreateDateSpotReviewInputFromStrings builds CreateDateSpotReviewInput from raw string values.
 // It performs type parsing (user_id/date_spot_id/rate) and returns BadRequest on parse errors.
-func NewCreateDateSpotReviewInputFromStrings(userIDStr, dateSpotIDStr, rateStr, contentStr string) (CreateDateSpotReviewInput, error) {
-	// parse user id
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		return CreateDateSpotReviewInput{}, apperror.BadRequest("user_id は整数で指定してください")
-	}
+// NewCreateDateSpotReviewInputFromStrings はフォーム値から Input を組み立てます。
+// 投稿者はリクエストではなくトークンから決めるため、userID は呼び出し側が渡します。
+func NewCreateDateSpotReviewInputFromStrings(userID uint, dateSpotIDStr, rateStr, contentStr string) (CreateDateSpotReviewInput, error) {
 	// parse date spot id
 	dateSpotID, err := strconv.Atoi(dateSpotIDStr)
 	if err != nil {
@@ -79,7 +76,7 @@ func NewCreateDateSpotReviewInputFromStrings(userIDStr, dateSpotIDStr, rateStr, 
 	}
 
 	return CreateDateSpotReviewInput{
-		UserID:     uint(userID),
+		UserID:     userID,
 		DateSpotID: uint(dateSpotID),
 		Rate:       rate,
 		Content:    content,

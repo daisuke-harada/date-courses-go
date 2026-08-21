@@ -5,7 +5,6 @@ components:
       required:
         - rate
         - content
-        - user_id
         - date_spot_id
       properties:
         rate:
@@ -13,7 +12,5 @@ components:
           format: float
         content:
           type: string
-        user_id:
-          type: integer
         date_spot_id:
           type: integer

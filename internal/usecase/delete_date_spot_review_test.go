@@ -16,6 +16,28 @@ import (
 )
 
 func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
+	// 他人のレビューを削除できないことを保証する
+	t.Run("error_forbidden_when_operator_is_not_the_author", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		ctx := context.Background()
+
+		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
+		reviewRepo.EXPECT().
+			FindByID(ctx, uint(1)).
+			Return(&model.DateSpotReview{ID: 1, UserID: 1, DateSpotID: 3}, nil)
+
+		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
+		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 1, OperatorID: 99})
+
+		assert.Nil(t, output)
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusForbidden, statusCode)
+	})
+
 	ctx := context.Background()
 
 	t.Run("success", func(t *testing.T) {
@@ -25,7 +47,7 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
 			FindByID(ctx, uint(10)).
-			Return(&model.DateSpotReview{ID: 10, DateSpotID: 5}, nil)
+			Return(&model.DateSpotReview{ID: 10, UserID: 1, DateSpotID: 5}, nil)
 		reviewRepo.EXPECT().
 			DeleteByID(ctx, uint(10)).
 			Return(nil)
@@ -34,7 +56,7 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			Return([]*model.DateSpotReview{}, nil)
 
 		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
+		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10, OperatorID: 1})
 
 		require.NoError(t, err)
 		assert.NotNil(t, output)
@@ -51,7 +73,7 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 			Return(nil, errors.New("not found"))
 
 		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
+		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10, OperatorID: 1})
 
 		assert.Error(t, err)
 		assert.Nil(t, output)
@@ -67,13 +89,13 @@ func TestDeleteDateSpotReviewInteractor_Execute(t *testing.T) {
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
 			FindByID(ctx, uint(10)).
-			Return(&model.DateSpotReview{ID: 10, DateSpotID: 5}, nil)
+			Return(&model.DateSpotReview{ID: 10, UserID: 1, DateSpotID: 5}, nil)
 		reviewRepo.EXPECT().
 			DeleteByID(ctx, uint(10)).
 			Return(errors.New("db error"))
 
 		interactor := usecase.NewDeleteDateSpotReviewUsecase(reviewRepo)
-		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10})
+		output, err := interactor.Execute(ctx, usecase.DeleteDateSpotReviewInput{ReviewID: 10, OperatorID: 1})
 
 		assert.Error(t, err)
 		assert.Nil(t, output)

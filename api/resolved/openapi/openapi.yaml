@@ -2893,15 +2893,12 @@ components:
           type: number
         content:
           type: string
-        user_id:
-          type: integer
         date_spot_id:
           type: integer
       required:
       - content
       - date_spot_id
       - rate
-      - user_id
       type: object
     DateSpotReviewResponseData:
       example:

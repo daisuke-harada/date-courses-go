@@ -160,7 +160,6 @@ type DateSpotReviewFormRequestData struct {
 	Content    string  `json:"content"`
 	DateSpotId int     `json:"date_spot_id"`
 	Rate       float32 `json:"rate"`
-	UserId     int     `json:"user_id"`
 }
 
 // DateSpotReviewResponseData defines model for DateSpotReviewResponseData.

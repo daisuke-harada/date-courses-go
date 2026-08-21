@@ -10,6 +10,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/stretchr/testify/assert"
@@ -41,6 +42,7 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 
 		ctx, rec := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", validDateSpotReviewForm())
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpotReviews(ctx)
 
@@ -53,23 +55,49 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 		assert.Contains(t, resp, "review_average_rate")
 	})
 
-	t.Run("error_bad_request_invalid_user_id", func(t *testing.T) {
+	// user_id はリクエストから受け取らなくなったため、なりすまし投稿ができないことを確認する
+	t.Run("ignores_user_id_in_request_body", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockPort := usecasemock.NewMockCreateDateSpotReviewInputPort(ctrl)
+		mockPort.EXPECT().
+			Execute(gomock.Any(), gomock.Cond(func(in usecase.CreateDateSpotReviewInput) bool {
+				return in.UserID == 1
+			})).
+			Return(&usecase.CreateDateSpotReviewOutput{}, nil)
+
+		form := url.Values{}
+		form.Set("user_id", "99999")
+		form.Set("date_spot_id", "2")
+		form.Set("rate", "4.5")
+		form.Set("content", "とても良かったです")
+		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
+
+		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
+		require.NoError(t, h.PostApiV1DateSpotReviews(ctx))
+	})
+
+	t.Run("error_unauthorized_without_current_user", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockPort := usecasemock.NewMockCreateDateSpotReviewInputPort(ctrl)
 
-		form := validDateSpotReviewForm()
-		form.Set("user_id", "abc")
+		form := url.Values{}
+		form.Set("date_spot_id", "2")
+		form.Set("rate", "4.5")
+		form.Set("content", "とても良かったです")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
 
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpotReviews(ctx)
 
-		assert.Error(t, err)
+		require.Error(t, err)
 		statusCode, _, _, ok := apperror.HTTPStatus(err)
 		assert.True(t, ok)
-		assert.Equal(t, http.StatusBadRequest, statusCode)
+		assert.Equal(t, http.StatusUnauthorized, statusCode)
 	})
 
 	t.Run("error_bad_request_invalid_date_spot_id", func(t *testing.T) {
@@ -82,6 +110,7 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 		form.Set("date_spot_id", "xyz")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpotReviews(ctx)
 
@@ -104,6 +133,7 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 		form.Set("user_id", "0")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpotReviews(ctx)
 
@@ -124,6 +154,7 @@ func TestPostApiV1DateSpotReviewsHandler(t *testing.T) {
 
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spot_reviews", validDateSpotReviewForm())
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PostApiV1DateSpotReviewsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpotReviews(ctx)
 
