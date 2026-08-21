@@ -14,6 +14,8 @@ type DeleteDateSpotReviewInputPort interface {
 
 type DeleteDateSpotReviewInput struct {
 	ReviewID uint
+	// OperatorID は削除を実行するユーザー（トークンの currentUser）の ID です。
+	OperatorID uint
 }
 
 type DeleteDateSpotReviewOutput struct {
@@ -33,6 +35,12 @@ func (i *DeleteDateSpotReviewInteractor) Execute(ctx context.Context, input Dele
 	if err != nil {
 		return nil, apperror.NotFound()
 	}
+
+	// レビューを削除できるのは投稿者だけ
+	if review.UserID != input.OperatorID {
+		return nil, apperror.Forbidden("他のユーザーのレビューは削除できません")
+	}
+
 	dateSpotID := review.DateSpotID
 
 	if err := i.DateSpotReviewRepository.DeleteByID(ctx, input.ReviewID); err != nil {

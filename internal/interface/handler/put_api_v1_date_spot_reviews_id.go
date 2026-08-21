@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -22,6 +23,14 @@ func (h *PutApiV1DateSpotReviewsIdHandler) PutApiV1DateSpotReviewsId(ctx echo.Co
 	if err != nil {
 		return err
 	}
+
+	// 編集できるのは投稿者だけなので、操作主体はトークンから決める
+	currentUser, err := middleware.RequireCurrentUser(ctx)
+	if err != nil {
+		return err
+	}
+	input.OperatorID = currentUser.ID
+
 	output, err := h.InputPort.Execute(ctx.Request().Context(), input)
 	if err != nil {
 		return err

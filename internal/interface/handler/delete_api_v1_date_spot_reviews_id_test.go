@@ -10,6 +10,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/stretchr/testify/assert"
@@ -24,13 +25,14 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 
 		mockPort := usecasemock.NewMockDeleteDateSpotReviewInputPort(ctrl)
 		mockPort.EXPECT().
-			Execute(gomock.Any(), usecase.DeleteDateSpotReviewInput{ReviewID: 10}).
+			Execute(gomock.Any(), usecase.DeleteDateSpotReviewInput{ReviewID: 10, OperatorID: 1}).
 			Return(&usecase.DeleteDateSpotReviewOutput{
 				DateSpotReviews: []*model.DateSpotReview{},
 			}, nil)
 
 		ctx, rec := setupFormRequest(http.MethodDelete, "/api/v1/date_spot_reviews/10", url.Values{})
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.DeleteApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1DateSpotReviewsId(ctx, 10)
 
@@ -54,6 +56,7 @@ func TestDeleteApiV1DateSpotReviewsIdHandler(t *testing.T) {
 
 		ctx, _ := setupFormRequest(http.MethodDelete, "/api/v1/date_spot_reviews/10", url.Values{})
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.DeleteApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.DeleteApiV1DateSpotReviewsId(ctx, 10)
 

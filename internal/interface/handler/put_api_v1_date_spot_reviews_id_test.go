@@ -10,6 +10,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/stretchr/testify/assert"
@@ -36,6 +37,7 @@ func TestPutApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		form.Set("content", "良かった")
 		ctx, rec := setupFormRequest(http.MethodPut, "/api/v1/date_spot_reviews/1", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PutApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotReviewsId(ctx, 1)
 
@@ -58,6 +60,7 @@ func TestPutApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		form.Set("rate", "4.5")
 		ctx, _ := setupFormRequest(http.MethodPut, "/api/v1/date_spot_reviews/1", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PutApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotReviewsId(ctx, 1)
 
@@ -78,6 +81,7 @@ func TestPutApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		form.Set("rate", "not-a-number")
 		ctx, _ := setupFormRequest(http.MethodPut, "/api/v1/date_spot_reviews/1", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PutApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotReviewsId(ctx, 1)
 
@@ -100,6 +104,7 @@ func TestPutApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		form.Set("date_spot_id", "3")
 		ctx, _ := setupFormRequest(http.MethodPut, "/api/v1/date_spot_reviews/1", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PutApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotReviewsId(ctx, 1)
 
@@ -123,6 +128,7 @@ func TestPutApiV1DateSpotReviewsIdHandler(t *testing.T) {
 		form.Set("rate", "4.5")
 		ctx, _ := setupFormRequest(http.MethodPut, "/api/v1/date_spot_reviews/1", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PutApiV1DateSpotReviewsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotReviewsId(ctx, 1)
 

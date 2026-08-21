@@ -16,6 +16,34 @@ import (
 )
 
 func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
+	// 他人のレビューを書き換えられないことを保証する
+	t.Run("error_forbidden_when_operator_is_not_the_author", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		ctx := context.Background()
+		r := 3.0
+
+		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
+		reviewRepo.EXPECT().
+			FindByID(ctx, uint(1)).
+			Return(&model.DateSpotReview{ID: 1, UserID: 1, DateSpotID: 3}, nil)
+
+		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
+		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
+			ReviewID:   1,
+			DateSpotID: 3,
+			Rate:       &r,
+			OperatorID: 99,
+		})
+
+		assert.Nil(t, output)
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusForbidden, statusCode)
+	})
+
 	ctx := context.Background()
 
 	rate := 4.5
@@ -27,6 +55,9 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
+			FindByID(ctx, gomock.Any()).
+			Return(&model.DateSpotReview{ID: 1, UserID: 1, DateSpotID: 3}, nil)
+		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(nil)
 		reviewRepo.EXPECT().
@@ -36,6 +67,7 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID:   1,
+			OperatorID: 1,
 			DateSpotID: 3,
 			Rate:       &rate,
 			Content:    &content,
@@ -52,6 +84,9 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
+			FindByID(ctx, gomock.Any()).
+			Return(&model.DateSpotReview{ID: 1, UserID: 1, DateSpotID: 3}, nil)
+		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(nil)
 		reviewRepo.EXPECT().
@@ -61,6 +96,7 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID:   1,
+			OperatorID: 1,
 			DateSpotID: 3,
 			Rate:       &rate,
 		})
@@ -78,6 +114,7 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID:   1,
+			OperatorID: 1,
 			DateSpotID: 3,
 		})
 
@@ -94,12 +131,16 @@ func TestUpdateDateSpotReviewInteractor_Execute(t *testing.T) {
 
 		reviewRepo := repomock.NewMockDateSpotReviewRepository(ctrl)
 		reviewRepo.EXPECT().
+			FindByID(ctx, gomock.Any()).
+			Return(&model.DateSpotReview{ID: 1, UserID: 1, DateSpotID: 3}, nil)
+		reviewRepo.EXPECT().
 			UpdateByID(ctx, uint(1), gomock.Any()).
 			Return(errors.New("db error"))
 
 		interactor := usecase.NewUpdateDateSpotReviewUsecase(reviewRepo)
 		output, err := interactor.Execute(ctx, usecase.UpdateDateSpotReviewInput{
 			ReviewID:   1,
+			OperatorID: 1,
 			DateSpotID: 3,
 			Rate:       &rate,
 		})

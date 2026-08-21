@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -13,8 +14,15 @@ type PostApiV1DateSpotReviewsHandler struct {
 }
 
 func (h *PostApiV1DateSpotReviewsHandler) PostApiV1DateSpotReviews(ctx echo.Context) error {
+	// 投稿者はリクエストではなくトークンから決める。
+	// リクエストの user_id を信用すると他人名義でレビューを投稿できてしまう。
+	currentUser, err := middleware.RequireCurrentUser(ctx)
+	if err != nil {
+		return err
+	}
+
 	input, err := usecase.NewCreateDateSpotReviewInputFromStrings(
-		ctx.FormValue("user_id"),
+		currentUser.ID,
 		ctx.FormValue("date_spot_id"),
 		ctx.FormValue("rate"),
 		ctx.FormValue("content"),

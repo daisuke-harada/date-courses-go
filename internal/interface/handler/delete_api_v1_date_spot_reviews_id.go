@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -13,8 +14,15 @@ type DeleteApiV1DateSpotReviewsIdHandler struct {
 }
 
 func (h *DeleteApiV1DateSpotReviewsIdHandler) DeleteApiV1DateSpotReviewsId(ctx echo.Context, arg1 int) error {
+	// 削除できるのは投稿者だけなので、操作主体はトークンから決める
+	currentUser, err := middleware.RequireCurrentUser(ctx)
+	if err != nil {
+		return err
+	}
+
 	output, err := h.InputPort.Execute(ctx.Request().Context(), usecase.DeleteDateSpotReviewInput{
-		ReviewID: uint(arg1),
+		ReviewID:   uint(arg1),
+		OperatorID: currentUser.ID,
 	})
 	if err != nil {
 		return err

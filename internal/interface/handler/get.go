@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"net/http"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
-type GetHandler struct {}
+type GetHandler struct{}
 
 func (h *GetHandler) Get(ctx echo.Context) error {
 	// TODO: Implement your logic here

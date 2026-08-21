@@ -18,6 +18,8 @@ type UpdateDateSpotReviewInput struct {
 	DateSpotID uint
 	Rate       *float64
 	Content    *string
+	// OperatorID は更新を実行するユーザー（トークンの currentUser）の ID です。
+	OperatorID uint
 }
 
 func (i *UpdateDateSpotReviewInput) Validate() error {
@@ -44,6 +46,16 @@ func (i *UpdateDateSpotReviewInteractor) Execute(ctx context.Context, input Upda
 	if err := input.Validate(); err != nil {
 		return nil, err
 	}
+
+	// レビューを編集できるのは投稿者だけ
+	existing, err := i.DateSpotReviewRepository.FindByID(ctx, input.ReviewID)
+	if err != nil {
+		return nil, apperror.NotFound()
+	}
+	if existing.UserID != input.OperatorID {
+		return nil, apperror.Forbidden("他のユーザーのレビューは編集できません")
+	}
+
 	review := &model.DateSpotReview{
 		Rate:    input.Rate,
 		Content: input.Content,
