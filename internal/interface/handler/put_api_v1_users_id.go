@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -27,6 +28,13 @@ func (h *PutApiV1UsersIdHandler) PutApiV1UsersId(ctx echo.Context, id int) error
 	if err != nil {
 		return err
 	}
+
+	// プロフィールを更新できるのは本人だけなので、操作主体はトークンから決める
+	currentUser, err := middleware.RequireCurrentUser(ctx)
+	if err != nil {
+		return err
+	}
+	input.OperatorID = currentUser.ID
 
 	output, err := h.InputPort.Execute(ctx.Request().Context(), input)
 	if err != nil {

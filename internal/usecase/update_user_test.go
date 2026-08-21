@@ -3,6 +3,7 @@ package usecase_test
 import (
 	"context"
 	"errors"
+	"net/http"
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
@@ -17,14 +18,42 @@ import (
 
 func validUpdateUserInput() usecase.UpdateUserInput {
 	return usecase.UpdateUserInput{
-		ID:     1,
-		Name:   "更新ユーザー",
-		Email:  "updated@example.com",
-		Gender: model.GenderMale,
+		ID:         1,
+		OperatorID: 1,
+		Name:       "更新ユーザー",
+		Email:      "updated@example.com",
+		Gender:     model.GenderMale,
 	}
 }
 
 func TestUpdateUserInteractor_Execute(t *testing.T) {
+	// 他人のプロフィールを書き換えられないことを保証する。
+	// パスワードも更新対象のため、防がないとアカウント乗っ取りが成立する。
+	t.Run("error_forbidden_when_operator_is_not_the_user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		ctx := context.Background()
+		user := &model.User{ID: 1, Name: "元ユーザー", Email: "old@example.com", Gender: model.GenderFemale}
+
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
+
+		userService := servicemock.NewMockUserService(ctrl)
+
+		input := validUpdateUserInput()
+		input.OperatorID = 99
+
+		interactor := usecase.NewUpdateUserUsecase(userRepo, userService)
+		output, err := interactor.Execute(ctx, input)
+
+		assert.Nil(t, output)
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusForbidden, statusCode)
+	})
+
 	t.Run("success", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()

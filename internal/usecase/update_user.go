@@ -23,6 +23,8 @@ type UpdateUserInput struct {
 	Image                *string
 	Password             string
 	PasswordConfirmation string
+	// OperatorID は更新を実行するユーザー（トークンの currentUser）の ID です。
+	OperatorID uint
 }
 
 // Validate はユーザー更新の入力データをバリデーションします。
@@ -95,6 +97,12 @@ func (i *UpdateUserInteractor) Execute(ctx context.Context, input UpdateUserInpu
 	user, err := i.UserRepository.FindByID(ctx, input.ID)
 	if err != nil {
 		return nil, apperror.NotFound()
+	}
+
+	// プロフィールを更新できるのは本人だけ。
+	// パスワードも更新対象のため、ここを開けるとアカウントを乗っ取られる。
+	if user.ID != input.OperatorID {
+		return nil, apperror.Forbidden("他のユーザーのプロフィールは変更できません")
 	}
 
 	// パスワードが指定されている場合のみ更新（Rails の allow_nil: true に対応）
