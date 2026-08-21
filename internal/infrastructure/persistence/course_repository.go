@@ -105,11 +105,28 @@ func (r *courseRepository) FindByID(ctx context.Context, id, viewerID uint) (*mo
 	return &course, nil
 }
 
-// DeleteByID は指定IDのコースを削除します。
+// DeleteByID は指定IDのコースを、紐づく during_spots ごと削除します。
+// during_spots はコースに従属するレコードで、外部キー制約があるため
+// 先に消さないと親のコースを削除できない。
+// 途中で失敗して during_spots だけが消えた状態にならないよう、
+// 2つの削除はトランザクションにまとめる。
 func (r *courseRepository) DeleteByID(ctx context.Context, id uint) error {
-	if err := r.db.WithContext(ctx).Delete(&model.Course{}, id).Error; err != nil {
+	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		return deleteCourse(tx, id)
+	})
+	if err != nil {
 		slog.ErrorContext(ctx, "courseRepository.DeleteByID failed", "err", err)
 		return err
 	}
+	slog.InfoContext(ctx, "courseRepository.DeleteByID succeeded", "course_id", id)
 	return nil
+}
+
+// deleteCourse は during_spots とコースをこの順で削除します。
+// 呼び出し側がトランザクションを張る前提のため、db にはその tx を渡します。
+func deleteCourse(db *gorm.DB, id uint) error {
+	if err := db.Where("course_id = ?", id).Delete(&model.DuringSpot{}).Error; err != nil {
+		return err
+	}
+	return db.Delete(&model.Course{}, id).Error
 }
