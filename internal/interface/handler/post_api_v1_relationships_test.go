@@ -11,6 +11,7 @@ import (
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/labstack/echo/v4"
@@ -67,6 +68,7 @@ func TestPostApiV1RelationshipsHandler(t *testing.T) {
 		form.Set("followed_user_id", "2")
 		ctx, rec := setupFormRequest(http.MethodPost, "/api/v1/relationships", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PostApiV1RelationshipsHandler{InputPort: mockPort}
 		err := h.PostApiV1Relationships(ctx)
 
@@ -82,24 +84,49 @@ func TestPostApiV1RelationshipsHandler(t *testing.T) {
 		assert.Equal(t, 2, len(users))
 	})
 
-	t.Run("error_invalid_current_user_id", func(t *testing.T) {
+	// current_user_id はリクエストから受け取らなくなったため、なりすましができないことを確認する
+	t.Run("ignores_current_user_id_in_request_body", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		mockPort := usecasemock.NewMockCreateRelationshipInputPort(ctrl)
-		// Execute は呼ばれないので EXPECT 不要
+		mockPort.EXPECT().
+			Execute(gomock.Any(), gomock.Cond(func(in usecase.CreateRelationshipInput) bool {
+				return in.CurrentUserID == 1 && in.FollowedUserID == 2
+			})).
+			Return(&usecase.CreateRelationshipOutput{
+				Users:        []*model.UserWithRelations{},
+				CurrentUser:  dummyUserWithRelations(1, "alice"),
+				FollowedUser: dummyUserWithRelations(2, "bob"),
+			}, nil)
 
 		form := url.Values{}
-		form.Set("current_user_id", "abc")
+		form.Set("current_user_id", "99999")
+		form.Set("followed_user_id", "2")
+		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/relationships", form)
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
+
+		h := handler.PostApiV1RelationshipsHandler{InputPort: mockPort}
+		require.NoError(t, h.PostApiV1Relationships(ctx))
+	})
+
+	t.Run("error_unauthorized_without_current_user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		mockPort := usecasemock.NewMockCreateRelationshipInputPort(ctrl)
+
+		form := url.Values{}
 		form.Set("followed_user_id", "2")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/relationships", form)
 
 		h := handler.PostApiV1RelationshipsHandler{InputPort: mockPort}
 		err := h.PostApiV1Relationships(ctx)
 
-		assert.Error(t, err)
-		_, _, _, ok := apperror.HTTPStatus(err)
-		assert.True(t, ok, "apperror 型のエラーであること")
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusUnauthorized, statusCode)
 	})
 
 	t.Run("error_usecase_returns_error", func(t *testing.T) {
@@ -119,6 +146,7 @@ func TestPostApiV1RelationshipsHandler(t *testing.T) {
 		form.Set("followed_user_id", "1")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/relationships", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "alice"})
 		h := handler.PostApiV1RelationshipsHandler{InputPort: mockPort}
 		err := h.PostApiV1Relationships(ctx)
 

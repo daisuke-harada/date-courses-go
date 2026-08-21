@@ -1525,12 +1525,9 @@ components:
       type: object
     FollowReauestData:
       properties:
-        current_user_id:
-          type: integer
         followed_user_id:
           type: integer
       required:
-      - current_user_id
       - followed_user_id
       type: object
     FollowResponseData:

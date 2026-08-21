@@ -40,9 +40,9 @@ type nominatimResult struct {
 // 見つからない場合は nil を返します（エラーではない）。
 func (c *Client) Search(ctx context.Context, spotName, cityName string) (*Coordinate, error) {
 	params := url.Values{
-		"q":              {spotName + " " + cityName},
-		"format":         {"json"},
-		"limit":          {"1"},
+		"q":               {spotName + " " + cityName},
+		"format":          {"json"},
+		"limit":           {"1"},
 		"accept-language": {"ja"},
 	}
 

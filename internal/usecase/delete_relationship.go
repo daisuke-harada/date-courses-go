@@ -16,6 +16,8 @@ type DeleteRelationshipInputPort interface {
 type DeleteRelationshipInput struct {
 	UserID   uint
 	FollowID uint
+	// OperatorID は操作を実行するユーザー（トークンの currentUser）の ID です。
+	OperatorID uint
 }
 
 type DeleteRelationshipOutput struct {
@@ -43,6 +45,12 @@ func NewDeleteRelationshipUsecase(
 }
 
 func (i *DeleteRelationshipInteractor) Execute(ctx context.Context, input DeleteRelationshipInput) (*DeleteRelationshipOutput, error) {
+	// 解除できるのは本人のフォローだけ。
+	// パスの current_user_id を信用すると他人のフォローを解除できてしまう。
+	if input.UserID != input.OperatorID {
+		return nil, apperror.Forbidden("他のユーザーのフォローは解除できません")
+	}
+
 	currentUser, err := i.UserRepository.FindByID(ctx, input.UserID)
 	if err != nil {
 		return nil, apperror.NotFound()

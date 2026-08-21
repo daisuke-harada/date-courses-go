@@ -4,9 +4,9 @@ import (
 	"context"
 	"log/slog"
 
+	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	model "github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/repository"
-	"github.com/daisuke-harada/date-courses-go/internal/apperror"
 	"gorm.io/gorm"
 )
 
