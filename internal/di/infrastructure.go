@@ -37,9 +37,15 @@ func ProvideJWTSecretKey(cfg *config.Config) usecase.JWTSecretKey {
 	return usecase.JWTSecretKey(cfg.JWT.SecretKey)
 }
 
+// ProvideDemoUserName は設定からデモ用アカウント名を提供します。
+func ProvideDemoUserName(cfg *config.Config) usecase.DemoUserName {
+	return usecase.DemoUserName(cfg.Demo.UserName)
+}
+
 // ProvideUsecases は全ユースケースのコンストラクタを Container に登録します。
 func ProvideUsecases(ct *Container) {
 	ct.MustProvide(ProvideJWTSecretKey)
+	ct.MustProvide(ProvideDemoUserName)
 	ct.MustProvide(usecase.NewGetDateSpotUsecase)
 	ct.MustProvide(usecase.NewGetDateSpotsUsecase)
 	ct.MustProvide(usecase.NewCreateDateSpotUsecase)

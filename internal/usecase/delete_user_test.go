@@ -16,6 +16,26 @@ import (
 )
 
 func TestDeleteUserInteractor_Execute(t *testing.T) {
+	// デモ用アカウントを退会させると復旧できないため、本人でも削除させない
+	t.Run("error_forbidden_when_target_is_demo_user", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		ctx := context.Background()
+		demo := &model.User{ID: 1, Name: "guest"}
+
+		userRepo := repositorymock.NewMockUserRepository(ctrl)
+		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(demo, nil)
+
+		interactor := usecase.NewDeleteUserUsecase(userRepo, "guest")
+		err := interactor.Execute(ctx, usecase.DeleteUserInput{ID: 1, OperatorID: 1})
+
+		require.Error(t, err)
+		statusCode, _, _, ok := apperror.HTTPStatus(err)
+		assert.True(t, ok)
+		assert.Equal(t, http.StatusForbidden, statusCode)
+	})
+
 	t.Run("success", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
@@ -27,7 +47,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
 		userRepo.EXPECT().Delete(ctx, uint(1)).Return(nil)
 
-		interactor := usecase.NewDeleteUserUsecase(userRepo)
+		interactor := usecase.NewDeleteUserUsecase(userRepo, "guest")
 		err := interactor.Execute(ctx, usecase.DeleteUserInput{ID: 1, OperatorID: 1})
 
 		require.NoError(t, err)
@@ -44,7 +64,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
 
-		interactor := usecase.NewDeleteUserUsecase(userRepo)
+		interactor := usecase.NewDeleteUserUsecase(userRepo, "guest")
 		err := interactor.Execute(ctx, usecase.DeleteUserInput{ID: 1, OperatorID: 99})
 
 		require.Error(t, err)
@@ -62,7 +82,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(999)).Return(nil, errors.New("not found"))
 
-		interactor := usecase.NewDeleteUserUsecase(userRepo)
+		interactor := usecase.NewDeleteUserUsecase(userRepo, "guest")
 		err := interactor.Execute(ctx, usecase.DeleteUserInput{ID: 999, OperatorID: 999})
 
 		assert.Error(t, err)
@@ -82,7 +102,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
 		userRepo.EXPECT().Delete(ctx, uint(1)).Return(errors.New("db error"))
 
-		interactor := usecase.NewDeleteUserUsecase(userRepo)
+		interactor := usecase.NewDeleteUserUsecase(userRepo, "guest")
 		err := interactor.Execute(ctx, usecase.DeleteUserInput{ID: 1, OperatorID: 1})
 
 		assert.Error(t, err)
