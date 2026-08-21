@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -13,6 +14,11 @@ type PutApiV1DateSpotsIdHandler struct {
 }
 
 func (h *PutApiV1DateSpotsIdHandler) PutApiV1DateSpotsId(ctx echo.Context, id int) error {
+	// デートスポットを操作できるのは管理者だけ
+	if _, err := middleware.RequireAdmin(ctx); err != nil {
+		return err
+	}
+
 	var req struct {
 		Name         string  `form:"name"`
 		GenreID      int     `form:"genre_id"`

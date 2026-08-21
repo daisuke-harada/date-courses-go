@@ -8,7 +8,9 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/stretchr/testify/assert"
@@ -37,6 +39,7 @@ func TestPostApiV1DateSpotsHandler(t *testing.T) {
 
 		ctx, rec := setupFormRequest(http.MethodPost, "/api/v1/date_spots", validDateSpotForm())
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpots(ctx)
 
@@ -58,6 +61,7 @@ func TestPostApiV1DateSpotsHandler(t *testing.T) {
 		form.Del("name")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spots", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpots(ctx)
 
@@ -77,6 +81,7 @@ func TestPostApiV1DateSpotsHandler(t *testing.T) {
 		form.Del("genre_id")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spots", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpots(ctx)
 
@@ -96,6 +101,7 @@ func TestPostApiV1DateSpotsHandler(t *testing.T) {
 		form.Del("city_name")
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spots", form)
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpots(ctx)
 
@@ -116,6 +122,7 @@ func TestPostApiV1DateSpotsHandler(t *testing.T) {
 
 		ctx, _ := setupFormRequest(http.MethodPost, "/api/v1/date_spots", validDateSpotForm())
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PostApiV1DateSpotsHandler{InputPort: mockPort}
 		err := h.PostApiV1DateSpots(ctx)
 

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/openapi"
 	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -15,6 +16,11 @@ type PostApiV1DateSpotsHandler struct {
 }
 
 func (h *PostApiV1DateSpotsHandler) PostApiV1DateSpots(ctx echo.Context) error {
+	// デートスポットを操作できるのは管理者だけ
+	if _, err := middleware.RequireAdmin(ctx); err != nil {
+		return err
+	}
+
 	genreIDStr := ctx.FormValue("genre_id")
 	prefectureIDStr := ctx.FormValue("prefecture_id")
 

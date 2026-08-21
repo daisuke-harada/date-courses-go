@@ -3,7 +3,6 @@ package openapi
 import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
-	"github.com/oapi-codegen/runtime/types"
 	"github.com/samber/lo"
 )
 
@@ -42,7 +41,6 @@ func NewUserResponseData(
 	return UserResponseData{
 		Id:              int(user.ID),
 		Admin:           user.Admin,
-		Email:           user.Email,
 		Gender:          gender,
 		Image:           ImageData{Url: user.Image},
 		Name:            user.Name,
@@ -84,7 +82,6 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseData, error) {
 		courseUser = UserData{
 			Id:     int(course.User.ID),
 			Name:   course.User.Name,
-			Email:  types.Email(course.User.Email),
 			Gender: gender,
 			Image:  ImageData{Url: course.User.Image},
 			Admin:  course.User.Admin,

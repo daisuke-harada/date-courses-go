@@ -35,6 +35,19 @@ func CurrentUserID(ctx echo.Context) uint {
 	return user.ID
 }
 
+// RequireAdmin は管理者を返します。未認証なら 401、管理者でなければ 403 を返します。
+// デートスポットの登録・編集・削除など、管理者だけに許す操作で使います。
+func RequireAdmin(ctx echo.Context) (*model.User, error) {
+	user, err := RequireCurrentUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !user.Admin {
+		return nil, apperror.Forbidden("管理者のみ実行できます")
+	}
+	return user, nil
+}
+
 // RequireCurrentUser は認証済みユーザーを返します。未認証の場合は 401 を返します。
 // 認証必須ルートでも、リクエストの user_id ではなく必ずこのユーザーを操作主体として扱います。
 func RequireCurrentUser(ctx echo.Context) (*model.User, error) {

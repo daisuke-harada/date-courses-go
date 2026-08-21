@@ -1,11 +1,12 @@
 components:
   schemas:
+    # email は本人向けのレスポンス（ログイン・新規登録）でのみ設定する。
+    # 公開されるコースの投稿者情報などでは省略する。
     UserData:
       type: object
       required:
         - id
         - name
-        - email
         - gender
         - image
         - admin
@@ -23,12 +24,13 @@ components:
           $ref: "./image.yaml#/components/schemas/ImageData"
         admin:
           type: boolean
+    # 他のユーザーからも参照されるため email は含めない。
+    # 本人のメールアドレスはログイン・新規登録のレスポンスから取得する。
     UserResponseData:
       type: object
       required:
         - id
         - admin
-        - email
         - gender
         - image
         - name
@@ -41,8 +43,6 @@ components:
           type: integer
         admin:
           type: boolean
-        email:
-          type: string
         gender:
           $ref: "../gender.yaml#/components/schemas/Gender"
         image:

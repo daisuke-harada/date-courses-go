@@ -11,11 +11,13 @@ func NewLoginResponse(user *model.User, token string) (LoginResponseData, error)
 	if err != nil {
 		return LoginResponseData{}, err
 	}
+	email := openapi_types.Email(user.Email)
 	return LoginResponseData{
 		User: UserData{
-			Id:     int(user.ID),
-			Name:   user.Name,
-			Email:  openapi_types.Email(user.Email),
+			Id:   int(user.ID),
+			Name: user.Name,
+			// ログインは本人向けのレスポンスなのでメールアドレスを含める
+			Email:  &email,
 			Gender: gender,
 			Admin:  user.Admin,
 			Image:  ImageData{Url: user.Image},

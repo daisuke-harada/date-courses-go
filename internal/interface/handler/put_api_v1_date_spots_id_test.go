@@ -9,7 +9,9 @@ import (
 	"testing"
 
 	"github.com/daisuke-harada/date-courses-go/internal/apperror"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/interface/handler"
+	"github.com/daisuke-harada/date-courses-go/internal/interface/middleware"
 	usecasemock "github.com/daisuke-harada/date-courses-go/internal/usecase/mock"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -46,6 +48,7 @@ func TestPutApiV1DateSpotsIdHandler(t *testing.T) {
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("10")
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PutApiV1DateSpotsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotsId(ctx, 10)
 
@@ -72,6 +75,7 @@ func TestPutApiV1DateSpotsIdHandler(t *testing.T) {
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("10")
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PutApiV1DateSpotsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotsId(ctx, 10)
 
@@ -98,6 +102,7 @@ func TestPutApiV1DateSpotsIdHandler(t *testing.T) {
 		ctx.SetParamNames("id")
 		ctx.SetParamValues("10")
 
+		middleware.SetCurrentUser(ctx, &model.User{ID: 1, Name: "admin", Admin: true})
 		h := handler.PutApiV1DateSpotsIdHandler{InputPort: mockPort}
 		err := h.PutApiV1DateSpotsId(ctx, 10)
 
