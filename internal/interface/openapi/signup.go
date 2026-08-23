@@ -21,8 +21,9 @@ func NewSignupResponse(user *model.User, token string) (SignUpResponseData, erro
 			Name:            user.Name,
 			FollowerIds:     []int{},
 			FollowingIds:    []int{},
-			Courses:         []CourseResponseData{},
-			DateSpotReviews: []DateSpotReviewData{},
+			Courses: []CourseResponseData{},
+			// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+			// DateSpotReviews: []DateSpotReviewData{},
 		},
 		LoginStatus: true,
 		Token:       token,

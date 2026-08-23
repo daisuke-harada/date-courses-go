@@ -9,8 +9,8 @@ components:
         - longitude
         - prefecture_name
         - genre_name
-        - review_total_number
-        - average_rate
+        # - review_total_number  # レビュー機能は無効化中
+        # - average_rate         # レビュー機能は無効化中
         - date_spot
       properties:
         id:
@@ -27,11 +27,12 @@ components:
           type: string
         genre_name:
           type: string
-        review_total_number:
-          type: integer
-        average_rate:
-          type: number
-          format: float
+        # レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+        # review_total_number:
+        #   type: integer
+        # average_rate:
+        #   type: number
+        #   format: float
         source:
           type: string
           enum: [manual, hotpepper, jalan]

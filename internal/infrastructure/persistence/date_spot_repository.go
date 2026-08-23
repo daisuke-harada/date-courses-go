@@ -30,11 +30,13 @@ func (r *dateSpotRepository) Create(ctx context.Context, dateSpot *model.DateSpo
 func (r *dateSpotRepository) FindByID(ctx context.Context, id uint) (*model.DateSpot, error) {
 	db := r.db.WithContext(ctx).
 		Model(&model.DateSpot{}).
-		Select(`date_spots.*,
-			COALESCE(AVG(date_spot_reviews.rate), 0)  AS average_rate,
-			COUNT(date_spot_reviews.id)               AS review_total_number`).
-		Joins("LEFT JOIN date_spot_reviews ON date_spot_reviews.date_spot_id = date_spots.id").
-		Group("date_spots.id")
+		Select("date_spots.*")
+		// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+		// Select(`date_spots.*,
+		// 	COALESCE(AVG(date_spot_reviews.rate), 0)  AS average_rate,
+		// 	COUNT(date_spot_reviews.id)               AS review_total_number`).
+		// Joins("LEFT JOIN date_spot_reviews ON date_spot_reviews.date_spot_id = date_spots.id").
+		// Group("date_spots.id")
 
 	var dateSpot model.DateSpot
 	if err := db.Where("date_spots.id = ?", id).First(&dateSpot).Error; err != nil {
@@ -50,11 +52,13 @@ func (r *dateSpotRepository) FindByID(ctx context.Context, id uint) (*model.Date
 func (r *dateSpotRepository) Search(ctx context.Context, params repository.DateSpotSearchParams) ([]*model.DateSpot, error) {
 	db := r.db.WithContext(ctx).
 		Model(&model.DateSpot{}).
-		Select(`date_spots.*,
-			COALESCE(AVG(date_spot_reviews.rate), 0)  AS average_rate,
-			COUNT(date_spot_reviews.id)               AS review_total_number`).
-		Joins("LEFT JOIN date_spot_reviews ON date_spot_reviews.date_spot_id = date_spots.id").
-		Group("date_spots.id")
+		Select("date_spots.*")
+		// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+		// Select(`date_spots.*,
+		// 	COALESCE(AVG(date_spot_reviews.rate), 0)  AS average_rate,
+		// 	COUNT(date_spot_reviews.id)               AS review_total_number`).
+		// Joins("LEFT JOIN date_spot_reviews ON date_spot_reviews.date_spot_id = date_spots.id").
+		// Group("date_spots.id")
 
 	if params.Name != nil && *params.Name != "" {
 		db = db.Where("date_spots.name LIKE ?", "%"+*params.Name+"%")
@@ -112,7 +116,8 @@ func (r *dateSpotRepository) Delete(ctx context.Context, id uint) error {
 // deleteDateSpot は依存関係の深い順に削除します。
 // 呼び出し側がトランザクションを張る前提のため、db にはその tx を渡します。
 func deleteDateSpot(db *gorm.DB, id uint) error {
-	if err := db.Where("date_spot_id = ?", id).Delete(&model.DateSpotReview{}).Error; err != nil {
+	// レビュー機能は無効化中だがテーブルは残しているため、外部キー制約を避けるために削除は行う
+	if err := db.Table("date_spot_reviews").Where("date_spot_id = ?", id).Delete(nil).Error; err != nil {
 		return err
 	}
 	if err := db.Where("date_spot_id = ?", id).Delete(&model.DuringSpot{}).Error; err != nil {

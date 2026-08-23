@@ -3,7 +3,6 @@ package handler
 
 type Handler struct {
 	DeleteApiV1CoursesIdHandler
-	DeleteApiV1DateSpotReviewsIdHandler
 	DeleteApiV1DateSpotsIdHandler
 	DeleteApiV1RelationshipsCurrentUserIdOtherUserIdHandler
 	DeleteApiV1UsersIdHandler
@@ -20,12 +19,10 @@ type Handler struct {
 	GetApiV1UsersUserIdFollowersHandler
 	GetApiV1UsersUserIdFollowingsHandler
 	PostApiV1CoursesHandler
-	PostApiV1DateSpotReviewsHandler
 	PostApiV1DateSpotsHandler
 	PostApiV1LoginHandler
 	PostApiV1RelationshipsHandler
 	PostApiV1SignupHandler
-	PutApiV1DateSpotReviewsIdHandler
 	PutApiV1DateSpotsIdHandler
 	PutApiV1UsersIdHandler
 }

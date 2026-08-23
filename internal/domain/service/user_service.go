@@ -16,20 +16,22 @@ type UserService interface {
 }
 
 type userService struct {
-	UserRepository           repository.UserRepository
-	CourseRepository         repository.CourseRepository
-	DateSpotReviewRepository repository.DateSpotReviewRepository
+	UserRepository   repository.UserRepository
+	CourseRepository repository.CourseRepository
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// DateSpotReviewRepository repository.DateSpotReviewRepository
 }
 
 func NewUserService(
 	userRepository repository.UserRepository,
 	courseRepository repository.CourseRepository,
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// dateSpotReviewRepository repository.DateSpotReviewRepository,
 ) UserService {
 	return &userService{
-		UserRepository:           userRepository,
-		CourseRepository:         courseRepository,
-		DateSpotReviewRepository: dateSpotReviewRepository,
+		UserRepository:   userRepository,
+		CourseRepository: courseRepository,
+		// DateSpotReviewRepository: dateSpotReviewRepository,
 	}
 }
 
@@ -43,8 +45,8 @@ func (s *userService) BuildUserWithRelations(ctx context.Context, user *model.Us
 }
 
 // BuildUsersWithRelations は複数ユーザーの関連データをまとめて取得します。
-// 関連ごとに1回ずつ（フォロワー・フォロー中・コース・レビューの計4回）しかクエリを
-// 発行しません。ユーザー1人につき4回投げると、一覧では人数に比例して
+// 関連ごとに1回ずつ（フォロワー・フォロー中・コースの計3回）しかクエリを
+// 発行しません。ユーザー1人につき3回投げると、一覧では人数に比例して
 // クエリが増えてしまうためです。
 func (s *userService) BuildUsersWithRelations(ctx context.Context, users []*model.User) ([]*model.UserWithRelations, error) {
 	userIDs := make([]uint, 0, len(users))
@@ -56,10 +58,11 @@ func (s *userService) BuildUsersWithRelations(ctx context.Context, users []*mode
 		followerIDs  map[uint][]int
 		followingIDs map[uint][]int
 		courses      map[uint][]*model.Course
-		reviews      map[uint][]*model.DateSpotReview
+		// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+		// reviews      map[uint][]*model.DateSpotReview
 	)
 
-	errCh := make(chan error, 4)
+	errCh := make(chan error, 3)
 	var wg sync.WaitGroup
 
 	run := func(fn func() error) {
@@ -87,11 +90,12 @@ func (s *userService) BuildUsersWithRelations(ctx context.Context, users []*mode
 		courses, err = s.CourseRepository.FindPublicByUserIDs(ctx, userIDs)
 		return err
 	})
-	run(func() error {
-		var err error
-		reviews, err = s.DateSpotReviewRepository.FindByUserIDs(ctx, userIDs)
-		return err
-	})
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// run(func() error {
+	// 	var err error
+	// 	reviews, err = s.DateSpotReviewRepository.FindByUserIDs(ctx, userIDs)
+	// 	return err
+	// })
 
 	wg.Wait()
 	close(errCh)
@@ -107,7 +111,7 @@ func (s *userService) BuildUsersWithRelations(ctx context.Context, users []*mode
 			FollowerIDs:  emptyIfNil(followerIDs[u.ID]),
 			FollowingIDs: emptyIfNil(followingIDs[u.ID]),
 			Courses:      courses[u.ID],
-			Reviews:      reviews[u.ID],
+			// Reviews:      reviews[u.ID],
 		})
 	}
 	return result, nil

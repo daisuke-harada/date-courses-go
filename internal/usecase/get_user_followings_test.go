@@ -23,7 +23,7 @@ func TestGetUserFollowingsInteractor_Execute(t *testing.T) {
 		ctx := context.Background()
 		user := &model.User{ID: 1, Name: "テストユーザー"}
 		following := &model.User{ID: 2, Name: "フォロー先"}
-		uwr := &model.UserWithRelations{User: following, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}}
+		uwr := &model.UserWithRelations{User: following, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)

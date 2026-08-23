@@ -3,7 +3,8 @@ package openapi
 import (
 	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
-	"github.com/samber/lo"
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// "github.com/samber/lo"
 )
 
 // NewUserResponseData は User と関連データから UserResponseBody を構築します。
@@ -11,7 +12,8 @@ func NewUserResponseData(
 	user *model.User,
 	followerIDs, followingIDs []int,
 	courses []*model.Course,
-	reviews []*model.DateSpotReview,
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// reviews []*model.DateSpotReview,
 ) (UserResponseData, error) {
 	gender, err := NewGender(user.Gender)
 	if err != nil {
@@ -27,9 +29,10 @@ func NewUserResponseData(
 		courseResponses = append(courseResponses, cr)
 	}
 
-	reviewResponses := lo.Map(reviews, func(rv *model.DateSpotReview, _ int) DateSpotReviewData {
-		return newDateSpotReviewData(rv)
-	})
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// reviewResponses := lo.Map(reviews, func(rv *model.DateSpotReview, _ int) DateSpotReviewData {
+	// 	return newDateSpotReviewData(rv)
+	// })
 
 	if followerIDs == nil {
 		followerIDs = []int{}
@@ -46,8 +49,8 @@ func NewUserResponseData(
 		Name:            user.Name,
 		FollowerIds:     followerIDs,
 		FollowingIds:    followingIDs,
-		Courses:         courseResponses,
-		DateSpotReviews: reviewResponses,
+		Courses: courseResponses,
+		// DateSpotReviews: reviewResponses,
 	}, nil
 }
 
@@ -98,28 +101,29 @@ func buildCourseResponseBody(course *model.Course) (CourseResponseData, error) {
 	}, nil
 }
 
-func newDateSpotReviewData(review *model.DateSpotReview) DateSpotReviewData {
-	var rate float32
-	if review.Rate != nil {
-		rate = float32(*review.Rate)
-	}
-	var content string
-	if review.Content != nil {
-		content = *review.Content
-	}
-
-	var dateSpot DateSpotData
-	if review.DateSpot != nil {
-		dateSpot = newDateSpotData(review.DateSpot)
-	}
-
-	return DateSpotReviewData{
-		Id:       int(review.ID),
-		Rate:     rate,
-		Content:  content,
-		DateSpot: dateSpot,
-	}
-}
+// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+// func newDateSpotReviewData(review *model.DateSpotReview) DateSpotReviewData {
+// 	var rate float32
+// 	if review.Rate != nil {
+// 		rate = float32(*review.Rate)
+// 	}
+// 	var content string
+// 	if review.Content != nil {
+// 		content = *review.Content
+// 	}
+//
+// 	var dateSpot DateSpotData
+// 	if review.DateSpot != nil {
+// 		dateSpot = newDateSpotData(review.DateSpot)
+// 	}
+//
+// 	return DateSpotReviewData{
+// 		Id:       int(review.ID),
+// 		Rate:     rate,
+// 		Content:  content,
+// 		DateSpot: dateSpot,
+// 	}
+// }
 
 func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseData, error) {
 	responses := make([]UserResponseData, 0, len(users))
@@ -129,7 +133,7 @@ func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseData, 
 			uwr.FollowerIDs,
 			uwr.FollowingIDs,
 			uwr.Courses,
-			uwr.Reviews,
+			// uwr.Reviews,
 		)
 		if err != nil {
 			return nil, err
@@ -141,5 +145,5 @@ func NewGetUsersResponse(users []*model.UserWithRelations) ([]UserResponseData, 
 
 // NewUserWithRelationsResponse は *model.UserWithRelations から UserResponseBody を構築します。
 func NewUserWithRelationsResponse(uwr *model.UserWithRelations) (UserResponseData, error) {
-	return NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
+	return NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses)
 }

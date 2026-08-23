@@ -21,7 +21,7 @@ CREATE TABLE date_spots (
   prefecture_id INT,
   name VARCHAR(255) NOT NULL,
   city_name VARCHAR(255) NOT NULL,
-  image VARCHAR(255),
+  image VARCHAR(1000),
   latitude DOUBLE,
   longitude DOUBLE,
   source VARCHAR(20) NOT NULL DEFAULT 'manual',

@@ -5,7 +5,7 @@ import "github.com/daisuke-harada/date-courses-go/internal/usecase"
 func NewUnFollowResponseData(output *usecase.DeleteRelationshipOutput) (UnFollowResponseData, error) {
 	users := make([]UserResponseData, 0, len(output.Users))
 	for _, uwr := range output.Users {
-		resp, err := NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
+		resp, err := NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses)
 		if err != nil {
 			return UnFollowResponseData{}, err
 		}
@@ -32,7 +32,7 @@ func NewUnFollowResponseData(output *usecase.DeleteRelationshipOutput) (UnFollow
 func NewFollowResponseData(output *usecase.CreateRelationshipOutput) (FollowResponseData, error) {
 	users := make([]UserResponseData, 0, len(output.Users))
 	for _, uwr := range output.Users {
-		resp, err := NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses, uwr.Reviews)
+		resp, err := NewUserResponseData(uwr.User, uwr.FollowerIDs, uwr.FollowingIDs, uwr.Courses)
 		if err != nil {
 			return FollowResponseData{}, err
 		}

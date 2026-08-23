@@ -36,8 +36,8 @@ func TestCreateRelationshipInteractor_Execute(t *testing.T) {
 		followedUser := newTestUser(2, "bob")
 		allUsers := []*model.User{currentUser, followedUser}
 
-		currentUwr := &model.UserWithRelations{User: currentUser, FollowerIDs: []int{}, FollowingIDs: []int{2}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}}
-		followedUwr := &model.UserWithRelations{User: followedUser, FollowerIDs: []int{1}, FollowingIDs: []int{}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}}
+		currentUwr := &model.UserWithRelations{User: currentUser, FollowerIDs: []int{}, FollowingIDs: []int{2}, Courses: []*model.Course{}}
+		followedUwr := &model.UserWithRelations{User: followedUser, FollowerIDs: []int{1}, FollowingIDs: []int{}, Courses: []*model.Course{}}
 		allUwrs := []*model.UserWithRelations{currentUwr, followedUwr}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)

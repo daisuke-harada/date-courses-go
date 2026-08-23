@@ -22,7 +22,7 @@ func TestGetUserInteractor_Execute(t *testing.T) {
 
 		ctx := context.Background()
 		user := &model.User{ID: 1, Name: "テストユーザー"}
-		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}}
+		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
@@ -51,7 +51,7 @@ func TestGetUserInteractor_Execute(t *testing.T) {
 			{ID: 10, UserID: 1, Authority: model.CourseAuthorityPublic},
 			{ID: 11, UserID: 1, Authority: model.CourseAuthorityPrivate},
 		}
-		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: publicCourses, Reviews: []*model.DateSpotReview{}}
+		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: publicCourses}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
@@ -77,7 +77,7 @@ func TestGetUserInteractor_Execute(t *testing.T) {
 		ctx := context.Background()
 		user := &model.User{ID: 1, Name: "テストユーザー"}
 		publicCourses := []*model.Course{{ID: 10, UserID: 1, Authority: model.CourseAuthorityPublic}}
-		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: publicCourses, Reviews: []*model.DateSpotReview{}}
+		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: publicCourses}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)

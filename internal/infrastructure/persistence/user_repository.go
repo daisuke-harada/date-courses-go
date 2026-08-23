@@ -162,7 +162,8 @@ func deleteUser(db *gorm.DB, id uint) error {
 	if err := db.Where("user_id = ?", id).Delete(&model.Course{}).Error; err != nil {
 		return err
 	}
-	if err := db.Where("user_id = ?", id).Delete(&model.DateSpotReview{}).Error; err != nil {
+	// レビュー機能は無効化中だがテーブルは残しているため、外部キー制約を避けるために削除は行う
+	if err := db.Table("date_spot_reviews").Where("user_id = ?", id).Delete(nil).Error; err != nil {
 		return err
 	}
 	// フォローしている側・されている側の両方を消す

@@ -84,7 +84,7 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 
 		ctx := context.Background()
 		user := &model.User{ID: 1, Name: "元ユーザー", Email: "old@example.com", Gender: model.GenderFemale}
-		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}}
+		uwr := &model.UserWithRelations{User: user, FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)
 		userRepo.EXPECT().FindByID(ctx, uint(1)).Return(user, nil)
