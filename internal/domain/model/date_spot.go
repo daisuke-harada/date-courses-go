@@ -26,6 +26,7 @@ type DateSpot struct {
 	UpdatedAt      time.Time `gorm:"not null;autoUpdateTime"`
 
 	// DB集計フィールド (SELECT時のみ使用、マイグレーション対象外)
-	AverageRate       float64 `gorm:"column:average_rate;<-:false"`
-	ReviewTotalNumber int     `gorm:"column:review_total_number;<-:false"`
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// AverageRate       float64 `gorm:"column:average_rate;<-:false"`
+	// ReviewTotalNumber int     `gorm:"column:review_total_number;<-:false"`
 }

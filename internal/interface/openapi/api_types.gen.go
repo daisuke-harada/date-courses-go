@@ -124,13 +124,12 @@ type CourseResponseData struct {
 
 // DateSpotData defines model for DateSpotData.
 type DateSpotData struct {
-	AverageRate float32   `json:"average_rate"`
-	CreatedAt   time.Time `json:"created_at"`
-	GenreId     int       `json:"genre_id"`
-	Id          int       `json:"id"`
-	Image       ImageData `json:"image"`
-	Name        string    `json:"name"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
+	GenreId   int       `json:"genre_id"`
+	Id        int       `json:"id"`
+	Image     ImageData `json:"image"`
+	Name      string    `json:"name"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // DateSpotFormRequestData defines model for DateSpotFormRequestData.
@@ -147,59 +146,22 @@ type DateSpotFormResponseData struct {
 	DateSpotId int `json:"date_spot_id"`
 }
 
-// DateSpotReviewData defines model for DateSpotReviewData.
-type DateSpotReviewData struct {
-	Content  string       `json:"content"`
-	DateSpot DateSpotData `json:"date_spot"`
-	Id       int          `json:"id"`
-	Rate     float32      `json:"rate"`
-}
-
-// DateSpotReviewFormRequestData defines model for DateSpotReviewFormRequestData.
-type DateSpotReviewFormRequestData struct {
-	Content    string  `json:"content"`
-	DateSpotId int     `json:"date_spot_id"`
-	Rate       float32 `json:"rate"`
-}
-
-// DateSpotReviewResponseData defines model for DateSpotReviewResponseData.
-type DateSpotReviewResponseData struct {
-	DateSpotReviews   []DateSpotShowResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
-	ReviewAverageRate float32                                        `json:"review_average_rate"`
-}
-
 // DateSpotShowResponseData defines model for DateSpotShowResponseData.
 type DateSpotShowResponseData struct {
-	DateSpot          DateSpotSummaryData                            `json:"date_spot"`
-	DateSpotReviews   []DateSpotShowResponseDataDateSpotReviewsInner `json:"date_spot_reviews"`
-	ReviewAverageRate float32                                        `json:"review_average_rate"`
-}
-
-// DateSpotShowResponseDataDateSpotReviewsInner defines model for DateSpotShowResponseData_date_spot_reviews_inner.
-type DateSpotShowResponseDataDateSpotReviewsInner struct {
-	Content    *string   `json:"content,omitempty"`
-	DateSpotId int       `json:"date_spot_id"`
-	Id         int       `json:"id"`
-	Rate       *float32  `json:"rate,omitempty"`
-	UserGender string    `json:"user_gender"`
-	UserId     int       `json:"user_id"`
-	UserImage  ImageData `json:"user_image"`
-	UserName   string    `json:"user_name"`
+	DateSpot DateSpotSummaryData `json:"date_spot"`
 }
 
 // DateSpotSummaryData defines model for DateSpotSummaryData.
 type DateSpotSummaryData struct {
-	AverageRate       float32                    `json:"average_rate"`
-	CityName          string                     `json:"city_name"`
-	DateSpot          DateSpotData               `json:"date_spot"`
-	GenreName         string                     `json:"genre_name"`
-	Id                int                        `json:"id"`
-	Latitude          float32                    `json:"latitude"`
-	Longitude         float32                    `json:"longitude"`
-	MapsUrl           *string                    `json:"maps_url,omitempty"`
-	PrefectureName    string                     `json:"prefecture_name"`
-	ReviewTotalNumber int                        `json:"review_total_number"`
-	Source            *DateSpotSummaryDataSource `json:"source,omitempty"`
+	CityName       string                     `json:"city_name"`
+	DateSpot       DateSpotData               `json:"date_spot"`
+	GenreName      string                     `json:"genre_name"`
+	Id             int                        `json:"id"`
+	Latitude       float32                    `json:"latitude"`
+	Longitude      float32                    `json:"longitude"`
+	MapsUrl        *string                    `json:"maps_url,omitempty"`
+	PrefectureName string                     `json:"prefecture_name"`
+	Source         *DateSpotSummaryDataSource `json:"source,omitempty"`
 }
 
 // DateSpotSummaryDataSource defines model for DateSpotSummaryData.Source.
@@ -324,15 +286,14 @@ type UserFormRequestData struct {
 
 // UserResponseData defines model for UserResponseData.
 type UserResponseData struct {
-	Admin           bool                 `json:"admin"`
-	Courses         []CourseResponseData `json:"courses"`
-	DateSpotReviews []DateSpotReviewData `json:"date_spot_reviews"`
-	FollowerIds     []int                `json:"followerIds"`
-	FollowingIds    []int                `json:"followingIds"`
-	Gender          Gender               `json:"gender"`
-	Id              int                  `json:"id"`
-	Image           ImageData            `json:"image"`
-	Name            string               `json:"name"`
+	Admin        bool                 `json:"admin"`
+	Courses      []CourseResponseData `json:"courses"`
+	FollowerIds  []int                `json:"followerIds"`
+	FollowingIds []int                `json:"followingIds"`
+	Gender       Gender               `json:"gender"`
+	Id           int                  `json:"id"`
+	Image        ImageData            `json:"image"`
+	Name         string               `json:"name"`
 }
 
 // WelcomeResponseData defines model for WelcomeResponseData.
@@ -368,12 +329,6 @@ type GetApiV1UsersParams struct {
 
 // PostApiV1CoursesFormdataRequestBody defines body for PostApiV1Courses for application/x-www-form-urlencoded ContentType.
 type PostApiV1CoursesFormdataRequestBody = CourseFormRequestData
-
-// PostApiV1DateSpotReviewsMultipartRequestBody defines body for PostApiV1DateSpotReviews for multipart/form-data ContentType.
-type PostApiV1DateSpotReviewsMultipartRequestBody = DateSpotReviewFormRequestData
-
-// PutApiV1DateSpotReviewsIdMultipartRequestBody defines body for PutApiV1DateSpotReviewsId for multipart/form-data ContentType.
-type PutApiV1DateSpotReviewsIdMultipartRequestBody = DateSpotReviewFormRequestData
 
 // PostApiV1DateSpotsMultipartRequestBody defines body for PostApiV1DateSpots for multipart/form-data ContentType.
 type PostApiV1DateSpotsMultipartRequestBody = DateSpotFormRequestData

@@ -16,22 +16,25 @@ type GetDateSpotInput struct {
 }
 
 type GetDateSpotOutput struct {
-	DateSpot        *model.DateSpot
-	DateSpotReviews []*model.DateSpotReview
+	DateSpot *model.DateSpot
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// DateSpotReviews []*model.DateSpotReview
 }
 
 type GetDateSpotInteractor struct {
-	DateSpotRepository       repository.DateSpotRepository
-	DateSpotReviewRepository repository.DateSpotReviewRepository
+	DateSpotRepository repository.DateSpotRepository
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// DateSpotReviewRepository repository.DateSpotReviewRepository
 }
 
 func NewGetDateSpotUsecase(
 	dateSpotRepository repository.DateSpotRepository,
-	dateSpotReviewRepository repository.DateSpotReviewRepository,
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// dateSpotReviewRepository repository.DateSpotReviewRepository,
 ) GetDateSpotInputPort {
 	return &GetDateSpotInteractor{
-		DateSpotRepository:       dateSpotRepository,
-		DateSpotReviewRepository: dateSpotReviewRepository,
+		DateSpotRepository: dateSpotRepository,
+		// DateSpotReviewRepository: dateSpotReviewRepository,
 	}
 }
 
@@ -41,10 +44,11 @@ func (i *GetDateSpotInteractor) Execute(ctx context.Context, input GetDateSpotIn
 		return nil, err
 	}
 
-	reviews, err := i.DateSpotReviewRepository.FindByDateSpotID(ctx, input.ID)
-	if err != nil {
-		return nil, err
-	}
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// reviews, err := i.DateSpotReviewRepository.FindByDateSpotID(ctx, input.ID)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return &GetDateSpotOutput{DateSpot: dateSpot, DateSpotReviews: reviews}, nil
+	return &GetDateSpotOutput{DateSpot: dateSpot}, nil
 }

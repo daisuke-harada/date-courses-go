@@ -8,7 +8,7 @@ components:
       - image
       - created_at
       - updated_at
-      - average_rate
+      # - average_rate  # レビュー機能は無効化中
       - genre_id
       properties:
         id:
@@ -23,9 +23,10 @@ components:
         updated_at:
           type: string
           format: date-time
-        average_rate:
-          type: number
-          format: float
+        # レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+        # average_rate:
+        #   type: number
+        #   format: float
         genre_id:
           type: integer
     DateSpotFormResponseData:

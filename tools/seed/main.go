@@ -2,145 +2,94 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"log/slog"
 	"math/rand"
-	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/daisuke-harada/date-courses-go/internal/config"
+	"github.com/daisuke-harada/date-courses-go/internal/domain/master"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/model"
 	"github.com/daisuke-harada/date-courses-go/internal/domain/service"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/db"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/hotpepper"
+	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/external/wikimedia"
 	"github.com/daisuke-harada/date-courses-go/internal/infrastructure/persistence"
+	"github.com/daisuke-harada/date-courses-go/internal/usecase"
 	"github.com/daisuke-harada/date-courses-go/pkg/logger"
 	"gorm.io/gorm"
 )
 
-// ─── Genre 名マップ (ActiveHash 相当) ────────────────────────────────────────
-var genreNames = map[int]string{
-	1:  "ショッピングモール",
-	2:  "飲食店",
-	3:  "カフェ",
-	4:  "アウトドア",
-	5:  "遊園地",
-	6:  "水族館",
-	7:  "寿司",
-	8:  "居酒屋",
-	9:  "焼肉",
-	10: "バーベキュー",
-	11: "ランドマーク",
-	12: "公園",
-}
+// ─── DateSpot 登録 (HotPepper グルメ API の実データ) ─────────────────────────
 
-// ─── Prefecture 名マップ (ActiveHash 相当) ────────────────────────────────────
-var prefectureNames = map[int]string{
-	1: "北海道", 2: "青森県", 3: "岩手県", 4: "宮城県", 5: "秋田県",
-	6: "山形県", 7: "福島県", 8: "茨城県", 9: "栃木県", 10: "群馬県",
-	11: "埼玉県", 12: "千葉県", 13: "東京都", 14: "神奈川県", 15: "新潟県",
-	16: "富山県", 17: "石川県", 18: "福井県", 19: "山梨県", 20: "長野県",
-	21: "岐阜県", 22: "静岡県", 23: "愛知県", 24: "三重県", 25: "滋賀県",
-	26: "京都府", 27: "大阪府", 28: "兵庫県", 29: "奈良県", 30: "和歌山県",
-	31: "鳥取県", 32: "島根県", 33: "岡山県", 34: "広島県", 35: "山口県",
-	36: "徳島県", 37: "香川県", 38: "愛媛県", 39: "高知県", 40: "福岡県",
-	41: "佐賀県", 42: "長崎県", 43: "熊本県", 44: "大分県", 45: "宮崎県",
-	46: "鹿児島県", 47: "沖縄県",
-}
+// seedPrefectureIDs は seed 対象の都道府県です。
+// 全 47 都道府県を回すと API リクエストが増えすぎるため、主要エリアに絞ります。
+var seedPrefectureIDs = []int{13, 12, 14, 23, 26, 27, 40, 43}
 
-// ─── Geocoding ───────────────────────────────────────────────────────────────
+const (
+	// seedSpotsPerCombination は 1 つの「都道府県 × ジャンル」で取得する件数です。
+	seedSpotsPerCombination = 3
+	// seedMinExistingSpots はこの件数以上すでに存在する組み合わせをスキップする閾値です。
+	seedMinExistingSpots = 3
+)
 
-type geocodeResult struct {
-	Results []struct {
-		Geometry struct {
-			Location struct {
-				Lat float64 `json:"lat"`
-				Lng float64 `json:"lng"`
-			} `json:"location"`
-		} `json:"geometry"`
-	} `json:"results"`
-	Status string `json:"status"`
-}
+// seedDateSpots は HotPepper グルメ API から実在店舗を取得して date_spots に投入します。
+// 名前・住所・緯度経度・画像 URL・掲載ページ URL はすべて API のデータをそのまま保存し、
+// 画像が無い店舗のみ Wikimedia でフォールバックします。
+func seedDateSpots(ctx context.Context, gdb *gorm.DB, recruitAPIKey string) {
+	repo := persistence.NewDateSpotRepository(gdb)
+	fetcher := external.NewSpotFetcher(
+		hotpepper.NewClient(recruitAPIKey),
+		wikimedia.NewClient(),
+	)
+	interactor := usecase.NewBatchCreateDateSpotsInteractor(
+		repo,
+		fetcher,
+		seedMinExistingSpots,
+		seedSpotsPerCombination,
+	)
 
-// geocode は Google Maps Geocoding API を呼び出して緯度・経度を返します。
-// API キーが空または "your_api_key_here" の場合は nil を返します。
-func geocode(apiKey, address string) (lat *float64, lng *float64) {
-	if apiKey == "" || apiKey == "your_api_key_here" {
-		return nil, nil
-	}
-	endpoint := "https://maps.googleapis.com/maps/api/geocode/json"
-	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
-	if err != nil {
-		slog.Warn("geocode: failed to create request", "err", err)
-		return nil, nil
-	}
-	q := url.Values{}
-	q.Set("address", address)
-	q.Set("key", apiKey)
-	req.URL.RawQuery = q.Encode()
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		slog.Warn("geocode: request failed", "address", address, "err", err)
-		return nil, nil
-	}
-	defer func() {
-		if err := resp.Body.Close(); err != nil {
-			slog.Warn("geocode: failed to close response body", "err", err)
+	for _, prefectureID := range seedPrefectureIDs {
+		pref := master.PrefectureByID(prefectureID)
+		if pref == nil {
+			slog.WarnContext(ctx, "seedDateSpots: unknown prefecture, skip", "prefecture_id", prefectureID)
+			continue
 		}
-	}()
-	body, _ := io.ReadAll(resp.Body)
 
-	var result geocodeResult
-	if err := json.Unmarshal(body, &result); err != nil || result.Status != "OK" || len(result.Results) == 0 {
-		slog.Warn("geocode: unexpected response", "address", address, "status", result.Status)
-		return nil, nil
+		for _, genre := range master.Genres() {
+			input := usecase.BatchCreateDateSpotsInput{
+				PrefectureID:   pref.ID,
+				PrefectureName: pref.Name,
+				PrefCode:       pref.PrefCode,
+				GenreID:        genre.ID,
+				GenreName:      genre.Name,
+			}
+
+			if err := interactor.Execute(ctx, input); err != nil {
+				slog.ErrorContext(ctx, "seedDateSpots: execute failed, skipping",
+					"prefecture", pref.Name,
+					"genre", genre.Name,
+					"err", err,
+				)
+			}
+		}
 	}
-	latVal := result.Results[0].Geometry.Location.Lat
-	lngVal := result.Results[0].Geometry.Location.Lng
-	return &latVal, &lngVal
 }
 
-// ─── DateSpot + Address 登録 ──────────────────────────────────────────────────
-
-func spotAndAddressCreate(
-	ctx context.Context,
-	gdb *gorm.DB,
-	name string,
-	genreID int,
-	prefectureID int,
-	cityName string,
-	apiKey string,
-) {
-	// DateSpot を重複チェックしながら登録 (find_or_create_by 相当)
-	var dateSpot model.DateSpot
-	if err := gdb.WithContext(ctx).Where("name = ?", name).First(&dateSpot).Error; err != nil {
-		// 画像はジャンル名.jpg (ActiveStorage の代替として文字列パスを保存)
-		imagePath := fmt.Sprintf("public/images/date_spot_images/%s.jpg", genreNames[genreID])
-		gid := genreID
-		pid := prefectureID
-		fullCityName := prefectureNames[prefectureID] + cityName
-		lat, lng := geocode(apiKey, fullCityName)
-		dateSpot = model.DateSpot{
-			GenreID:      &gid,
-			PrefectureID: &pid,
-			Name:         name,
-			CityName:     fullCityName,
-			Image:        &imagePath,
-			Latitude:     lat,
-			Longitude:    lng,
-		}
-		repo := persistence.NewDateSpotRepository(gdb)
-		if err := repo.Create(ctx, &dateSpot); err != nil {
-			slog.ErrorContext(ctx, "spotAndAddressCreate: dateSpot create failed", "name", name, "err", err)
-			return
-		}
-		slog.InfoContext(ctx, "DateSpot created", "name", name, "id", dateSpot.ID)
-	} else {
-		slog.InfoContext(ctx, "DateSpot already exists, skip", "name", name, "id", dateSpot.ID)
+// dateSpotIDsByPrefecture は指定した都道府県の date_spot ID を返します (コース seed 用)。
+func dateSpotIDsByPrefecture(ctx context.Context, gdb *gorm.DB, prefectureIDs ...int) []uint {
+	var ids []uint
+	if err := gdb.WithContext(ctx).
+		Model(&model.DateSpot{}).
+		Where("prefecture_id IN ?", prefectureIDs).
+		Order("id").
+		Pluck("id", &ids).Error; err != nil {
+		slog.ErrorContext(ctx, "dateSpotIDsByPrefecture: failed to fetch ids",
+			"prefecture_ids", prefectureIDs, "err", err)
+		return nil
 	}
+	return ids
 }
 
 // ─── User 登録 ────────────────────────────────────────────────────────────────
@@ -271,67 +220,68 @@ func seedRelationships(ctx context.Context, gdb *gorm.DB) {
 	}
 }
 
-// ─── DateSpotReview 登録 ──────────────────────────────────────────────────────
-
-func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
-	rates := []float64{2, 2.5, 3, 3.5, 4, 4.5, 5}
-	// Rails の "test" * 18 相当
-	content := "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
-
-	repo := persistence.NewDateSpotReviewRepository(gdb)
-
-	// 非管理者ユーザー (adminstrator@gmail.com 以外) を取得
-	var users []model.User
-	if err := gdb.WithContext(ctx).
-		Where("email != ?", "adminstrator@gmail.com").
-		Find(&users).Error; err != nil {
-		slog.ErrorContext(ctx, "seedDateSpotReviews: failed to fetch users", "err", err)
-		return
-	}
-
-	// DateSpot の件数を取得
-	var dateSpotCount int64
-	gdb.WithContext(ctx).Model(&model.DateSpot{}).Count(&dateSpotCount)
-	if dateSpotCount == 0 {
-		slog.Warn("seedDateSpotReviews: no date spots found, skip")
-		return
-	}
-
-	// 各ユーザーにランダムに 5 件レビューを投稿 (重複スキップ)
-	for _, user := range users {
-		for i := 0; i < 5; i++ {
-			// ランダムな DateSpot を取得
-			var ds model.DateSpot
-			offset := rand.Int63n(dateSpotCount)
-			if err := gdb.WithContext(ctx).Offset(int(offset)).First(&ds).Error; err != nil {
-				continue
-			}
-			dateSpotID := ds.ID
-
-			// 同ユーザー × 同スポットの重複チェック
-			var existing model.DateSpotReview
-			if err := gdb.WithContext(ctx).
-				Where("user_id = ? AND date_spot_id = ?", user.ID, dateSpotID).
-				First(&existing).Error; err == nil {
-				continue
-			}
-
-			rate := rates[rand.Intn(len(rates))]
-			review := model.DateSpotReview{
-				Rate:       &rate,
-				Content:    &content,
-				UserID:     user.ID,
-				DateSpotID: dateSpotID,
-			}
-			if err := repo.Create(ctx, &review); err != nil {
-				slog.ErrorContext(ctx, "seedDateSpotReviews: create failed",
-					"user_id", user.ID, "date_spot_id", dateSpotID, "err", err)
-			} else {
-				slog.InfoContext(ctx, "DateSpotReview created", "user_id", user.ID, "date_spot_id", dateSpotID)
-			}
-		}
-	}
-}
+// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+// // ─── DateSpotReview 登録 ──────────────────────────────────────────────────────
+//
+// func seedDateSpotReviews(ctx context.Context, gdb *gorm.DB) {
+// 	rates := []float64{2, 2.5, 3, 3.5, 4, 4.5, 5}
+// 	// Rails の "test" * 18 相当
+// 	content := "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"
+//
+// 	repo := persistence.NewDateSpotReviewRepository(gdb)
+//
+// 	// 非管理者ユーザー (adminstrator@gmail.com 以外) を取得
+// 	var users []model.User
+// 	if err := gdb.WithContext(ctx).
+// 		Where("email != ?", "adminstrator@gmail.com").
+// 		Find(&users).Error; err != nil {
+// 		slog.ErrorContext(ctx, "seedDateSpotReviews: failed to fetch users", "err", err)
+// 		return
+// 	}
+//
+// 	// DateSpot の件数を取得
+// 	var dateSpotCount int64
+// 	gdb.WithContext(ctx).Model(&model.DateSpot{}).Count(&dateSpotCount)
+// 	if dateSpotCount == 0 {
+// 		slog.Warn("seedDateSpotReviews: no date spots found, skip")
+// 		return
+// 	}
+//
+// 	// 各ユーザーにランダムに 5 件レビューを投稿 (重複スキップ)
+// 	for _, user := range users {
+// 		for i := 0; i < 5; i++ {
+// 			// ランダムな DateSpot を取得
+// 			var ds model.DateSpot
+// 			offset := rand.Int63n(dateSpotCount)
+// 			if err := gdb.WithContext(ctx).Offset(int(offset)).First(&ds).Error; err != nil {
+// 				continue
+// 			}
+// 			dateSpotID := ds.ID
+//
+// 			// 同ユーザー × 同スポットの重複チェック
+// 			var existing model.DateSpotReview
+// 			if err := gdb.WithContext(ctx).
+// 				Where("user_id = ? AND date_spot_id = ?", user.ID, dateSpotID).
+// 				First(&existing).Error; err == nil {
+// 				continue
+// 			}
+//
+// 			rate := rates[rand.Intn(len(rates))]
+// 			review := model.DateSpotReview{
+// 				Rate:       &rate,
+// 				Content:    &content,
+// 				UserID:     user.ID,
+// 				DateSpotID: dateSpotID,
+// 			}
+// 			if err := repo.Create(ctx, &review); err != nil {
+// 				slog.ErrorContext(ctx, "seedDateSpotReviews: create failed",
+// 					"user_id", user.ID, "date_spot_id", dateSpotID, "err", err)
+// 			} else {
+// 				slog.InfoContext(ctx, "DateSpotReview created", "user_id", user.ID, "date_spot_id", dateSpotID)
+// 			}
+// 		}
+// 	}
+// }
 
 // ─── Course + DuringSpot 登録 ─────────────────────────────────────────────────
 
@@ -399,15 +349,6 @@ func courseCreate(
 	}
 }
 
-// rangeIDs は start〜end の連続した uint スライスを返します。
-func rangeIDs(start, end int) []uint {
-	ids := make([]uint, 0, end-start+1)
-	for i := start; i <= end; i++ {
-		ids = append(ids, uint(i))
-	}
-	return ids
-}
-
 // ─── main ─────────────────────────────────────────────────────────────────────
 
 func main() {
@@ -424,64 +365,9 @@ func main() {
 	}
 	slog.Info("database connected")
 
-	apiKey := cfg.GoogleMaps.APIKey
-
-	// ─── DateSpot & Address ───────────────────────────────────────────────────
-	slog.Info("=== seeding DateSpots & Addresses ===")
-
-	// 東京 1〜6
-	spotAndAddressCreate(ctx, gdb, "東京スカイツリー", 11, 13, "墨田区押上１丁目１−２", apiKey)
-	spotAndAddressCreate(ctx, gdb, "恵比寿ガーデンプレイス", 1, 13, "渋谷区恵比寿4丁目20 ガーデンプレイス", apiKey)
-	spotAndAddressCreate(ctx, gdb, "プレゴ・プレゴ", 2, 13, "新宿区新宿3-31-3 ＮＳプラザ中央　4F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "酒場シナトラ 東京駅店", 9, 13, "千代田区丸の内１丁目９−１ 東京駅一番街 2階", apiKey)
-	spotAndAddressCreate(ctx, gdb, "カフェ バッハ", 3, 13, "台東区日本堤１丁目２３−９", apiKey)
-	spotAndAddressCreate(ctx, gdb, "おもてなしとりよし 西新宿店", 2, 13, "新宿区西新宿1-10-2 110ビル 11F", apiKey)
-
-	// 千葉 7
-	spotAndAddressCreate(ctx, gdb, "東京ディズニーランド", 5, 12, "浦安市舞浜１−１", apiKey)
-
-	// 大阪 8〜13
-	spotAndAddressCreate(ctx, gdb, "純喫茶 アメリカン", 3, 27, "大阪市中央区道頓堀１丁目７−４", apiKey)
-	spotAndAddressCreate(ctx, gdb, "ユニバーサル・スタジオ・ジャパン", 5, 27, "大阪市此花区桜島２丁目１−３３", apiKey)
-	spotAndAddressCreate(ctx, gdb, "焼肉Lab 梅田店", 9, 27, "大阪市曽根崎2-10-21 第3河合ビル3F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "居酒屋 牡蠣 やまと", 8, 27, "大阪市阿倍野区旭町2-1-2 あべのポンテ1F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "創蔵", 7, 27, "大阪市中央区難波4-6-10", apiKey)
-	spotAndAddressCreate(ctx, gdb, "りんくうプレミアム・アウトレット", 1, 27, "泉佐野市りんくう往来南３−２８", apiKey)
-
-	// 京都 14〜19
-	spotAndAddressCreate(ctx, gdb, "京都タワー", 11, 26, "京都市下京区烏丸通七条下る 東塩小路町 721-1", apiKey)
-	spotAndAddressCreate(ctx, gdb, "ウメ子の家 四条河原町店", 2, 26, "京都市下京区四条小橋東入橋本町105 PONTOビル2F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "CINQUE IKARIYA（チンクエイカリヤ）", 2, 26, "京都市中京区突抜町138-3", apiKey)
-	spotAndAddressCreate(ctx, gdb, "京都 焼き鳥 一", 2, 26, "京都市中京区四条室町菊水鉾町585 1F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "京都円山　天正", 9, 26, "京都市東山区祇園町北側338", apiKey)
-	spotAndAddressCreate(ctx, gdb, "Walden Woods Kyoto", 3, 26, "京都市下京区栄町５０８−１", apiKey)
-
-	// 神奈川 20〜25
-	spotAndAddressCreate(ctx, gdb, "横浜ランドマークタワー", 11, 14, "横浜市西区みなとみらい２丁目２−１", apiKey)
-	spotAndAddressCreate(ctx, gdb, "横浜・八景島シーパラダイス", 6, 14, "横浜市金沢区八景島", apiKey)
-	spotAndAddressCreate(ctx, gdb, "よこはまコスモワールド", 5, 14, "横浜市中区新港２丁目８−１", apiKey)
-	spotAndAddressCreate(ctx, gdb, "海の公園 バーベキュー場", 10, 14, "横浜市金沢区海の公園１０", apiKey)
-	spotAndAddressCreate(ctx, gdb, "新横浜ラーメン博物館", 2, 14, "横浜市港北区新横浜２丁目１４−２１", apiKey)
-	spotAndAddressCreate(ctx, gdb, "旅情個室空間 酒の友 新横浜店", 8, 14, "横浜市港北区新横浜3-17-15 3F", apiKey)
-
-	// 愛知 26〜31
-	spotAndAddressCreate(ctx, gdb, "名古屋港水族館", 6, 23, "名古屋市港区港町1-3", apiKey)
-	spotAndAddressCreate(ctx, gdb, "博物館 明治村", 2, 23, "犬山市内山1", apiKey)
-	spotAndAddressCreate(ctx, gdb, "茶寮 花の宴", 2, 23, "安城市大東町１７−８", apiKey)
-	spotAndAddressCreate(ctx, gdb, "食堂うさぎや", 2, 23, "名古屋市名東区高社２丁目９７", apiKey)
-	spotAndAddressCreate(ctx, gdb, "THE ONE AND ONLY", 8, 23, "名古屋市西区牛島町６−１ 名古屋ルーセントタワ 40F", apiKey)
-	spotAndAddressCreate(ctx, gdb, "完全個室ダイニング カーヴ隠れや 名古屋駅店", 8, 23, "名古屋市中村区名駅３丁目１５−１１ Ｍ三ダイニングビル 4F", apiKey)
-
-	// 福岡 32〜37
-	spotAndAddressCreate(ctx, gdb, "キャナルシティ博多", 1, 40, "福岡市博多区住吉1丁目2", apiKey)
-	spotAndAddressCreate(ctx, gdb, "つなぐダイニング ZINO 天神店", 8, 40, "福岡市中央区大名1-11-22-1", apiKey)
-	spotAndAddressCreate(ctx, gdb, "大濠公園", 12, 40, "福岡市中央区大濠公園", apiKey)
-	spotAndAddressCreate(ctx, gdb, "マリンワールド海の中道", 6, 40, "福岡市東区西戸崎18-28", apiKey)
-	spotAndAddressCreate(ctx, gdb, "麺劇場 玄瑛", 2, 40, "福岡市中央区薬院 2-16-3", apiKey)
-	spotAndAddressCreate(ctx, gdb, "芥屋の大門", 4, 40, "糸島市志摩芥屋６７５−２", apiKey)
-
-	// 熊本 38
-	spotAndAddressCreate(ctx, gdb, "あか牛丼いわさき", 2, 43, "阿蘇市乙姫2006-2", apiKey)
+	// ─── DateSpots ────────────────────────────────────────────────────────────
+	slog.Info("=== seeding DateSpots (HotPepper) ===")
+	seedDateSpots(ctx, gdb, cfg.Recruit.APIKey)
 
 	// ─── Users ───────────────────────────────────────────────────────────────
 	slog.Info("=== seeding Users ===")
@@ -492,20 +378,21 @@ func main() {
 	seedRelationships(ctx, gdb)
 
 	// ─── DateSpotReviews ──────────────────────────────────────────────────────
-	slog.Info("=== seeding DateSpotReviews ===")
-	seedDateSpotReviews(ctx, gdb)
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// slog.Info("=== seeding DateSpotReviews ===")
+	// seedDateSpotReviews(ctx, gdb)
 
 	// ─── Courses & DuringSpots ────────────────────────────────────────────────
 	slog.Info("=== seeding Courses & DuringSpots ===")
-	courseCreate(ctx, gdb, 2, 6, rangeIDs(1, 6), "DRIVING")
-	courseCreate(ctx, gdb, 4, 6, rangeIDs(1, 7), "DRIVING")
-	courseCreate(ctx, gdb, 7, 11, rangeIDs(8, 13), "BICYCLING")
-	courseCreate(ctx, gdb, 9, 11, rangeIDs(8, 19), "DRIVING")
-	courseCreate(ctx, gdb, 12, 16, rangeIDs(8, 19), "DRIVING")
-	courseCreate(ctx, gdb, 14, 16, rangeIDs(20, 25), "WALKING")
-	courseCreate(ctx, gdb, 17, 20, rangeIDs(26, 31), "DRIVING")
-	courseCreate(ctx, gdb, 21, 25, rangeIDs(32, 37), "DRIVING")
-	courseCreate(ctx, gdb, 26, 30, rangeIDs(32, 38), "DRIVING")
+	courseCreate(ctx, gdb, 2, 6, dateSpotIDsByPrefecture(ctx, gdb, 13), "DRIVING")
+	courseCreate(ctx, gdb, 4, 6, dateSpotIDsByPrefecture(ctx, gdb, 13, 12), "DRIVING")
+	courseCreate(ctx, gdb, 7, 11, dateSpotIDsByPrefecture(ctx, gdb, 27), "BICYCLING")
+	courseCreate(ctx, gdb, 9, 11, dateSpotIDsByPrefecture(ctx, gdb, 27, 26), "DRIVING")
+	courseCreate(ctx, gdb, 12, 16, dateSpotIDsByPrefecture(ctx, gdb, 27, 26), "DRIVING")
+	courseCreate(ctx, gdb, 14, 16, dateSpotIDsByPrefecture(ctx, gdb, 14), "WALKING")
+	courseCreate(ctx, gdb, 17, 20, dateSpotIDsByPrefecture(ctx, gdb, 23), "DRIVING")
+	courseCreate(ctx, gdb, 21, 25, dateSpotIDsByPrefecture(ctx, gdb, 40), "DRIVING")
+	courseCreate(ctx, gdb, 26, 30, dateSpotIDsByPrefecture(ctx, gdb, 40, 43), "DRIVING")
 
 	slog.Info("=== seed completed ===")
 }

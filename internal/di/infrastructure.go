@@ -21,7 +21,8 @@ func ProvideRepositories(ct *Container) {
 	ct.MustProvide(persistence.NewUserRepository)
 	ct.MustProvide(persistence.NewDateSpotRepository)
 	ct.MustProvide(persistence.NewCourseRepository)
-	ct.MustProvide(persistence.NewDateSpotReviewRepository)
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// ct.MustProvide(persistence.NewDateSpotReviewRepository)
 	ct.MustProvide(persistence.NewDuringSpotRepository)
 	ct.MustProvide(persistence.NewRelationshipRepository)
 }
@@ -63,9 +64,10 @@ func ProvideUsecases(ct *Container) {
 	ct.MustProvide(usecase.NewDeleteRelationshipUsecase)
 	ct.MustProvide(usecase.NewGetCoursesUsecase)
 	ct.MustProvide(usecase.NewGetCourseUsecase)
-	ct.MustProvide(usecase.NewCreateDateSpotReviewUsecase)
-	ct.MustProvide(usecase.NewDeleteDateSpotReviewUsecase)
-	ct.MustProvide(usecase.NewUpdateDateSpotReviewUsecase)
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// ct.MustProvide(usecase.NewCreateDateSpotReviewUsecase)
+	// ct.MustProvide(usecase.NewDeleteDateSpotReviewUsecase)
+	// ct.MustProvide(usecase.NewUpdateDateSpotReviewUsecase)
 	ct.MustProvide(usecase.NewCreateCourseUsecase)
 	ct.MustProvide(usecase.NewDeleteCourseUsecase)
 }

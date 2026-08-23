@@ -29,15 +29,6 @@ type ServerInterface interface {
 	// (GET /api/v1/courses/{id})
 	GetApiV1CoursesId(ctx echo.Context, id int) error
 
-	// (POST /api/v1/date_spot_reviews)
-	PostApiV1DateSpotReviews(ctx echo.Context) error
-
-	// (DELETE /api/v1/date_spot_reviews/{id})
-	DeleteApiV1DateSpotReviewsId(ctx echo.Context, id int) error
-
-	// (PUT /api/v1/date_spot_reviews/{id})
-	PutApiV1DateSpotReviewsId(ctx echo.Context, id int) error
-
 	// (GET /api/v1/date_spots)
 	GetApiV1DateSpots(ctx echo.Context, params GetApiV1DateSpotsParams) error
 
@@ -167,53 +158,6 @@ func (w *ServerInterfaceWrapper) GetApiV1CoursesId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetApiV1CoursesId(ctx, id)
-	return err
-}
-
-// PostApiV1DateSpotReviews converts echo context to params.
-func (w *ServerInterfaceWrapper) PostApiV1DateSpotReviews(ctx echo.Context) error {
-	var err error
-
-	ctx.Set(string(BearerAuthScopes), []string{})
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostApiV1DateSpotReviews(ctx)
-	return err
-}
-
-// DeleteApiV1DateSpotReviewsId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteApiV1DateSpotReviewsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: ""})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	ctx.Set(string(BearerAuthScopes), []string{})
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeleteApiV1DateSpotReviewsId(ctx, id)
-	return err
-}
-
-// PutApiV1DateSpotReviewsId converts echo context to params.
-func (w *ServerInterfaceWrapper) PutApiV1DateSpotReviewsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int
-
-	err = runtime.BindStyledParameterWithOptions("simple", "id", ctx.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: ""})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	ctx.Set(string(BearerAuthScopes), []string{})
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PutApiV1DateSpotReviewsId(ctx, id)
 	return err
 }
 
@@ -573,9 +517,6 @@ func RegisterHandlersWithOptions(router EchoRouter, si ServerInterface, options 
 	router.POST(options.BaseURL+"/api/v1/courses", wrapper.PostApiV1Courses, options.OperationMiddlewares["PostApiV1Courses"]...)
 	router.DELETE(options.BaseURL+"/api/v1/courses/:id", wrapper.DeleteApiV1CoursesId, options.OperationMiddlewares["DeleteApiV1CoursesId"]...)
 	router.GET(options.BaseURL+"/api/v1/courses/:id", wrapper.GetApiV1CoursesId, options.OperationMiddlewares["GetApiV1CoursesId"]...)
-	router.POST(options.BaseURL+"/api/v1/date_spot_reviews", wrapper.PostApiV1DateSpotReviews, options.OperationMiddlewares["PostApiV1DateSpotReviews"]...)
-	router.DELETE(options.BaseURL+"/api/v1/date_spot_reviews/:id", wrapper.DeleteApiV1DateSpotReviewsId, options.OperationMiddlewares["DeleteApiV1DateSpotReviewsId"]...)
-	router.PUT(options.BaseURL+"/api/v1/date_spot_reviews/:id", wrapper.PutApiV1DateSpotReviewsId, options.OperationMiddlewares["PutApiV1DateSpotReviewsId"]...)
 	router.GET(options.BaseURL+"/api/v1/date_spots", wrapper.GetApiV1DateSpots, options.OperationMiddlewares["GetApiV1DateSpots"]...)
 	router.POST(options.BaseURL+"/api/v1/date_spots", wrapper.PostApiV1DateSpots, options.OperationMiddlewares["PostApiV1DateSpots"]...)
 	router.DELETE(options.BaseURL+"/api/v1/date_spots/:id", wrapper.DeleteApiV1DateSpotsId, options.OperationMiddlewares["DeleteApiV1DateSpotsId"]...)

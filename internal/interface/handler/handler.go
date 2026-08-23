@@ -10,9 +10,6 @@ func NewHandler(container *di.Container) *Handler {
 		DeleteApiV1CoursesIdHandler: DeleteApiV1CoursesIdHandler{
 			InputPort: di.MustInvoke[usecase.DeleteCourseInputPort](container),
 		},
-		DeleteApiV1DateSpotReviewsIdHandler: DeleteApiV1DateSpotReviewsIdHandler{
-			InputPort: di.MustInvoke[usecase.DeleteDateSpotReviewInputPort](container),
-		},
 		DeleteApiV1DateSpotsIdHandler: DeleteApiV1DateSpotsIdHandler{
 			InputPort: di.MustInvoke[usecase.DeleteDateSpotInputPort](container),
 		},
@@ -59,9 +56,6 @@ func NewHandler(container *di.Container) *Handler {
 		PostApiV1CoursesHandler: PostApiV1CoursesHandler{
 			InputPort: di.MustInvoke[usecase.CreateCourseInputPort](container),
 		},
-		PostApiV1DateSpotReviewsHandler: PostApiV1DateSpotReviewsHandler{
-			InputPort: di.MustInvoke[usecase.CreateDateSpotReviewInputPort](container),
-		},
 		PostApiV1DateSpotsHandler: PostApiV1DateSpotsHandler{
 			InputPort: di.MustInvoke[usecase.CreateDateSpotInputPort](container),
 		},
@@ -73,9 +67,6 @@ func NewHandler(container *di.Container) *Handler {
 		},
 		PostApiV1SignupHandler: PostApiV1SignupHandler{
 			InputPort: di.MustInvoke[usecase.SignupInputPort](container),
-		},
-		PutApiV1DateSpotReviewsIdHandler: PutApiV1DateSpotReviewsIdHandler{
-			InputPort: di.MustInvoke[usecase.UpdateDateSpotReviewInputPort](container),
 		},
 		PutApiV1DateSpotsIdHandler: PutApiV1DateSpotsIdHandler{
 			InputPort: di.MustInvoke[usecase.UpdateDateSpotInputPort](container),

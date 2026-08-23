@@ -37,7 +37,6 @@ func dummyUserWithRelations(id uint, name string) *model.UserWithRelations {
 		FollowerIDs:  []int{},
 		FollowingIDs: []int{},
 		Courses:      []*model.Course{},
-		Reviews:      []*model.DateSpotReview{},
 	}
 }
 

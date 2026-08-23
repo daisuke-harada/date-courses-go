@@ -25,8 +25,8 @@ func TestGetUsersInteractor_Execute(t *testing.T) {
 			{ID: 2, Name: "ユーザー2"},
 		}
 		uwrs := []*model.UserWithRelations{
-			{User: users[0], FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}},
-			{User: users[1], FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}, Reviews: []*model.DateSpotReview{}},
+			{User: users[0], FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}},
+			{User: users[1], FollowerIDs: []int{}, FollowingIDs: []int{}, Courses: []*model.Course{}},
 		}
 
 		userRepo := repositorymock.NewMockUserRepository(ctrl)

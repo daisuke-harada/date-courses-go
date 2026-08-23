@@ -64,5 +64,6 @@ type UserWithRelations struct {
 	FollowerIDs  []int
 	FollowingIDs []int
 	Courses      []*Course
-	Reviews      []*DateSpotReview
+	// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+	// Reviews      []*DateSpotReview
 }

@@ -37,7 +37,7 @@ components:
         - followerIds
         - followingIds
         - courses
-        - date_spot_reviews
+        # - date_spot_reviews  # レビュー機能は無効化中
       properties:
         id:
           type: integer
@@ -61,7 +61,8 @@ components:
           type: array
           items:
             $ref: "./courses.yaml#/components/schemas/CourseResponseData"
-        date_spot_reviews:
-          type: array
-          items:
-            $ref: "./date_spot_review.yaml#/components/schemas/DateSpotReviewData"
+        # レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+        # date_spot_reviews:
+        #   type: array
+        #   items:
+        #     $ref: "./date_spot_review.yaml#/components/schemas/DateSpotReviewData"

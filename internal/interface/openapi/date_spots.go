@@ -6,36 +6,43 @@ import (
 	"github.com/samber/lo"
 )
 
-func NewDateSpotShowResponse(dateSpot *model.DateSpot, reviews []*model.DateSpotReview) DateSpotShowResponseData {
+func NewDateSpotShowResponse(dateSpot *model.DateSpot) DateSpotShowResponseData {
 	return DateSpotShowResponseData{
-		DateSpot:          newDateSpotSummaryData(dateSpot),
-		ReviewAverageRate: float32(dateSpot.AverageRate),
-		DateSpotReviews:   newDateSpotShowResponseDataDateSpotReviewsInner(reviews),
+		DateSpot: newDateSpotSummaryData(dateSpot),
 	}
 }
 
-func newDateSpotShowResponseDataDateSpotReviewsInner(reviews []*model.DateSpotReview) []DateSpotShowResponseDataDateSpotReviewsInner {
-	return lo.Map(reviews, func(r *model.DateSpotReview, _ int) DateSpotShowResponseDataDateSpotReviewsInner {
-		item := DateSpotShowResponseDataDateSpotReviewsInner{
-			Id:         int(r.ID),
-			DateSpotId: int(r.DateSpotID),
-			UserId:     int(r.UserID),
-		}
-		if r.Rate != nil {
-			f := float32(*r.Rate)
-			item.Rate = &f
-		}
-		if r.Content != nil {
-			item.Content = r.Content
-		}
-		if r.User != nil {
-			item.UserName = r.User.Name
-			item.UserGender = string(r.User.Gender)
-			item.UserImage = ImageData{Url: r.User.Image}
-		}
-		return item
-	})
-}
+// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+// func NewDateSpotShowResponse(dateSpot *model.DateSpot, reviews []*model.DateSpotReview) DateSpotShowResponseData {
+// 	return DateSpotShowResponseData{
+// 		DateSpot:          newDateSpotSummaryData(dateSpot),
+// 		ReviewAverageRate: float32(dateSpot.AverageRate),
+// 		DateSpotReviews:   newDateSpotShowResponseDataDateSpotReviewsInner(reviews),
+// 	}
+// }
+//
+// func newDateSpotShowResponseDataDateSpotReviewsInner(reviews []*model.DateSpotReview) []DateSpotShowResponseDataDateSpotReviewsInner {
+// 	return lo.Map(reviews, func(r *model.DateSpotReview, _ int) DateSpotShowResponseDataDateSpotReviewsInner {
+// 		item := DateSpotShowResponseDataDateSpotReviewsInner{
+// 			Id:         int(r.ID),
+// 			DateSpotId: int(r.DateSpotID),
+// 			UserId:     int(r.UserID),
+// 		}
+// 		if r.Rate != nil {
+// 			f := float32(*r.Rate)
+// 			item.Rate = &f
+// 		}
+// 		if r.Content != nil {
+// 			item.Content = r.Content
+// 		}
+// 		if r.User != nil {
+// 			item.UserName = r.User.Name
+// 			item.UserGender = string(r.User.Gender)
+// 			item.UserImage = ImageData{Url: r.User.Image}
+// 		}
+// 		return item
+// 	})
+// }
 
 func NewCreateDateSpotResponse(dateSpotID uint) DateSpotFormResponseData {
 	return DateSpotFormResponseData{
@@ -88,8 +95,9 @@ func newDateSpotSummaryData(ds *model.DateSpot) DateSpotSummaryData {
 		Longitude:         longitude,
 		GenreName:         genreName,
 		PrefectureName:    prefectureName,
-		AverageRate:       float32(ds.AverageRate),
-		ReviewTotalNumber: ds.ReviewTotalNumber,
+		// レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+		// AverageRate:       float32(ds.AverageRate),
+		// ReviewTotalNumber: ds.ReviewTotalNumber,
 		Source:            &source,
 		MapsUrl:           ds.MapsURL,
 		DateSpot:          newDateSpotData(ds),
@@ -107,7 +115,7 @@ func newDateSpotData(ds *model.DateSpot) DateSpotData {
 		Name:        ds.Name,
 		Image:       ImageData{Url: ds.Image},
 		GenreId:     genreId,
-		AverageRate: float32(ds.AverageRate),
+		// AverageRate: float32(ds.AverageRate),
 		CreatedAt:   ds.CreatedAt,
 		UpdatedAt:   ds.UpdatedAt,
 	}

@@ -49,10 +49,11 @@ paths:
     $ref: "./paths/date_spots.yaml"
   /api/v1/date_spots/{id}:
     $ref: "./paths/date_spots_id.yaml"
-  /api/v1/date_spot_reviews:
-    $ref: "./paths/date_spot_reviews.yaml"
-  /api/v1/date_spot_reviews/{id}:
-    $ref: "./paths/date_spot_reviews_id.yaml"
+  # レビュー機能は無効化中（復活させる場合はコメントアウトを解除する）
+  # /api/v1/date_spot_reviews:
+  #   $ref: "./paths/date_spot_reviews.yaml"
+  # /api/v1/date_spot_reviews/{id}:
+  #   $ref: "./paths/date_spot_reviews_id.yaml"
   /api/v1/prefectures/{id}:
     $ref: "./paths/prefectures_id.yaml"
   /api/v1/genres/{id}:
